@@ -1,15 +1,4 @@
-## testing git comment
-#dgdrgdg 
-
-
-#dfgdf 
-#suckmadeek python ya mong  
-
-
-#testing testing
-
-
-#this is a project
+#better workkk
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 11 10:21:50 2021
