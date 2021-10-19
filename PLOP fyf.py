@@ -1,4 +1,11 @@
 ## testing git comment
+#dgdrgdg 
+
+
+#dfgdf 
+#suckmadeek python ya mong  
+
+
 
 # -*- coding: utf-8 -*-
 """
@@ -483,16 +490,16 @@ if SwitchCEI == 1:
 # else:
 #     layout += SumCD
 
-layout += SumCD + SumOmega + SumPZ + SumVlc + TLC
+# layout += SumCD + SumOmega + SumPZ + SumVlc + TLC
 
 # commented out as it is currently under review 'REVIEW' - to be used as switches.
-# obj_sumOmega = SwitchFEI*SumOmega
-# obj_PZ = SwitchProt*SumPZ
-# obj_Vle = SwitchFEIVle*SumVle
-# obj_TLC = SwitchLandUse*TLC
-# obj_Vlc = SwitchCEI*Vlc
-# obj_CD = SumCD
-# layout += obj_CD + obj_sumOmega + obj_PZ + obj_Vle + obj_TLC + obj_Vlc
+ obj_sumOmega = SwitchFEI*SumOmega
+ obj_PZ = SwitchProt*SumPZ
+ obj_Vle = SwitchFEIVle*SumVle
+ obj_TLC = SwitchLandUse*TLC
+ obj_Vlc = SwitchCEI*Vlc
+ obj_CD = SumCD
+ layout += obj_CD + obj_sumOmega + obj_PZ + obj_Vle + obj_TLC + obj_Vlc
 
 
 
