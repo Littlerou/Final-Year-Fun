@@ -1,4 +1,5 @@
 ## testing git comment
+<<<<<<< HEAD
 #dgdrgdg 
 
 
@@ -6,6 +7,9 @@
 #suckmadeek python ya mong  
 
 
+=======
+#testing testing
+>>>>>>> 5bd8217b87a7c26d062826bd23f2542124f657cb
 
 # -*- coding: utf-8 -*-
 """
