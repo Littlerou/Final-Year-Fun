@@ -1,5 +1,4 @@
 ## testing git comment
-<<<<<<< HEAD
 #dgdrgdg 
 
 
@@ -7,19 +6,10 @@
 #suckmadeek python ya mong  
 
 
-=======
 #testing testing
->>>>>>> 5bd8217b87a7c26d062826bd23f2542124f657cb
 
 
 #this is a project
-
-
-# This is a pet project
-
-
-
-
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 11 10:21:50 2021
@@ -108,9 +98,9 @@ if SwitchProt == 1 and SwitchFEI == 0:
 
 # --------------Define Sets--------------
 # Define the process units
-units = []
-pertinent_units = []
-hazardous_chemicals = []
+units = ['furnace', 'reactor', 'flash','comp','distil'] #3distill comlmns in total
+pertinent_units = ['furnace','reactor','distil']
+hazardous_chemicals = ['tol','benz','meth','h2','diph']
 Nunits = len(units)
 
 # --------------Define Parameters and Values--------------
