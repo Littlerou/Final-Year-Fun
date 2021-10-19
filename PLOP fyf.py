@@ -1,23 +1,3 @@
-## testing git comment
-<<<<<<< HEAD
-#dgdrgdg 
-
-
-#dfgdf 
-#suckmadeek python ya mong  
-
-
-=======
-#testing testing
->>>>>>> 5bd8217b87a7c26d062826bd23f2542124f657cb
-
-
-#this is a project
-
-
-# This is a pet project
-
-
 
 
 # -*- coding: utf-8 -*-
