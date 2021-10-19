@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 
 
+=======
+#better workkk
+>>>>>>> fd436aa74c3e2fb21f2fcd2c9755b1db7e77a96b
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 11 10:21:50 2021
@@ -88,9 +92,9 @@ if SwitchProt == 1 and SwitchFEI == 0:
 
 # --------------Define Sets--------------
 # Define the process units
-units = []
-pertinent_units = []
-hazardous_chemicals = []
+units = ['furnace', 'reactor', 'flash','comp','distil'] #3distill comlmns in total
+pertinent_units = ['furnace','reactor','distil']
+hazardous_chemicals = ['tol','benz','meth','h2','diph']
 Nunits = len(units)
 
 # --------------Define Parameters and Values--------------
