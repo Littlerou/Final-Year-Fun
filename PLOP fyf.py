@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 
 
-=======
 #better workkk
->>>>>>> fd436aa74c3e2fb21f2fcd2c9755b1db7e77a96b
 # -*- coding: utf-8 -*-
 """
 Created on Mon Oct 11 10:21:50 2021
