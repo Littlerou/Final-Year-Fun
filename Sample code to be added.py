@@ -44,3 +44,7 @@ for i in units:
     P[i][j] = Q[i][j] * deltaPD[i][j] / (rhog * mechEffic)
     #operating cost for the year
     POC[i][j] = C_elec * OH * P[i][j] * n[i][j]
+    
+    #Safety Distances (based on Industrial Risk Insurers)
+    
+        
