@@ -81,12 +81,38 @@ pertinent_units = ['reactor', 'eoabs', 'co2abs']
 hazardous_chemicals = ['EO']
 Nunits = len(units)
 
+
 #%% --------------Define Parameters and Values--------------
 # Base layout model
 
 # M (m) is used in the contraints which set A or B, L or R, and Din or Dout.
 # It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
 M = 1e3
+
+# Trapezium layout:X1,Y1,X2,Y2 refer to end points 
+# Ng = 30
+# X1 = 15
+# X2 = 30
+# Y1 = 30
+# Y2 = 0
+# grad = (Y1-Y2)/(X1-X2)
+# colin = Y1 - grad*X1 
+
+#pentagon layout:
+Ng = 25
+X1 = 12.5
+X2 = 25
+Y1 = 40
+Y2 = 30
+X3 = 0
+Y3 = 30
+grad1 = (Y1-Y2)/(X1-X2)
+colin1 = Y1 - grad1*X1 
+grad2 = (Y1-Y3)/(X1-X3)
+colin2 = Y1 - grad2*X1 
+
+
+
 
 # Dimensions of each unit (m)
 alpha = dict.fromkeys(units)
@@ -95,14 +121,14 @@ alpha['reactor'] = 10
 alpha['hex1'] = 11.42
 alpha['eoabs'] = 7.68
 alpha['hex2'] = 8.48
-alpha['co2abs'] = 7.68
+alpha['co2abs'] = 5
 alpha['flash'] = 2.68
 alpha['pump'] = 2.40
 beta['reactor'] = 5
 beta['hex1'] = 11.42
 beta['eoabs'] = 7.68
 beta['hex2'] = 8.48
-beta['co2abs'] = 7.68
+beta['co2abs'] = 5
 beta['flash'] = 2.68
 beta['pump'] = 2.40
 
@@ -128,7 +154,7 @@ C[4][5] = 98.4  # connection cost between co2abs and flash
 C[4][6] = 98.4  # connection cost between co2abs and pump
 C[5][6] = 98.4  # connection cost between flash and pump
 # symmetrise the matrix
-C = C + C.T - np.diag(C.diagonal())
+C = C + C.T - np.diag(C.diagonal()) #
 # Cost data is made into a dictionary
 C = makeDict([units,units],C,0)
 
@@ -137,11 +163,13 @@ if SwitchLandUse == 1:
     # Land cost (per unit distance squared)
     LC = 3e3
     # Number of grid points in square plot
-    N = 250
-    # Size of one grid square (m)
+    N = 20
+    # Length of one grid side of a square (m)
     g = 2
     # Define the set for binary variable Gn
     gridsize = list(range(1,N))
+    
+
 else:
     # Maximum plot size if land use model not switched on
     xmax = 1000
@@ -168,7 +196,7 @@ w['co2abs']['EO'] = 0.05
 rhol['reactor'] = 1000
 rhol['eoabs'] = 1000
 rhol['co2abs'] = 1000
-MWunit['reactor'] = 44.05  # g/mol
+MWunit['reactor'] = 44.05  # g/mol #EO=ethylene oxide
 MWunit['eoabs'] = 44.05
 MWunit['co2abs'] = 44.05
 INV['reactor'] = 10000  # kg
@@ -559,7 +587,7 @@ for i in units:
     # Orientation constraints (1 - 2)
     layout += l[i] == alpha[i]*O[i] + beta[i]*(1 - O[i])
     layout += d[i] == alpha[i] + beta[i] - l[i]
-    # Lower and upper bounds of coordinates (19 - 22)
+    # Lower bounds of coordinates (19 - 22)
     layout += x[i] >= 0.5*l[i]
     layout += y[i] >= 0.5*d[i]
 
@@ -594,10 +622,39 @@ layout += SumCD == lpSum([CD[i][j] for i in units for j in units])
 
 # Land use constraints (or set max plot size if not used)
 if SwitchLandUse == 1:
+
     for i in units:
         # Land area approximation constraints for square plot (24 - 25)
-        layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-        layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+        # layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+        # layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+        # halfdepth  = y[i] + 0.5*d[i]
+        # halflength = x[i] + 0.5*l[i]
+        layout += x[i] + 0.5*l[i] <= N*g
+        layout += y[i] + 0.5*d[i] <= N*g
+        #Trapezium constraint:
+        # layout += y[i] + 0.5*d[i] <= grad*(x[i] + l[i]) + colin
+        
+        
+        #pentagon constraint: # no half so that no part of the unit is outside constraint
+        ##need to account for the top corner, imagine sliding triangle along line connected to unit
+        layout += y[i] + 0.5*d[i] - l[i]*grad1  <= grad1*(x[i]) + colin1
+        layout += y[i] + 0.5*d[i]  + l[i]*grad2 <= grad2*(x[i]) + colin2
+        layout += x[i] + 0.5*l[i] - d[i]*1/grad1  <= (y[i] - colin1)*1/grad1
+        layout += x[i] + 0.5*l[i]  + d[i]*1/grad2 >= (y[i] - colin2)*1/grad2
+        layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
+        # # if y[i] - 0.5*d[i] >= 0 and y[i] - 0.5*d[i] <= 10 :
+        #     layout += x[i] - 0.5*l[i] >=10
+        # if y[i] + 0.5*d[i] >= 5  and y[i] + 0.5*d[i] <= 10 :
+        #     layout += x[i] - 0.5*l[i] >=10
+    
+        # if y[i] + 0.5*d[i] >= 15 and y[i] + 0.5*d[i] <= 18 :
+        #     layout += x[i] + 0.5*l[i] <=24
+        # if y[i] + 0.5*d[i] >= 24 and y[i] + 0.5*d[i] <= 27 :
+        #     layout += x[i] + 0.5*l[i] <= 15
+        # if y['eoabs'] + 0.5*d['eoabs'] >= 1 and y['eoabs'] + 0.5*d['eoabs'] <= 10 :
+        #     layout += x['eoabs'] + 0.5*l['eoabs'] >= 12
+        # if y['eoabs'] + 0.5*d['eoabs'] >= 30 and y['eoabs'] + 0.5*d['eoabs'] <= 40 :
+        #     layout += x['eoabs'] + 0.5*l['eoabs'] >= 12
         # for rectangular plot
         # layout += x[i] + 0.5*l[i] <= lpSum(n1*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
         # layout += y[i] + 0.5*d[i] <= lpSum(n2*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
@@ -853,14 +910,30 @@ xpos, ypos = [], []
 for i in units:
     xpos.append(x[i].varValue)
     ypos.append(y[i].varValue)
+    
+
 
 # Plot invisible scatter
 fig, ax = plt.subplots()
 ax.scatter(xpos,ypos,alpha=0)
+#### LINE THING IS X1,X2 AND Y1,Y2 WTF
+#Trapezium:
+# line = plt.Line2D((X1, X2), (Y1, Y2), lw=1.5)
+# plt.gca().add_line(line)
+# line2 = plt.Line2D((0, Ng), (Ng, Ng), lw=1.5)
+# plt.gca().add_line(line2)
+
+#Pentagon:
+line = plt.Line2D((X1, X2), (Y1, Y2), lw=1.5)
+plt.gca().add_line(line)
+line2 = plt.Line2D((X3, X1), (Y3,Y1), lw=1.5)
+plt.gca().add_line(line2)
+line3 = plt.Line2D((Ng, Ng), (0,Y3), lw=1.5)
+plt.gca().add_line(line3)
 # Set bounds of axis
 plt.axis('square')
-ax.set_xlim(0,max(xpos+ypos)+5)
-ax.set_ylim(0,max(xpos+ypos)+5)
+ax.set_xlim(0,max(xpos+ypos)+15)
+ax.set_ylim(0,max(xpos+ypos)+15)
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))
 for i,txt in enumerate(numbers):
@@ -890,4 +963,10 @@ for i in units:
 for i in range(len(numbers)):
     rect = mpatch.Rectangle((xrect[i], yrect[i]), length[i], depth[i], fill=None, edgecolor="black")
     ax.add_patch(rect)
+# halflength1, halfdepth1 = [], []
+# for i in units:
+#     halflength1.append(halflength[i].varValue)
+#     halfdepth1.append(halfdepth[i].varValue)
+    
+    
 #%%
