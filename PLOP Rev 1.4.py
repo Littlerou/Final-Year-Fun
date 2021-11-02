@@ -100,22 +100,29 @@ M = 1e3
 # colin = Y1 - grad*X1 
 
 #pentagon layout:
-Ng = 25
+X_begin = np.array([0,12.5,25,30,20,0.1])
+X_end = np.array([12.5,25,30,20,0.1,0])
+XDiff = X_end - X_begin
+XDiff_norm = np.array([])
 
-X1 = 12.5
-X2 = 25
-Y1 = 40
-Y2 = 30
-X3 = 0
-Y3 = 30
-grad1 = (Y1-Y2)/(X1-X2)
-absgrad1 = abs(grad1)
-colin1 = Y1 - grad1*X1 
-grad2 = (Y1-Y3)/(X1-X3)
-absgrad2 = abs(grad2)
-colin2 = Y1 - grad2*X1 
+Y_begin = np.array([30,40,30,20,0,0])
+Y_end = np.array([40,30,20,0,0,0])
+YDiff = Y_end - Y_begin
 
+Ng = max(X_end)
 
+grad = YDiff/XDiff
+absgrad = abs(grad)
+colin = Y_begin - (grad * X_begin)
+
+# Converting to list for manipulation.
+X_begin = list(X_begin)
+X_end = list(X_end)
+Y_begin = list(Y_begin)
+Y_end = list(Y_end)
+grad = list(grad)
+absgrad = list(absgrad)
+colin = list(colin)
 
 
 # Dimensions of each unit (m)
@@ -641,25 +648,13 @@ if SwitchLandUse == 1:
         
         #pentagon constraint: # no half so that no part of the unit is outside constraint
         ##need to account for the top corner, imagine sliding triangle along line connected to unit
-        layout += y[i] + 0.5*d[i] + l[i]*absgrad1/2  <= grad1*(x[i]) + colin1
-        layout += y[i] + 0.5*d[i]  + l[i]*absgrad2/2 <= grad2*(x[i]) + colin2
-        # layout += x[i] + 0.5*l[i] - d[i]*1/grad1  <= (y[i] - colin1)*1/grad1
-        # layout += x[i] + 0.5*l[i]  + d[i]*1/grad2 >= (y[i] - colin2)*1/grad2
-        
+        for archit in colin:
+           if archit > 0:
+               layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(archit)]/2 <= grad[colin.index(archit)]*x[i] + archit
+           elif archit < 0:
+               layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(archit)]/2 >= grad[colin.index(archit)]*x[i] + archit
         layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
-        # # if y[i] - 0.5*d[i] >= 0 and y[i] - 0.5*d[i] <= 10 :
-        #     layout += x[i] - 0.5*l[i] >=10
-        # if y[i] + 0.5*d[i] >= 5  and y[i] + 0.5*d[i] <= 10 :
-        #     layout += x[i] - 0.5*l[i] >=10
-    
-        # if y[i] + 0.5*d[i] >= 15 and y[i] + 0.5*d[i] <= 18 :
-        #     layout += x[i] + 0.5*l[i] <=24
-        # if y[i] + 0.5*d[i] >= 24 and y[i] + 0.5*d[i] <= 27 :
-        #     layout += x[i] + 0.5*l[i] <= 15
-        # if y['eoabs'] + 0.5*d['eoabs'] >= 1 and y['eoabs'] + 0.5*d['eoabs'] <= 10 :
-        #     layout += x['eoabs'] + 0.5*l['eoabs'] >= 12
-        # if y['eoabs'] + 0.5*d['eoabs'] >= 30 and y['eoabs'] + 0.5*d['eoabs'] <= 40 :
-        #     layout += x['eoabs'] + 0.5*l['eoabs'] >= 12
+        
         # for rectangular plot
         # layout += x[i] + 0.5*l[i] <= lpSum(n1*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
         # layout += y[i] + 0.5*d[i] <= lpSum(n2*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
@@ -674,10 +669,14 @@ else:
     layout += x[i] + 0.5*l[i] <= xmax
     layout += y[i] + 0.5*d[i] <= ymax
     
-    layout += y[i] + 0.5*d[i] - l[i]*grad1  <= grad1*(x[i]) + colin1
-    layout += y[i] + 0.5*d[i]  + l[i]*grad2 <= grad2*(x[i]) + colin2
+    for archit in colin:
+        if archit > 0:
+            layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(archit)]/2 <= grad[colin.index(archit)]*x[i] + archit
+        elif archit < 0:
+            layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(archit)]/2 >= grad[colin.index(archit)]*x[i] + archit
     
-    TLC = 0
+    layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
+    
 
 # F&EI Constraints
 if SwitchFEI == 1:
@@ -934,12 +933,10 @@ ax.scatter(xpos,ypos,alpha=0)
 # plt.gca().add_line(line2)
 
 #Pentagon:
-line = plt.Line2D((X1, X2), (Y1, Y2), lw=1.5)
-plt.gca().add_line(line)
-line2 = plt.Line2D((X3, X1), (Y3,Y1), lw=1.5)
-plt.gca().add_line(line2)
-line3 = plt.Line2D((Ng, Ng), (0,Y3), lw=1.5)
-plt.gca().add_line(line3)
+for archit in X_begin:
+    line = plt.Line2D((archit, X_end[X_begin.index(archit)]), (Y_begin[X_begin.index(archit)], Y_end[X_begin.index(archit)]), lw = 1.5)
+    plt.gca().add_line(line)
+    
 # Set bounds of axis
 plt.axis('square')
 ax.set_xlim(0,max(xpos+ypos)+15)

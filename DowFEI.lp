@@ -479,285 +479,299 @@ _C430: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_reactor
  + 0.5 d_reactor <= 0
-_C431: 0.8 X_reactor + Y_reactor + 0.5 d_reactor + 0.4 l_reactor <= 50
-_C432: - 0.8 X_reactor + Y_reactor + 0.5 d_reactor + 0.4 l_reactor <= 30
-_C433: X_reactor + 0.5 l_reactor <= 25
-_C434: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C431: - 0.8 X_reactor + Y_reactor + 0.5 d_reactor + 0.4 l_reactor <= 30
+_C432: 0.8 X_reactor + Y_reactor + 0.5 d_reactor + 0.4 l_reactor <= 50
+_C433: 2 X_reactor + Y_reactor + 0.5 d_reactor + l_reactor <= 80
+_C434: - 2 X_reactor + Y_reactor - 0.5 d_reactor - l_reactor >= -40
+_C435: X_reactor + 0.5 l_reactor <= 30
+_C436: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_hex1
  + 0.5 l_hex1 <= 0
-_C435: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C437: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_hex1
  + 0.5 d_hex1 <= 0
-_C436: 0.8 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.4 l_hex1 <= 50
-_C437: - 0.8 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.4 l_hex1 <= 30
-_C438: X_hex1 + 0.5 l_hex1 <= 25
-_C439: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C438: - 0.8 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.4 l_hex1 <= 30
+_C439: 0.8 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.4 l_hex1 <= 50
+_C44: A_reactor_hex1 - B_hex1_reactor = 0
+_C440: 2 X_hex1 + Y_hex1 + 0.5 d_hex1 + l_hex1 <= 80
+_C441: - 2 X_hex1 + Y_hex1 - 0.5 d_hex1 - l_hex1 >= -40
+_C442: X_hex1 + 0.5 l_hex1 <= 30
+_C443: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_eoabs
  + 0.5 l_eoabs <= 0
-_C44: A_reactor_hex1 - B_hex1_reactor = 0
-_C440: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C444: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_eoabs
  + 0.5 d_eoabs <= 0
-_C441: 0.8 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.4 l_eoabs <= 50
-_C442: - 0.8 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.4 l_eoabs <= 30
-_C443: X_eoabs + 0.5 l_eoabs <= 25
-_C444: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
- - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
- - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_hex2
- + 0.5 l_hex2 <= 0
-_C445: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
- - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
- - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_hex2
- + 0.5 d_hex2 <= 0
-_C446: 0.8 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.4 l_hex2 <= 50
-_C447: - 0.8 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.4 l_hex2 <= 30
-_C448: X_hex2 + 0.5 l_hex2 <= 25
-_C449: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
- - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
- - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_co2abs
- + 0.5 l_co2abs <= 0
+_C445: - 0.8 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.4 l_eoabs <= 30
+_C446: 0.8 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.4 l_eoabs <= 50
+_C447: 2 X_eoabs + Y_eoabs + 0.5 d_eoabs + l_eoabs <= 80
+_C448: - 2 X_eoabs + Y_eoabs - 0.5 d_eoabs - l_eoabs >= -40
+_C449: X_eoabs + 0.5 l_eoabs <= 30
 _C45: - A_hex1_reactor + B_reactor_hex1 = 0
 _C450: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
+ - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_hex2
+ + 0.5 l_hex2 <= 0
+_C451: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+ - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
+ - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_hex2
+ + 0.5 d_hex2 <= 0
+_C452: - 0.8 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.4 l_hex2 <= 30
+_C453: 0.8 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.4 l_hex2 <= 50
+_C454: 2 X_hex2 + Y_hex2 + 0.5 d_hex2 + l_hex2 <= 80
+_C455: - 2 X_hex2 + Y_hex2 - 0.5 d_hex2 - l_hex2 >= -40
+_C456: X_hex2 + 0.5 l_hex2 <= 30
+_C457: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+ - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
+ - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_co2abs
+ + 0.5 l_co2abs <= 0
+_C458: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+ - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_co2abs
  + 0.5 d_co2abs <= 0
-_C451: 0.8 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.4 l_co2abs <= 50
-_C452: - 0.8 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.4 l_co2abs <= 30
-_C453: X_co2abs + 0.5 l_co2abs <= 25
-_C454: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C459: - 0.8 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.4 l_co2abs <= 30
+_C46: Wx_hex1_reactor + Wx_reactor_hex1 = 1
+_C460: 0.8 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.4 l_co2abs <= 50
+_C461: 2 X_co2abs + Y_co2abs + 0.5 d_co2abs + l_co2abs <= 80
+_C462: - 2 X_co2abs + Y_co2abs - 0.5 d_co2abs - l_co2abs >= -40
+_C463: X_co2abs + 0.5 l_co2abs <= 30
+_C464: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_flash
  + 0.5 l_flash <= 0
-_C455: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C465: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_flash
  + 0.5 d_flash <= 0
-_C456: 0.8 X_flash + Y_flash + 0.5 d_flash + 0.4 l_flash <= 50
-_C457: - 0.8 X_flash + Y_flash + 0.5 d_flash + 0.4 l_flash <= 30
-_C458: X_flash + 0.5 l_flash <= 25
-_C459: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C466: - 0.8 X_flash + Y_flash + 0.5 d_flash + 0.4 l_flash <= 30
+_C467: 0.8 X_flash + Y_flash + 0.5 d_flash + 0.4 l_flash <= 50
+_C468: 2 X_flash + Y_flash + 0.5 d_flash + l_flash <= 80
+_C469: - 2 X_flash + Y_flash - 0.5 d_flash - l_flash >= -40
+_C47: Wy_hex1_reactor + Wy_reactor_hex1 = 1
+_C470: X_flash + 0.5 l_flash <= 30
+_C471: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + X_pump
  + 0.5 l_pump <= 0
-_C46: Wx_hex1_reactor + Wx_reactor_hex1 = 1
-_C460: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
+_C472: - 2 Gn_1 - 20 Gn_10 - 22 Gn_11 - 24 Gn_12 - 26 Gn_13 - 28 Gn_14
  - 30 Gn_15 - 32 Gn_16 - 34 Gn_17 - 36 Gn_18 - 38 Gn_19 - 4 Gn_2 - 6 Gn_3
  - 8 Gn_4 - 10 Gn_5 - 12 Gn_6 - 14 Gn_7 - 16 Gn_8 - 18 Gn_9 + Y_pump
  + 0.5 d_pump <= 0
-_C461: 0.8 X_pump + Y_pump + 0.5 d_pump + 0.4 l_pump <= 50
-_C462: - 0.8 X_pump + Y_pump + 0.5 d_pump + 0.4 l_pump <= 30
-_C463: X_pump + 0.5 l_pump <= 25
-_C464: Gn_1 + Gn_10 + Gn_11 + Gn_12 + Gn_13 + Gn_14 + Gn_15 + Gn_16 + Gn_17
+_C473: - 0.8 X_pump + Y_pump + 0.5 d_pump + 0.4 l_pump <= 30
+_C474: 0.8 X_pump + Y_pump + 0.5 d_pump + 0.4 l_pump <= 50
+_C475: 2 X_pump + Y_pump + 0.5 d_pump + l_pump <= 80
+_C476: - 2 X_pump + Y_pump - 0.5 d_pump - l_pump >= -40
+_C477: X_pump + 0.5 l_pump <= 30
+_C478: Gn_1 + Gn_10 + Gn_11 + Gn_12 + Gn_13 + Gn_14 + Gn_15 + Gn_16 + Gn_17
  + Gn_18 + Gn_19 + Gn_2 + Gn_3 + Gn_4 + Gn_5 + Gn_6 + Gn_7 + Gn_8 + Gn_9 = 1
-_C465: TLC = 0
-_C466: Ve2_reactor_reactor = 0
-_C467: - D_reactor_hex1 + Din_reactor_hex1 + Dout_reactor_hex1 = 0
-_C468: Din_reactor_hex1 - 40 Psie_reactor_hex1 <= 0
-_C469: Dout_reactor_hex1 + 40 Psie_reactor_hex1 >= 40
-_C47: Wy_hex1_reactor + Wy_reactor_hex1 = 1
-_C470: Dout_reactor_hex1 + 1000 Psie_reactor_hex1 <= 1000
-_C471: 12775 Din_reactor_hex1 - 511000 Psie_reactor_hex1 + Ve2_reactor_hex1
- = 0
-_C472: - D_reactor_eoabs + Din_reactor_eoabs + Dout_reactor_eoabs = 0
-_C473: Din_reactor_eoabs - 40 Psie_reactor_eoabs <= 0
-_C474: Dout_reactor_eoabs + 40 Psie_reactor_eoabs >= 40
-_C475: Dout_reactor_eoabs + 1000 Psie_reactor_eoabs <= 1000
-_C476: 77675 Din_reactor_eoabs - 3107000 Psie_reactor_eoabs
- + Ve2_reactor_eoabs = 0
-_C477: - D_reactor_hex2 + Din_reactor_hex2 + Dout_reactor_hex2 = 0
-_C478: Din_reactor_hex2 - 40 Psie_reactor_hex2 <= 0
-_C479: Dout_reactor_hex2 + 40 Psie_reactor_hex2 >= 40
+_C479: TLC = 0
 _C48: CD_reactor_eoabs = 0
-_C480: Dout_reactor_hex2 + 1000 Psie_reactor_hex2 <= 1000
-_C481: 12600 Din_reactor_hex2 - 504000 Psie_reactor_hex2 + Ve2_reactor_hex2
+_C480: Ve2_reactor_reactor = 0
+_C481: - D_reactor_hex1 + Din_reactor_hex1 + Dout_reactor_hex1 = 0
+_C482: Din_reactor_hex1 - 40 Psie_reactor_hex1 <= 0
+_C483: Dout_reactor_hex1 + 40 Psie_reactor_hex1 >= 40
+_C484: Dout_reactor_hex1 + 1000 Psie_reactor_hex1 <= 1000
+_C485: 12775 Din_reactor_hex1 - 511000 Psie_reactor_hex1 + Ve2_reactor_hex1
  = 0
-_C482: - D_reactor_co2abs + Din_reactor_co2abs + Dout_reactor_co2abs = 0
-_C483: Din_reactor_co2abs - 40 Psie_reactor_co2abs <= 0
-_C484: Dout_reactor_co2abs + 40 Psie_reactor_co2abs >= 40
-_C485: Dout_reactor_co2abs + 1000 Psie_reactor_co2abs <= 1000
-_C486: 77032.5 Din_reactor_co2abs - 3081300 Psie_reactor_co2abs
- + Ve2_reactor_co2abs = 0
-_C487: - D_reactor_flash + Din_reactor_flash + Dout_reactor_flash = 0
-_C488: Din_reactor_flash - 40 Psie_reactor_flash <= 0
-_C489: Dout_reactor_flash + 40 Psie_reactor_flash >= 40
+_C486: - D_reactor_eoabs + Din_reactor_eoabs + Dout_reactor_eoabs = 0
+_C487: Din_reactor_eoabs - 40 Psie_reactor_eoabs <= 0
+_C488: Dout_reactor_eoabs + 40 Psie_reactor_eoabs >= 40
+_C489: Dout_reactor_eoabs + 1000 Psie_reactor_eoabs <= 1000
 _C49: - L_reactor_eoabs + R_reactor_eoabs + X_eoabs - X_reactor = 0
-_C490: Dout_reactor_flash + 1000 Psie_reactor_flash <= 1000
-_C491: 12625 Din_reactor_flash - 505000 Psie_reactor_flash + Ve2_reactor_flash
+_C490: 77675 Din_reactor_eoabs - 3107000 Psie_reactor_eoabs
+ + Ve2_reactor_eoabs = 0
+_C491: - D_reactor_hex2 + Din_reactor_hex2 + Dout_reactor_hex2 = 0
+_C492: Din_reactor_hex2 - 40 Psie_reactor_hex2 <= 0
+_C493: Dout_reactor_hex2 + 40 Psie_reactor_hex2 >= 40
+_C494: Dout_reactor_hex2 + 1000 Psie_reactor_hex2 <= 1000
+_C495: 12600 Din_reactor_hex2 - 504000 Psie_reactor_hex2 + Ve2_reactor_hex2
  = 0
-_C492: - D_reactor_pump + Din_reactor_pump + Dout_reactor_pump = 0
-_C493: Din_reactor_pump - 40 Psie_reactor_pump <= 0
-_C494: Dout_reactor_pump + 40 Psie_reactor_pump >= 40
-_C495: Dout_reactor_pump + 1000 Psie_reactor_pump <= 1000
-_C496: 12537.5 Din_reactor_pump - 501500 Psie_reactor_pump + Ve2_reactor_pump
- = 0
-_C497: - D_eoabs_reactor + Din_eoabs_reactor + Dout_eoabs_reactor = 0
-_C498: Din_eoabs_reactor - 21.8 Psie_eoabs_reactor <= 0
-_C499: Dout_eoabs_reactor + 21.8 Psie_eoabs_reactor >= 21.8
+_C496: - D_reactor_co2abs + Din_reactor_co2abs + Dout_reactor_co2abs = 0
+_C497: Din_reactor_co2abs - 40 Psie_reactor_co2abs <= 0
+_C498: Dout_reactor_co2abs + 40 Psie_reactor_co2abs >= 40
+_C499: Dout_reactor_co2abs + 1000 Psie_reactor_co2abs <= 1000
 _C5: 0 O_hex1 + l_hex1 = 11.42
 _C50: A_reactor_eoabs - B_reactor_eoabs + Y_eoabs - Y_reactor = 0
-_C500: Dout_eoabs_reactor + 1000 Psie_eoabs_reactor <= 1000
-_C501: 152981.651376 Din_eoabs_reactor - 3335000 Psie_eoabs_reactor
- + Ve2_eoabs_reactor = 0
-_C502: - D_eoabs_hex1 + Din_eoabs_hex1 + Dout_eoabs_hex1 = 0
-_C503: Din_eoabs_hex1 - 21.8 Psie_eoabs_hex1 <= 0
-_C504: Dout_eoabs_hex1 + 21.8 Psie_eoabs_hex1 >= 21.8
-_C505: Dout_eoabs_hex1 + 1000 Psie_eoabs_hex1 <= 1000
-_C506: 23440.3669725 Din_eoabs_hex1 - 511000 Psie_eoabs_hex1 + Ve2_eoabs_hex1
+_C500: 77032.5 Din_reactor_co2abs - 3081300 Psie_reactor_co2abs
+ + Ve2_reactor_co2abs = 0
+_C501: - D_reactor_flash + Din_reactor_flash + Dout_reactor_flash = 0
+_C502: Din_reactor_flash - 40 Psie_reactor_flash <= 0
+_C503: Dout_reactor_flash + 40 Psie_reactor_flash >= 40
+_C504: Dout_reactor_flash + 1000 Psie_reactor_flash <= 1000
+_C505: 12625 Din_reactor_flash - 505000 Psie_reactor_flash + Ve2_reactor_flash
  = 0
-_C507: Ve2_eoabs_eoabs = 0
-_C508: - D_eoabs_hex2 + Din_eoabs_hex2 + Dout_eoabs_hex2 = 0
-_C509: Din_eoabs_hex2 - 21.8 Psie_eoabs_hex2 <= 0
+_C506: - D_reactor_pump + Din_reactor_pump + Dout_reactor_pump = 0
+_C507: Din_reactor_pump - 40 Psie_reactor_pump <= 0
+_C508: Dout_reactor_pump + 40 Psie_reactor_pump >= 40
+_C509: Dout_reactor_pump + 1000 Psie_reactor_pump <= 1000
 _C51: R_reactor_eoabs - 1000 Wx_reactor_eoabs <= 0
-_C510: Dout_eoabs_hex2 + 21.8 Psie_eoabs_hex2 >= 21.8
-_C511: Dout_eoabs_hex2 + 1000 Psie_eoabs_hex2 <= 1000
-_C512: 23119.266055 Din_eoabs_hex2 - 504000 Psie_eoabs_hex2 + Ve2_eoabs_hex2
+_C510: 12537.5 Din_reactor_pump - 501500 Psie_reactor_pump + Ve2_reactor_pump
  = 0
-_C513: - D_eoabs_co2abs + Din_eoabs_co2abs + Dout_eoabs_co2abs = 0
-_C514: Din_eoabs_co2abs - 21.8 Psie_eoabs_co2abs <= 0
-_C515: Dout_eoabs_co2abs + 21.8 Psie_eoabs_co2abs >= 21.8
-_C516: Dout_eoabs_co2abs + 1000 Psie_eoabs_co2abs <= 1000
-_C517: 141344.036697 Din_eoabs_co2abs - 3081300 Psie_eoabs_co2abs
- + Ve2_eoabs_co2abs = 0
-_C518: - D_eoabs_flash + Din_eoabs_flash + Dout_eoabs_flash = 0
-_C519: Din_eoabs_flash - 21.8 Psie_eoabs_flash <= 0
+_C511: - D_eoabs_reactor + Din_eoabs_reactor + Dout_eoabs_reactor = 0
+_C512: Din_eoabs_reactor - 21.8 Psie_eoabs_reactor <= 0
+_C513: Dout_eoabs_reactor + 21.8 Psie_eoabs_reactor >= 21.8
+_C514: Dout_eoabs_reactor + 1000 Psie_eoabs_reactor <= 1000
+_C515: 152981.651376 Din_eoabs_reactor - 3335000 Psie_eoabs_reactor
+ + Ve2_eoabs_reactor = 0
+_C516: - D_eoabs_hex1 + Din_eoabs_hex1 + Dout_eoabs_hex1 = 0
+_C517: Din_eoabs_hex1 - 21.8 Psie_eoabs_hex1 <= 0
+_C518: Dout_eoabs_hex1 + 21.8 Psie_eoabs_hex1 >= 21.8
+_C519: Dout_eoabs_hex1 + 1000 Psie_eoabs_hex1 <= 1000
 _C52: L_reactor_eoabs + 1000 Wx_reactor_eoabs <= 1000
-_C520: Dout_eoabs_flash + 21.8 Psie_eoabs_flash >= 21.8
-_C521: Dout_eoabs_flash + 1000 Psie_eoabs_flash <= 1000
-_C522: 23165.1376147 Din_eoabs_flash - 505000 Psie_eoabs_flash
- + Ve2_eoabs_flash = 0
-_C523: - D_eoabs_pump + Din_eoabs_pump + Dout_eoabs_pump = 0
-_C524: Din_eoabs_pump - 21.8 Psie_eoabs_pump <= 0
-_C525: Dout_eoabs_pump + 21.8 Psie_eoabs_pump >= 21.8
-_C526: Dout_eoabs_pump + 1000 Psie_eoabs_pump <= 1000
-_C527: 23004.587156 Din_eoabs_pump - 501500 Psie_eoabs_pump + Ve2_eoabs_pump
+_C520: 23440.3669725 Din_eoabs_hex1 - 511000 Psie_eoabs_hex1 + Ve2_eoabs_hex1
  = 0
-_C528: - D_co2abs_reactor + Din_co2abs_reactor + Dout_co2abs_reactor = 0
-_C529: Din_co2abs_reactor - 18.06 Psie_co2abs_reactor <= 0
+_C521: Ve2_eoabs_eoabs = 0
+_C522: - D_eoabs_hex2 + Din_eoabs_hex2 + Dout_eoabs_hex2 = 0
+_C523: Din_eoabs_hex2 - 21.8 Psie_eoabs_hex2 <= 0
+_C524: Dout_eoabs_hex2 + 21.8 Psie_eoabs_hex2 >= 21.8
+_C525: Dout_eoabs_hex2 + 1000 Psie_eoabs_hex2 <= 1000
+_C526: 23119.266055 Din_eoabs_hex2 - 504000 Psie_eoabs_hex2 + Ve2_eoabs_hex2
+ = 0
+_C527: - D_eoabs_co2abs + Din_eoabs_co2abs + Dout_eoabs_co2abs = 0
+_C528: Din_eoabs_co2abs - 21.8 Psie_eoabs_co2abs <= 0
+_C529: Dout_eoabs_co2abs + 21.8 Psie_eoabs_co2abs >= 21.8
 _C53: A_reactor_eoabs - 1000 Wy_reactor_eoabs <= 0
-_C530: Dout_co2abs_reactor + 18.06 Psie_co2abs_reactor >= 18.06
-_C531: Dout_co2abs_reactor + 1000 Psie_co2abs_reactor <= 1000
-_C532: 184662.236988 Din_co2abs_reactor - 3335000 Psie_co2abs_reactor
- + Ve2_co2abs_reactor = 0
-_C533: - D_co2abs_hex1 + Din_co2abs_hex1 + Dout_co2abs_hex1 = 0
-_C534: Din_co2abs_hex1 - 18.06 Psie_co2abs_hex1 <= 0
-_C535: Dout_co2abs_hex1 + 18.06 Psie_co2abs_hex1 >= 18.06
-_C536: Dout_co2abs_hex1 + 1000 Psie_co2abs_hex1 <= 1000
-_C537: 28294.5736434 Din_co2abs_hex1 - 511000 Psie_co2abs_hex1
- + Ve2_co2abs_hex1 = 0
-_C538: - D_co2abs_eoabs + Din_co2abs_eoabs + Dout_co2abs_eoabs = 0
-_C539: Din_co2abs_eoabs - 18.06 Psie_co2abs_eoabs <= 0
+_C530: Dout_eoabs_co2abs + 1000 Psie_eoabs_co2abs <= 1000
+_C531: 141344.036697 Din_eoabs_co2abs - 3081300 Psie_eoabs_co2abs
+ + Ve2_eoabs_co2abs = 0
+_C532: - D_eoabs_flash + Din_eoabs_flash + Dout_eoabs_flash = 0
+_C533: Din_eoabs_flash - 21.8 Psie_eoabs_flash <= 0
+_C534: Dout_eoabs_flash + 21.8 Psie_eoabs_flash >= 21.8
+_C535: Dout_eoabs_flash + 1000 Psie_eoabs_flash <= 1000
+_C536: 23165.1376147 Din_eoabs_flash - 505000 Psie_eoabs_flash
+ + Ve2_eoabs_flash = 0
+_C537: - D_eoabs_pump + Din_eoabs_pump + Dout_eoabs_pump = 0
+_C538: Din_eoabs_pump - 21.8 Psie_eoabs_pump <= 0
+_C539: Dout_eoabs_pump + 21.8 Psie_eoabs_pump >= 21.8
 _C54: B_reactor_eoabs + 1000 Wy_reactor_eoabs <= 1000
-_C540: Dout_co2abs_eoabs + 18.06 Psie_co2abs_eoabs >= 18.06
-_C541: Dout_co2abs_eoabs + 1000 Psie_co2abs_eoabs <= 1000
-_C542: 172037.65227 Din_co2abs_eoabs - 3107000 Psie_co2abs_eoabs
- + Ve2_co2abs_eoabs = 0
-_C543: - D_co2abs_hex2 + Din_co2abs_hex2 + Dout_co2abs_hex2 = 0
-_C544: Din_co2abs_hex2 - 18.06 Psie_co2abs_hex2 <= 0
-_C545: Dout_co2abs_hex2 + 18.06 Psie_co2abs_hex2 >= 18.06
-_C546: Dout_co2abs_hex2 + 1000 Psie_co2abs_hex2 <= 1000
-_C547: 27906.9767442 Din_co2abs_hex2 - 504000 Psie_co2abs_hex2
- + Ve2_co2abs_hex2 = 0
-_C548: Ve2_co2abs_co2abs = 0
-_C549: - D_co2abs_flash + Din_co2abs_flash + Dout_co2abs_flash = 0
+_C540: Dout_eoabs_pump + 1000 Psie_eoabs_pump <= 1000
+_C541: 23004.587156 Din_eoabs_pump - 501500 Psie_eoabs_pump + Ve2_eoabs_pump
+ = 0
+_C542: - D_co2abs_reactor + Din_co2abs_reactor + Dout_co2abs_reactor = 0
+_C543: Din_co2abs_reactor - 18.06 Psie_co2abs_reactor <= 0
+_C544: Dout_co2abs_reactor + 18.06 Psie_co2abs_reactor >= 18.06
+_C545: Dout_co2abs_reactor + 1000 Psie_co2abs_reactor <= 1000
+_C546: 184662.236988 Din_co2abs_reactor - 3335000 Psie_co2abs_reactor
+ + Ve2_co2abs_reactor = 0
+_C547: - D_co2abs_hex1 + Din_co2abs_hex1 + Dout_co2abs_hex1 = 0
+_C548: Din_co2abs_hex1 - 18.06 Psie_co2abs_hex1 <= 0
+_C549: Dout_co2abs_hex1 + 18.06 Psie_co2abs_hex1 >= 18.06
 _C55: - A_reactor_eoabs - B_reactor_eoabs + D_reactor_eoabs - L_reactor_eoabs
  - R_reactor_eoabs = 0
-_C550: Din_co2abs_flash - 18.06 Psie_co2abs_flash <= 0
-_C551: Dout_co2abs_flash + 18.06 Psie_co2abs_flash >= 18.06
-_C552: Dout_co2abs_flash + 1000 Psie_co2abs_flash <= 1000
-_C553: 27962.3477298 Din_co2abs_flash - 505000 Psie_co2abs_flash
- + Ve2_co2abs_flash = 0
-_C554: - D_co2abs_pump + Din_co2abs_pump + Dout_co2abs_pump = 0
-_C555: Din_co2abs_pump - 18.06 Psie_co2abs_pump <= 0
-_C556: Dout_co2abs_pump + 18.06 Psie_co2abs_pump >= 18.06
-_C557: Dout_co2abs_pump + 1000 Psie_co2abs_pump <= 1000
-_C558: 27768.5492802 Din_co2abs_pump - 501500 Psie_co2abs_pump
- + Ve2_co2abs_pump = 0
-_C559: - Ve2_reactor_co2abs - Ve2_reactor_eoabs - Ve2_reactor_flash
- - Ve2_reactor_hex1 - Ve2_reactor_hex2 - Ve2_reactor_pump
- - Ve2_reactor_reactor + Ve_reactor = 3335000
+_C550: Dout_co2abs_hex1 + 1000 Psie_co2abs_hex1 <= 1000
+_C551: 28294.5736434 Din_co2abs_hex1 - 511000 Psie_co2abs_hex1
+ + Ve2_co2abs_hex1 = 0
+_C552: - D_co2abs_eoabs + Din_co2abs_eoabs + Dout_co2abs_eoabs = 0
+_C553: Din_co2abs_eoabs - 18.06 Psie_co2abs_eoabs <= 0
+_C554: Dout_co2abs_eoabs + 18.06 Psie_co2abs_eoabs >= 18.06
+_C555: Dout_co2abs_eoabs + 1000 Psie_co2abs_eoabs <= 1000
+_C556: 172037.65227 Din_co2abs_eoabs - 3107000 Psie_co2abs_eoabs
+ + Ve2_co2abs_eoabs = 0
+_C557: - D_co2abs_hex2 + Din_co2abs_hex2 + Dout_co2abs_hex2 = 0
+_C558: Din_co2abs_hex2 - 18.06 Psie_co2abs_hex2 <= 0
+_C559: Dout_co2abs_hex2 + 18.06 Psie_co2abs_hex2 >= 18.06
 _C56: - D_eoabs_reactor + D_reactor_eoabs = 0
-_C560: Omega0_reactor - 0.87 Ve_reactor = 0
-_C561: - Ve2_eoabs_co2abs - Ve2_eoabs_eoabs - Ve2_eoabs_flash - Ve2_eoabs_hex1
- - Ve2_eoabs_hex2 - Ve2_eoabs_pump - Ve2_eoabs_reactor + Ve_eoabs = 3107000
-_C562: Omega0_eoabs - 0.73 Ve_eoabs = 0
-_C563: - Ve2_co2abs_co2abs - Ve2_co2abs_eoabs - Ve2_co2abs_flash
- - Ve2_co2abs_hex1 - Ve2_co2abs_hex2 - Ve2_co2abs_pump - Ve2_co2abs_reactor
- + Ve_co2abs = 3081300
-_C564: Omega0_co2abs - 0.66 Ve_co2abs = 0
-_C565: - 100000000 Z_reactor_1 + linOmega0_reactor_1 <= 0
-_C566: - 100000000 Z_reactor_2 + linOmega0_reactor_2 <= 0
-_C567: - 100000000 Z_reactor_3 + linOmega0_reactor_3 <= 0
-_C568: - 100000000 Z_reactor_4 + linOmega0_reactor_4 <= 0
-_C569: - 100000000 Z_reactor_5 + linOmega0_reactor_5 <= 0
+_C560: Dout_co2abs_hex2 + 1000 Psie_co2abs_hex2 <= 1000
+_C561: 27906.9767442 Din_co2abs_hex2 - 504000 Psie_co2abs_hex2
+ + Ve2_co2abs_hex2 = 0
+_C562: Ve2_co2abs_co2abs = 0
+_C563: - D_co2abs_flash + Din_co2abs_flash + Dout_co2abs_flash = 0
+_C564: Din_co2abs_flash - 18.06 Psie_co2abs_flash <= 0
+_C565: Dout_co2abs_flash + 18.06 Psie_co2abs_flash >= 18.06
+_C566: Dout_co2abs_flash + 1000 Psie_co2abs_flash <= 1000
+_C567: 27962.3477298 Din_co2abs_flash - 505000 Psie_co2abs_flash
+ + Ve2_co2abs_flash = 0
+_C568: - D_co2abs_pump + Din_co2abs_pump + Dout_co2abs_pump = 0
+_C569: Din_co2abs_pump - 18.06 Psie_co2abs_pump <= 0
 _C57: 1000 E1_reactor_eoabs + 1000 E2_reactor_eoabs - X_eoabs + X_reactor
  - 0.5 l_eoabs - 0.5 l_reactor >= 0
-_C570: - 100000000 Z_reactor_6 + linOmega0_reactor_6 <= 0
-_C571: - 100000000 Z_eoabs_1 + linOmega0_eoabs_1 <= 0
-_C572: - 100000000 Z_eoabs_2 + linOmega0_eoabs_2 <= 0
-_C573: - 100000000 Z_eoabs_3 + linOmega0_eoabs_3 <= 0
-_C574: - 100000000 Z_eoabs_4 + linOmega0_eoabs_4 <= 0
-_C575: - 100000000 Z_eoabs_5 + linOmega0_eoabs_5 <= 0
-_C576: - 100000000 Z_eoabs_6 + linOmega0_eoabs_6 <= 0
-_C577: - 100000000 Z_co2abs_1 + linOmega0_co2abs_1 <= 0
-_C578: - 100000000 Z_co2abs_2 + linOmega0_co2abs_2 <= 0
-_C579: - 100000000 Z_co2abs_3 + linOmega0_co2abs_3 <= 0
+_C570: Dout_co2abs_pump + 18.06 Psie_co2abs_pump >= 18.06
+_C571: Dout_co2abs_pump + 1000 Psie_co2abs_pump <= 1000
+_C572: 27768.5492802 Din_co2abs_pump - 501500 Psie_co2abs_pump
+ + Ve2_co2abs_pump = 0
+_C573: - Ve2_reactor_co2abs - Ve2_reactor_eoabs - Ve2_reactor_flash
+ - Ve2_reactor_hex1 - Ve2_reactor_hex2 - Ve2_reactor_pump
+ - Ve2_reactor_reactor + Ve_reactor = 3335000
+_C574: Omega0_reactor - 0.87 Ve_reactor = 0
+_C575: - Ve2_eoabs_co2abs - Ve2_eoabs_eoabs - Ve2_eoabs_flash - Ve2_eoabs_hex1
+ - Ve2_eoabs_hex2 - Ve2_eoabs_pump - Ve2_eoabs_reactor + Ve_eoabs = 3107000
+_C576: Omega0_eoabs - 0.73 Ve_eoabs = 0
+_C577: - Ve2_co2abs_co2abs - Ve2_co2abs_eoabs - Ve2_co2abs_flash
+ - Ve2_co2abs_hex1 - Ve2_co2abs_hex2 - Ve2_co2abs_pump - Ve2_co2abs_reactor
+ + Ve_co2abs = 3081300
+_C578: Omega0_co2abs - 0.66 Ve_co2abs = 0
+_C579: - 100000000 Z_reactor_1 + linOmega0_reactor_1 <= 0
 _C58: - 1000 E1_reactor_eoabs + 1000 E2_reactor_eoabs + X_eoabs - X_reactor
  - 0.5 l_eoabs - 0.5 l_reactor >= -1000
-_C580: - 100000000 Z_co2abs_4 + linOmega0_co2abs_4 <= 0
-_C581: - 100000000 Z_co2abs_5 + linOmega0_co2abs_5 <= 0
-_C582: - 100000000 Z_co2abs_6 + linOmega0_co2abs_6 <= 0
-_C583: Z_reactor_1 + Z_reactor_2 + Z_reactor_3 + Z_reactor_4 + Z_reactor_5
- + Z_reactor_6 = 1
-_C584: Omega0_reactor - linOmega0_reactor_1 - linOmega0_reactor_2
- - linOmega0_reactor_3 - linOmega0_reactor_4 - linOmega0_reactor_5
- - linOmega0_reactor_6 = 0
-_C585: Omega_reactor - linOmega0_reactor_1 - 0.9 linOmega0_reactor_2
- - 0.75 linOmega0_reactor_3 - 0.365 linOmega0_reactor_4
- - 0.292 linOmega0_reactor_5 - 0.117 linOmega0_reactor_6 = 0
-_C586: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
-_C587: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
-_C588: Z_eoabs_1 + Z_eoabs_2 + Z_eoabs_3 + Z_eoabs_4 + Z_eoabs_5 + Z_eoabs_6
- = 1
-_C589: Omega0_eoabs - linOmega0_eoabs_1 - linOmega0_eoabs_2
- - linOmega0_eoabs_3 - linOmega0_eoabs_4 - linOmega0_eoabs_5
- - linOmega0_eoabs_6 = 0
+_C580: - 100000000 Z_reactor_2 + linOmega0_reactor_2 <= 0
+_C581: - 100000000 Z_reactor_3 + linOmega0_reactor_3 <= 0
+_C582: - 100000000 Z_reactor_4 + linOmega0_reactor_4 <= 0
+_C583: - 100000000 Z_reactor_5 + linOmega0_reactor_5 <= 0
+_C584: - 100000000 Z_reactor_6 + linOmega0_reactor_6 <= 0
+_C585: - 100000000 Z_eoabs_1 + linOmega0_eoabs_1 <= 0
+_C586: - 100000000 Z_eoabs_2 + linOmega0_eoabs_2 <= 0
+_C587: - 100000000 Z_eoabs_3 + linOmega0_eoabs_3 <= 0
+_C588: - 100000000 Z_eoabs_4 + linOmega0_eoabs_4 <= 0
+_C589: - 100000000 Z_eoabs_5 + linOmega0_eoabs_5 <= 0
 _C59: 1000 E1_reactor_eoabs - 1000 E2_reactor_eoabs - Y_eoabs + Y_reactor
  - 0.5 d_eoabs - 0.5 d_reactor >= -1000
-_C590: Omega_eoabs - linOmega0_eoabs_1 - 0.9 linOmega0_eoabs_2
- - 0.76 linOmega0_eoabs_3 - 0.684 linOmega0_eoabs_4 - 0.612 linOmega0_eoabs_5
- - 0.465 linOmega0_eoabs_6 = 0
-_C591: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
-_C592: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
-_C593: Z_co2abs_1 + Z_co2abs_2 + Z_co2abs_3 + Z_co2abs_4 + Z_co2abs_5
- + Z_co2abs_6 = 1
-_C594: Omega0_co2abs - linOmega0_co2abs_1 - linOmega0_co2abs_2
- - linOmega0_co2abs_3 - linOmega0_co2abs_4 - linOmega0_co2abs_5
- - linOmega0_co2abs_6 = 0
-_C595: Omega_co2abs - linOmega0_co2abs_1 - 0.9 linOmega0_co2abs_2
- - 0.76 linOmega0_co2abs_3 - 0.684 linOmega0_co2abs_4
- - 0.612 linOmega0_co2abs_5 - 0.465 linOmega0_co2abs_6 = 0
-_C596: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
-_C597: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
+_C590: - 100000000 Z_eoabs_6 + linOmega0_eoabs_6 <= 0
+_C591: - 100000000 Z_co2abs_1 + linOmega0_co2abs_1 <= 0
+_C592: - 100000000 Z_co2abs_2 + linOmega0_co2abs_2 <= 0
+_C593: - 100000000 Z_co2abs_3 + linOmega0_co2abs_3 <= 0
+_C594: - 100000000 Z_co2abs_4 + linOmega0_co2abs_4 <= 0
+_C595: - 100000000 Z_co2abs_5 + linOmega0_co2abs_5 <= 0
+_C596: - 100000000 Z_co2abs_6 + linOmega0_co2abs_6 <= 0
+_C597: Z_reactor_1 + Z_reactor_2 + Z_reactor_3 + Z_reactor_4 + Z_reactor_5
+ + Z_reactor_6 = 1
+_C598: Omega0_reactor - linOmega0_reactor_1 - linOmega0_reactor_2
+ - linOmega0_reactor_3 - linOmega0_reactor_4 - linOmega0_reactor_5
+ - linOmega0_reactor_6 = 0
+_C599: Omega_reactor - linOmega0_reactor_1 - 0.9 linOmega0_reactor_2
+ - 0.75 linOmega0_reactor_3 - 0.365 linOmega0_reactor_4
+ - 0.292 linOmega0_reactor_5 - 0.117 linOmega0_reactor_6 = 0
 _C6: d_hex1 + l_hex1 = 22.84
 _C60: - 1000 E1_reactor_eoabs - 1000 E2_reactor_eoabs + Y_eoabs - Y_reactor
  - 0.5 d_eoabs - 0.5 d_reactor >= -2000
+_C600: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
+_C601: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
+ - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
+ - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
+ - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
+ - 125000 Z_reactor_6 = 0
+_C602: Z_eoabs_1 + Z_eoabs_2 + Z_eoabs_3 + Z_eoabs_4 + Z_eoabs_5 + Z_eoabs_6
+ = 1
+_C603: Omega0_eoabs - linOmega0_eoabs_1 - linOmega0_eoabs_2
+ - linOmega0_eoabs_3 - linOmega0_eoabs_4 - linOmega0_eoabs_5
+ - linOmega0_eoabs_6 = 0
+_C604: Omega_eoabs - linOmega0_eoabs_1 - 0.9 linOmega0_eoabs_2
+ - 0.76 linOmega0_eoabs_3 - 0.684 linOmega0_eoabs_4 - 0.612 linOmega0_eoabs_5
+ - 0.465 linOmega0_eoabs_6 = 0
+_C605: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
+_C606: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
+ - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
+ - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
+ - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
+ - 125000 Z_reactor_6 = 0
+_C607: Z_co2abs_1 + Z_co2abs_2 + Z_co2abs_3 + Z_co2abs_4 + Z_co2abs_5
+ + Z_co2abs_6 = 1
+_C608: Omega0_co2abs - linOmega0_co2abs_1 - linOmega0_co2abs_2
+ - linOmega0_co2abs_3 - linOmega0_co2abs_4 - linOmega0_co2abs_5
+ - linOmega0_co2abs_6 = 0
+_C609: Omega_co2abs - linOmega0_co2abs_1 - 0.9 linOmega0_co2abs_2
+ - 0.76 linOmega0_co2abs_3 - 0.684 linOmega0_co2abs_4
+ - 0.612 linOmega0_co2abs_5 - 0.465 linOmega0_co2abs_6 = 0
 _C61: L_reactor_eoabs - R_eoabs_reactor = 0
+_C610: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
+_C611: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
+ - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
+ - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
+ - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
+ - 125000 Z_reactor_6 = 0
 _C62: - L_eoabs_reactor + R_reactor_eoabs = 0
 _C63: A_reactor_eoabs - B_eoabs_reactor = 0
 _C64: - A_eoabs_reactor + B_reactor_eoabs = 0
