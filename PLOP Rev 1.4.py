@@ -101,6 +101,7 @@ M = 1e3
 
 #pentagon layout:
 Ng = 25
+
 X1 = 12.5
 X2 = 25
 Y1 = 40
@@ -108,8 +109,10 @@ Y2 = 30
 X3 = 0
 Y3 = 30
 grad1 = (Y1-Y2)/(X1-X2)
+absgrad1 = abs(grad1)
 colin1 = Y1 - grad1*X1 
 grad2 = (Y1-Y3)/(X1-X3)
+absgrad2 = abs(grad2)
 colin2 = Y1 - grad2*X1 
 
 
@@ -162,7 +165,7 @@ C = makeDict([units,units],C,0)
 #%% Land use model
 if SwitchLandUse == 1:
     # Land cost (per unit distance squared)
-    LC = 3e3
+    LC = 3e1
     # Number of grid points in square plot
     N = 20
     # Length of one grid side of a square (m)
@@ -173,8 +176,8 @@ if SwitchLandUse == 1:
 
 else:
     # Maximum plot size if land use model not switched on
-    xmax = 1000
-    ymax = 1000
+    xmax = 40
+    ymax = 40
 
 #%% ----------F&EI model parameter input-----------
 # Operating condidions
@@ -626,22 +629,23 @@ if SwitchLandUse == 1:
 
     for i in units:
         # Land area approximation constraints for square plot (24 - 25)
-        # layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-        # layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+        layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+        layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
         # halfdepth  = y[i] + 0.5*d[i]
         # halflength = x[i] + 0.5*l[i]
-        layout += x[i] + 0.5*l[i] <= N*g
-        layout += y[i] + 0.5*d[i] <= N*g
+        # layout += x[i] + 0.5*l[i] <= N*g
+        # layout += y[i] + 0.5*d[i] <= N*g
         #Trapezium constraint:
         # layout += y[i] + 0.5*d[i] <= grad*(x[i] + l[i]) + colin
         
         
         #pentagon constraint: # no half so that no part of the unit is outside constraint
         ##need to account for the top corner, imagine sliding triangle along line connected to unit
-        layout += y[i] + 0.5*d[i] - l[i]*grad1  <= grad1*(x[i]) + colin1
-        layout += y[i] + 0.5*d[i]  + l[i]*grad2 <= grad2*(x[i]) + colin2
-        layout += x[i] + 0.5*l[i] - d[i]*1/grad1  <= (y[i] - colin1)*1/grad1
-        layout += x[i] + 0.5*l[i]  + d[i]*1/grad2 >= (y[i] - colin2)*1/grad2
+        layout += y[i] + 0.5*d[i] + l[i]*absgrad1/2  <= grad1*(x[i]) + colin1
+        layout += y[i] + 0.5*d[i]  + l[i]*absgrad2/2 <= grad2*(x[i]) + colin2
+        # layout += x[i] + 0.5*l[i] - d[i]*1/grad1  <= (y[i] - colin1)*1/grad1
+        # layout += x[i] + 0.5*l[i]  + d[i]*1/grad2 >= (y[i] - colin2)*1/grad2
+        
         layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
         # # if y[i] - 0.5*d[i] >= 0 and y[i] - 0.5*d[i] <= 10 :
         #     layout += x[i] - 0.5*l[i] >=10
@@ -664,10 +668,15 @@ if SwitchLandUse == 1:
     layout += lpSum(Gn[n] for n in range(1,N)) == 1
 
     # Objective function contribution for land use model
-    layout += TLC == LC*lpSum(Gn[n]*(n*g)**2 for n in range(1,N))
+    # layout += TLC == LC*lpSum(Gn[n]*(n*g)**2 for n in range(1,N))
+    layout += TLC == 0
 else:
     layout += x[i] + 0.5*l[i] <= xmax
     layout += y[i] + 0.5*d[i] <= ymax
+    
+    layout += y[i] + 0.5*d[i] - l[i]*grad1  <= grad1*(x[i]) + colin1
+    layout += y[i] + 0.5*d[i]  + l[i]*grad2 <= grad2*(x[i]) + colin2
+    
     TLC = 0
 
 # F&EI Constraints
