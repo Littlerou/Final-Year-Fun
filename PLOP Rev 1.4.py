@@ -56,7 +56,7 @@ solver = 1
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
 # Land Use Constraints
-SwitchLandUse = 0
+SwitchLandShape = 1
 
 # FEI Constraints
 SwitchFEI = 1
@@ -90,27 +90,56 @@ Nunits = len(units)
 # It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
 M = 1e3
 
-# Trapezium layout:X1,Y1,X2,Y2 refer to end points 
-# Ng = 30
-# X1 = 15
-# X2 = 30
-# Y1 = 30
-# Y2 = 0
-# grad = (Y1-Y2)/(X1-X2)
-# colin = Y1 - grad*X1 
+# X_begin = np.array([0,12.5,25,30,30])
+# X_end = np.array([12.5,25,30,30,0])
+# Ng = max(X_end)
+# XDiff = X_end - X_begin
 
-#pentagon layout:
-X_begin = np.array([0,12.5,25,30,20,0.1])
-X_end = np.array([12.5,25,30,20,0.1,0])
+# Y_begin = np.array([30,40,30,20,0])
+# Y_end = np.array([40,30,20,0,0])
+
+#polygon layout:
+
+X_begin = np.array([0,0,7,30])
+X_end = np.array([0,7,30,15])
+Ng = max(X_end)
 XDiff = X_end - X_begin
-XDiff_norm = np.array([])
 
-Y_begin = np.array([30,40,30,20,0,0])
-Y_end = np.array([40,30,20,0,0,0])
+Y_begin = np.array([0,10,35,20])
+Y_end = np.array([10,35,20,0])
 YDiff = Y_end - Y_begin
 
-Ng = max(X_end)
+#for plotting:
+X_beginplot = list(X_begin)
+X_endplot = list(X_end)
+Y_beginplot = list(Y_begin)
+Y_endplot = list(Y_end)
+idx_0 = -1
 
+#check for convex shape or not
+
+#check for vertical lines
+for i in XDiff:
+    if i == 0:
+        X_begin = list(X_begin)
+        X_end = list(X_end)
+        XDiff = list(XDiff)
+        Y_begin = list(Y_begin)
+        Y_end = list(Y_end)
+        idx_0 = XDiff.index(i)   
+        X_begin.remove(X_begin[idx_0])
+        X_end.remove(X_end[idx_0])
+        Y_begin.remove(Y_begin[idx_0])
+        Y_end.remove(Y_end[idx_0])
+        X_begin = np.asarray(X_begin)
+        X_end = np.asarray(X_end)
+        XDiff = np.asarray(XDiff)
+        Y_begin = np.asarray(Y_begin)
+        Y_end = np.asarray(Y_end)
+
+      
+XDiff = X_end - X_begin
+YDiff = Y_end - Y_begin
 grad = YDiff/XDiff
 absgrad = abs(grad)
 colin = Y_begin - (grad * X_begin)
@@ -169,22 +198,11 @@ C = C + C.T - np.diag(C.diagonal()) #
 # Cost data is made into a dictionary
 C = makeDict([units,units],C,0)
 
-#%% Land use model
-if SwitchLandUse == 1:
-    # Land cost (per unit distance squared)
-    LC = 3e1
-    # Number of grid points in square plot
-    N = 20
-    # Length of one grid side of a square (m)
-    g = 2
-    # Define the set for binary variable Gn
-    gridsize = list(range(1,N))
-    
-
-else:
-    # Maximum plot size if land use model not switched on
+#%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
+if SwitchLandShape == 0: #sets default max available plot area.
     xmax = 40
     ymax = 40
+
 
 #%% ----------F&EI model parameter input-----------
 # Operating condidions
@@ -505,14 +523,6 @@ CD = LpVariable.dicts("CD",(units,units),lowBound=0,upBound=None,cat="Continuous
 # Total connection cost
 SumCD = LpVariable("SumCD",lowBound=0,upBound=None,cat="Continuous")
 
-if SwitchLandUse == 1:
-    # N binary variables representing plot grid
-    Gn = LpVariable.dicts("Gn",(gridsize),lowBound=0,upBound=1,cat="Integer")
-    # Total land cost
-    TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
-else:
-    TLC=0
-
 
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
@@ -568,32 +578,18 @@ if SwitchCEI == 1:
 SumVlc = LpVariable("SumVlc",lowBound=0,upBound=None,cat="Continuous")
 
 #%% --------------Define Objective Function--------------
-# if SwitchFEI == 1 and SwitchProt == 1 and SwitchLandUse == 1:
-#     layout += SumCD + TLC + SumOmega + SumPZ
-# elif SwitchFEI == 1 and SwitchProt == 1 and SwitchLandUse == 0:
-#     layout += SumCD + SumOmega + SumPZ
-# elif SwitchFEI == 1 and SwitchProt == 0 and SwitchLandUse == 0:
-#     layout += SumCD + SumOmega
-# elif SwitchFEI == 1 and SwitchProt == 0 and SwitchLandUse == 1:
-#     layout += SumCD + TLC + SumOmega
-# else:
-#     layout += SumCD
 
-# layout += SumCD + SumOmega + SumPZ + SumVlc + TLC
-
-# commented out as it is currently under review
 obj_sumOmega = SwitchFEI*SumOmega
 obj_PZ = SwitchProt*SumPZ
 # obj_Vle = SwitchFEIVle*SumVle
-obj_TLC = SwitchLandUse*TLC
 obj_Vlc = SwitchCEI*SumVlc
 obj_CD = SumCD
-layout += obj_CD + obj_sumOmega + obj_PZ + obj_TLC + obj_Vlc
+layout += obj_CD + obj_sumOmega + obj_PZ + obj_Vlc
 
 
 
 #%% --------------Define Constraints and Objective Function Contributions--------------
-# Base model constraints for all units i
+#%% Base model constraints for all units i
 for i in units:
     # Orientation constraints (1 - 2)
     layout += l[i] == alpha[i]*O[i] + beta[i]*(1 - O[i])
@@ -631,55 +627,26 @@ for idxj, j in enumerate(units):
 # Objective function contribution for base model
 layout += SumCD == lpSum([CD[i][j] for i in units for j in units])
 
-# Land use constraints (or set max plot size if not used)
-if SwitchLandUse == 1:
+#%% Land use constraints (or set max plot size if not used)
+if SwitchLandShape == 1:
 
     for i in units:
-        # Land area approximation constraints for square plot (24 - 25)
-        # layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-        # layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-        # halfdepth  = y[i] + 0.5*d[i]
-        # halflength = x[i] + 0.5*l[i]
-        layout += x[i] + 0.5*l[i] <= N*g
-        layout += y[i] + 0.5*d[i] <= N*g
-        #Trapezium constraint:
-        # layout += y[i] + 0.5*d[i] <= grad*(x[i] + l[i]) + colin
-        
-        
         #pentagon constraint: # no half so that no part of the unit is outside constraint
         ##need to account for the top corner, imagine sliding triangle along line connected to unit
         for archit in colin:
-           if archit > 0:
+           if archit >= 0:
                layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(archit)]/2 <= grad[colin.index(archit)]*x[i] + archit
            elif archit < 0:
                layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(archit)]/2 >= grad[colin.index(archit)]*x[i] + archit
-        layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
         
-        # for rectangular plot
-        # layout += x[i] + 0.5*l[i] <= lpSum(n1*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
-        # layout += y[i] + 0.5*d[i] <= lpSum(n2*g*Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1,N2))
-
-    # Only 1 grid size selected (23)
-    layout += lpSum(Gn[n] for n in range(1,N)) == 1
-
-    # Objective function contribution for land use model
-    # layout += TLC == LC*lpSum(Gn[n]*(n*g)**2 for n in range(1,N))
-    layout += TLC == 0
+        layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
+               
 else:
     for i in units:
         layout += x[i] + 0.5*l[i] <= xmax
         layout += y[i] + 0.5*d[i] <= ymax
         
-        for archit in colin:
-            if archit > 0:
-                layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(archit)]/2 <= grad[colin.index(archit)]*x[i] + archit
-            elif archit < 0:
-                layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(archit)]/2 >= grad[colin.index(archit)]*x[i] + archit
-        
-        layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
-    
-
-# F&EI Constraints
+#%% F&EI Constraints
 if SwitchFEI == 1:
     # for all i in pertinent units, j in units, j != i
     for i in units:
@@ -715,7 +682,7 @@ if SwitchFEI == 1:
 
 #    if SwitchFEIVle == 1:
 #       for i in units:
-#            if i in pertinent_units:
+#            if i in pertinent_units: 
 #                for j in units:
 #                    if i != j:
 #                        layout += Vle2[i][j] == OCC[j]*Cl[j]*Psie[i][j]
@@ -756,7 +723,7 @@ if SwitchFEI == 1:
         layout += SumOmega == lpSum(Omega0[i] for i in pertinent_units)
 
 
-# CEI Equations
+#%% CEI Equations
 # All commented out while under review - appears to use same Din and Dout as FEI which is not right - separate case
 # Unused CEI constraints
 # for i in units:
@@ -875,11 +842,7 @@ print("Status: ", LpStatus[layout.status])
 for v in layout.variables():
     print(v.name, "=", v.varValue)
 print("Total cost of connections =", SumCD.varValue)
-if SwitchLandUse == 1:
-    for n in range(1, N):
-        if Gn[n].varValue == 1:
-            print("Size of land area =", n*g, "metres square")
-    print("Total cost of land =", TLC.varValue)
+
 if SwitchFEI == 1:
     print("Total actual MPPD =", SumOmega.varValue)
 if SwitchProt == 1:
@@ -927,15 +890,19 @@ for i in units:
 fig, ax = plt.subplots()
 ax.scatter(xpos,ypos,alpha=0)
 #### LINE THING IS X1,X2 AND Y1,Y2 WTF
-#Trapezium:
-# line = plt.Line2D((X1, X2), (Y1, Y2), lw=1.5)
-# plt.gca().add_line(line)
-# line2 = plt.Line2D((0, Ng), (Ng, Ng), lw=1.5)
-# plt.gca().add_line(line2)
 
 #Pentagon:
-for archit in X_begin:
-    line = plt.Line2D((archit, X_end[X_begin.index(archit)]), (Y_begin[X_begin.index(archit)], Y_end[X_begin.index(archit)]), lw = 1.5)
+if SwitchLandShape == 1:
+    for archit in X_begin:
+        line = plt.Line2D((archit, X_end[X_begin.index(archit)]), (Y_begin[X_begin.index(archit)], Y_end[X_begin.index(archit)]), lw = 1.5)
+        plt.gca().add_line(line)
+    if idx_0 != -1  :      
+        line = plt.Line2D((X_beginplot[idx_0], X_endplot[idx_0]), (Y_beginplot[idx_0], Y_endplot[idx_0]), lw = 1.5)
+        plt.gca().add_line(line)
+else:
+    line = plt.Line2D((0, xmax), (ymax,ymax))
+    plt.gca().add_line(line)
+    line = plt.Line2D((xmax, xmax), (0, ymax))
     plt.gca().add_line(line)
     
 # Set bounds of axis
