@@ -100,13 +100,14 @@ M = 1e3
 
 #polygon layout:
 
-X_begin = np.array([0,0,7,30])
-X_end = np.array([0,7,30,15])
+X_begin = np.array([0,0,15,30,30])
+X_end = np.array([0,15,30,30,1])
 Ng = max(X_end)
+Nl = min(X_begin)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,10,35,20])
-Y_end = np.array([10,35,20,0])
+Y_begin = np.array([0,21,35,21,0.1])
+Y_end = np.array([21,35,21,0.1,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -114,32 +115,36 @@ X_beginplot = list(X_begin)
 X_endplot = list(X_end)
 Y_beginplot = list(Y_begin)
 Y_endplot = list(Y_end)
-idx_0 = -1
 
 #check for convex shape or not
 
 #check for vertical lines
-for i in XDiff:
-    if i == 0:
-        X_begin = list(X_begin)
-        X_end = list(X_end)
-        XDiff = list(XDiff)
-        Y_begin = list(Y_begin)
-        Y_end = list(Y_end)
-        idx_0 = XDiff.index(i)   
-        X_begin.remove(X_begin[idx_0])
-        X_end.remove(X_end[idx_0])
-        Y_begin.remove(Y_begin[idx_0])
-        Y_end.remove(Y_end[idx_0])
-        X_begin = np.asarray(X_begin)
-        X_end = np.asarray(X_end)
-        XDiff = np.asarray(XDiff)
-        Y_begin = np.asarray(Y_begin)
-        Y_end = np.asarray(Y_end)
+grad0_list = list(reversed(list(np.where(XDiff==0) [0])))
 
-      
+if len(grad0_list)>0:
+    X_begin = list(X_begin)
+    X_end = list(X_end)
+    Y_begin = list(Y_begin)
+    Y_end = list(Y_end)
+    
+    for i in grad0_list:
+        del X_begin[i]
+        del X_end[i]
+        del Y_begin[i]
+        del Y_end[i]
+        
+        # X_begin.remove(X_begin[i])
+        # X_end.remove(X_end[i])
+        # Y_begin.remove(Y_begin[i])
+        # Y_end.remove(Y_end[i])
+    
+    X_begin = np.asarray(X_begin)
+    X_end = np.asarray(X_end)
+    Y_begin = np.asarray(Y_begin)
+    Y_end = np.asarray(Y_end)
+
 XDiff = X_end - X_begin
-YDiff = Y_end - Y_begin
+YDiff = Y_end - Y_begin      
 grad = YDiff/XDiff
 absgrad = abs(grad)
 colin = Y_begin - (grad * X_begin)
@@ -762,11 +767,11 @@ if SwitchLandShape == 1:
     for i in units:
         #pentagon constraint: # no half so that no part of the unit is outside constraint
         ##need to account for the top corner, imagine sliding triangle along line connected to unit
-        for archit in colin:
-           if archit >= 0:
-               layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(archit)]/2 <= grad[colin.index(archit)]*x[i] + archit
-           elif archit < 0:
-               layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(archit)]/2 >= grad[colin.index(archit)]*x[i] + archit
+        for k in colin:
+           if k > 0:
+               layout += y[i] + 0.5*d[i] + l[i]*absgrad[colin.index(k)]/2 <= grad[colin.index(k)]*x[i] + k
+           elif k <= 0:
+               layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(k)]/2 >= grad[colin.index(k)]*x[i] + k
         
         layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
                
@@ -1022,12 +1027,14 @@ ax.scatter(xpos,ypos,alpha=0)
 
 #Pentagon:
 if SwitchLandShape == 1:
-    for archit in X_begin:
-        line = plt.Line2D((archit, X_end[X_begin.index(archit)]), (Y_begin[X_begin.index(archit)], Y_end[X_begin.index(archit)]), lw = 1.5)
+    for k in X_begin:
+        line = plt.Line2D((k, X_end[X_begin.index(k)]), (Y_begin[X_begin.index(k)], Y_end[X_begin.index(k)]), lw = 1.5)
         plt.gca().add_line(line)
-    if idx_0 != -1  :      
-        line = plt.Line2D((X_beginplot[idx_0], X_endplot[idx_0]), (Y_beginplot[idx_0], Y_endplot[idx_0]), lw = 1.5)
-        plt.gca().add_line(line)
+    if len(grad0_list)>0:  
+        for i in grad0_list:
+            line = plt.Line2D((X_beginplot[i], X_endplot[i]), (Y_beginplot[i], Y_endplot[i]), lw = 1.5)
+            plt.gca().add_line(line)
+            
 else:
     line = plt.Line2D((0, xmax), (ymax,ymax))
     plt.gca().add_line(line)
