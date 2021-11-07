@@ -55,9 +55,11 @@ solver = 1
 
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
-# Land Use Constraints
+# Land Shape Constraints (1 for non-square polygon, 0 for square based on xmax and ymax)
 SwitchLandShape = 1
 
+# Toggle Minimum Separation Distances switch
+SwitchMinSepDistance = 0
 # FEI Constraints
 SwitchFEI = 1
 
@@ -90,24 +92,16 @@ Nunits = len(units)
 # It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
 M = 1e3
 
-# X_begin = np.array([0,12.5,25,30,30])
-# X_end = np.array([12.5,25,30,30,0])
-# Ng = max(X_end)
-# XDiff = X_end - X_begin
-
-# Y_begin = np.array([30,40,30,20,0])
-# Y_end = np.array([40,30,20,0,0])
-
 #polygon layout:
 
 X_begin = np.array([0,0,15,30,30])
-X_end = np.array([0,15,30,30,1])
+X_end = np.array([0,15,30,30,0])
 Ng = max(X_end)
 Nl = min(X_begin)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,21,35,21,0.1])
-Y_end = np.array([21,35,21,0.1,0])
+Y_begin = np.array([0,21,35,21,0])
+Y_end = np.array([21,35,21,0,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -132,11 +126,6 @@ if len(grad0_list)>0:
         del X_end[i]
         del Y_begin[i]
         del Y_end[i]
-        
-        # X_begin.remove(X_begin[i])
-        # X_end.remove(X_end[i])
-        # Y_begin.remove(Y_begin[i])
-        # Y_end.remove(Y_end[i])
     
     X_begin = np.asarray(X_begin)
     X_end = np.asarray(X_end)
@@ -157,6 +146,9 @@ Y_end = list(Y_end)
 grad = list(grad)
 absgrad = list(absgrad)
 colin = list(colin)
+
+#Area calculation if needed??
+Area = np.trapz(Y_begin, X_begin)
 
 
 # Dimensions of each unit (m)
@@ -187,30 +179,39 @@ Cp['co2abs'] = 81300
 Cp['flash'] = 5000
 Cp['pump'] = 1500
 
+#Minimum separation distances
+Demin = np.zeros((len(units), len(units)))
+Demin[0][1] = 1
+Demin[1][2] = 1
+Demin[5][6] = 20
+
+Demin = Demin + Demin.T - np.diag(Demin.diagonal())
+Demin = makeDict([units,units],Demin,0)
+
 ## define the velocities 
 velocity = np.zeros((len(units), len(units)))
-velocity[0][1] = 98.4  # connection cost between reactor and hex1
-velocity[0][4] = 98.4  # connection cost between reactor and co2abs
-velocity[1][2] = 98.4  # connection cost between hex1 and eoabs
-velocity[2][3] = 98.4  # connection cost between eoabs and hex2
-velocity[3][4] = 98.4  # connection cost between hex2 and co2abs
-velocity[4][5] = 98.4  # connection cost between co2abs and flash
-velocity[4][6] = 98.4  # connection cost between co2abs and pump
-velocity[5][6] = 98.4  # connection cost between flash and pump
+velocity[0][1] = 1  # connection cost between reactor and hex1
+velocity[0][4] = 1  # connection cost between reactor and co2abs
+velocity[1][2] = 1  # connection cost between hex1 and eoabs
+velocity[2][3] = 1  # connection cost between eoabs and hex2
+velocity[3][4] = 1  # connection cost between hex2 and co2abs
+velocity[4][5] = 1  # connection cost between co2abs and flash
+velocity[4][6] = 1  # connection cost between co2abs and pump
+velocity[5][6] = 1  # connection cost between flash and pump
 
 velocity = velocity + velocity.T - np.diag(velocity.diagonal())#
 velocity = makeDict([units,units],velocity,0)
 
 ## define the flowrates Q
 Q = np.zeros((len(units), len(units)))
-Q[0][1] = 98.4  # connection cost between reactor and hex1
-Q[0][4] = 98.4  # connection cost between reactor and co2abs
-Q[1][2] = 98.4  # connection cost between hex1 and eoabs
-Q[2][3] = 98.4  # connection cost between eoabs and hex2
-Q[3][4] = 98.4  # connection cost between hex2 and co2abs
-Q[4][5] = 98.4  # connection cost between co2abs and flash
-Q[4][6] = 98.4  # connection cost between co2abs and pump
-Q[5][6] = 98.4  # connection cost between flash and pump
+Q[0][1] = 1000000  # connection cost between reactor and hex1
+Q[0][4] = 1000000  # connection cost between reactor and co2abs
+Q[1][2] = 1000000  # connection cost between hex1 and eoabs
+Q[2][3] = 1000000 # connection cost between eoabs and hex2
+Q[3][4] = 1000000  # connection cost between hex2 and co2abs
+Q[4][5] = 1000000  # connection cost between co2abs and flash
+Q[4][6] = 1000000  # connection cost between co2abs and pump
+Q[5][6] = 1000000  # connection cost between flash and pump
 
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
@@ -287,9 +288,7 @@ mechEffic = 0.6
 C_elec = 0.000045
 OH = 8000
 
-
-
-            
+           
             # kr[i][j] += epsilon[i][j] / DIA[i][j]
             # Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
 
@@ -720,10 +719,10 @@ for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
             
-            DIA[i][j] += np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
-            C[i][j] += C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
-            PC[i][j] += BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
-            C_annual[i][j] += PC[i][j] * (1+F) * (A_f + bb)
+            DIA[i][j] = np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
+            C[i][j] = C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
+            PC[i][j] = BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
+            C_annual[i][j] = PC[i][j] * (1+F) * (A_f + bb)
             
             # kr[i][j] += epsilon[i][j] / DIA[i][j]
             # Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
@@ -746,10 +745,16 @@ for idxj, j in enumerate(units):
             layout += D[i][j] == R[i][j] + L[i][j] + A[i][j] + B[i][j]
             layout += D[i][j] == D[j][i]
             # Nonoverlapping constraints (15 - 18)
-            layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2
-            layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2
-            layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2
-            layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2
+            # layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2 + 1
+            # layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2 + 1
+            # layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2 +1
+            # layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  (d[i] + d[j])/2 +1
+            
+            layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
+            layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= Demin[i][j]+ (l[i] + l[j])/2
+            layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
+            layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
+            
             # These constraints ensure consistency in interdependent variables
             layout += L[i][j] == R[j][i]
             layout += R[i][j] == L[j][i]
@@ -761,7 +766,15 @@ for idxj, j in enumerate(units):
 # Objective function contribution for base model
 layout += SumCD == lpSum([CD[i][j] for i in units for j in units])
 
-#%% Land use constraints (or set max plot size if not used)
+#%% Minimum separation constraint activated. 
+# if SwitchMinSepDistance == 1:
+#     layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
+#     layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
+#     layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >=  Demin[i][j] + (d[i] + d[j])/2
+#     layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  Demin[i][j] + (d[i] + d[j])/2
+    
+
+#%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
 
     for i in units:
