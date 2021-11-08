@@ -280,15 +280,15 @@ n_1 = 1.08        # parameter for installed cost of ducts
 n_2 = 1           # paramter for type of material 
 CEPCI_ref  =1     # accounts for rise of inflation 2006
 MF = 1            # material factor (different fro each component)
-A_f = 11
-FX_rate = 1
-BB = 1
-F = 1
-bb = 1
-CEPCI_2021 =1
-DIA_ref = 1
+A_f = 11          # check report
+FX_rate = 1       # exchange rate
+BB = 1            # paramter dependent on material
+F = 1             # parameter dependent on material 
+bb = 1            # 5% of installed cost accounting fro maintanance 
+CEPCI_2021 =1     #ccounts for rise of inflation 2021
+DIA_ref = 1       # diameter of pipe
 mechEffic = 0.6     #mechanical efficiency 
-C_elec = 0.000045
+C_elec = 0.000045    # wholesale cost of electircity 
 OH = 8000           # operating hours
 
            
