@@ -59,12 +59,14 @@ solver = 1
 SwitchLandShape = 1
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 0
+SwitchMinSepDistance = 1
+
+
 # FEI Constraints
-SwitchFEI = 1
+SwitchFEI = 0
 
 # Toggle protection devices (must have FEI enabled if 1)
-SwitchProt = 1
+SwitchProt = 0
 
 # FEI Cost of Life Constraints (only works if SwitchFEI is on)
 SwitchFEIVle = 1
@@ -97,7 +99,6 @@ M = 1e3
 X_begin = np.array([0,0,15,30,30])
 X_end = np.array([0,15,30,30,0])
 Ng = max(X_end)
-Nl = min(X_begin)
 XDiff = X_end - X_begin
 
 Y_begin = np.array([0,21,35,21,0])
@@ -204,14 +205,14 @@ velocity = makeDict([units,units],velocity,0)
 
 ## define the flowrates Q
 Q = np.zeros((len(units), len(units)))
-Q[0][1] = 1000000  # connection cost between reactor and hex1
-Q[0][4] = 1000000  # connection cost between reactor and co2abs
-Q[1][2] = 1000000  # connection cost between hex1 and eoabs
-Q[2][3] = 1000000 # connection cost between eoabs and hex2
-Q[3][4] = 1000000  # connection cost between hex2 and co2abs
-Q[4][5] = 1000000  # connection cost between co2abs and flash
-Q[4][6] = 1000000  # connection cost between co2abs and pump
-Q[5][6] = 1000000  # connection cost between flash and pump
+Q[0][1] = 100  # connection cost between reactor and hex1
+Q[0][4] = 100  # connection cost between reactor and co2abs
+Q[1][2] = 100  # connection cost between hex1 and eoabs
+Q[2][3] = 100 # connection cost between eoabs and hex2
+Q[3][4] = 100  # connection cost between hex2 and co2abs
+Q[4][5] = 100  # connection cost between co2abs and flash
+Q[4][6] = 100  # connection cost between co2abs and pump
+Q[5][6] = 100  # connection cost between flash and pump
 
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
@@ -714,6 +715,7 @@ for i in units:
     # Lower bounds of coordinates (19 - 22)
     layout += x[i] >= 0.5*l[i]
     layout += y[i] >= 0.5*d[i]
+        
 
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
@@ -744,16 +746,20 @@ for idxj, j in enumerate(units):
             layout += B[i][j] <= M*(1 - Wy[i][j])
             layout += D[i][j] == R[i][j] + L[i][j] + A[i][j] + B[i][j]
             layout += D[i][j] == D[j][i]
-            # Nonoverlapping constraints (15 - 18)
-            # layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2 + 1
-            # layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2 + 1
-            # layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2 +1
-            # layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  (d[i] + d[j])/2 +1
+   
             
-            layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
-            layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= Demin[i][j]+ (l[i] + l[j])/2
-            layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
-            layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
+            # Nonoverlapping constraints (15 - 18)
+            # Including switch for minimum separation distances
+            if SwitchMinSepDistance == 1:
+                layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
+                layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= Demin[i][j]+ (l[i] + l[j])/2
+                layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
+                layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >= Demin[i][j]+ (d[i] + d[j])/2
+            else:
+                layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2
+                layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= (l[i] + l[j])/2
+                layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2
+                layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  (d[i] + d[j])/2
             
             # These constraints ensure consistency in interdependent variables
             layout += L[i][j] == R[j][i]
@@ -764,15 +770,7 @@ for idxj, j in enumerate(units):
             layout += Wy[i][j] == 1 - Wy[j][i]
 
 # Objective function contribution for base model
-layout += SumCD == lpSum([CD[i][j] for i in units for j in units])
-
-#%% Minimum separation constraint activated. 
-# if SwitchMinSepDistance == 1:
-#     layout += x[i] - x[j] + M*(E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
-#     layout += x[j] - x[i] + M*(1 - E1[i][j] + E2[i][j]) >= Demin[i][j] + (l[i] + l[j])/2
-#     layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >=  Demin[i][j] + (d[i] + d[j])/2
-#     layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  Demin[i][j] + (d[i] + d[j])/2
-    
+layout += SumCD == lpSum([CD[i][j] for i in units for j in units])        
 
 #%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
@@ -787,6 +785,7 @@ if SwitchLandShape == 1:
                layout += y[i] - 0.5*d[i] - l[i]*absgrad[colin.index(k)]/2 >= grad[colin.index(k)]*x[i] + k
         
         layout += x[i] + 0.5*l[i] <= Ng #CHANGE N TO PEAK OF PENTAGON
+        layout += x[i] -0.5*l[i] >= 0
                
 else:
     for i in units:
@@ -1003,27 +1002,27 @@ print ("Total cost of layout =", value(layout.objective))
 print("Elapsed time =", totaltime)
 
 #%%--------------Export Results--------------
-filename = 'Optimisation_Plot.csv'
-with open(filename, 'w', newline='') as file:
-    # Write objective function
-    writer = csv.writer(file)
-    writer.writerow(['Objective', value(layout.objective)])
+# filename = 'Optimisation_Plot.csv'
+# with open(filename, 'w', newline='') as file:
+#     # Write objective function
+#     writer = csv.writer(file)
+#     writer.writerow(['Objective', value(layout.objective)])
     
-    # Write coordinates
-    #fieldnames = ['unit','x', 'y', 'l', 'd', 'De', 'Dc']
-    fieldnames = ['unit','x', 'y', 'l', 'd', 'De', 'Dc']
-    writer = csv.DictWriter(file, fieldnames=fieldnames)    
-    writer.writeheader()
-    for i in units:
-        #writer.writerow({'unit': i, 'x': x[i].varValue, 'y': y[i].varValue, 'l': l[i].varValue, 'd': d[i].varValue, 'De': De.get(i), 'Dc': Dc.get(i)})
-        writer.writerow({'unit': i, 'x': x[i].varValue, 'y': y[i].varValue, 'l': l[i].varValue, 'd': d[i].varValue, 'De': De.get(i), 'Dc': Dc.get(i)})
+#     # Write coordinates
+#     #fieldnames = ['unit','x', 'y', 'l', 'd', 'De', 'Dc']
+#     fieldnames = ['unit','x', 'y', 'l', 'd', 'De', 'Dc']
+#     writer = csv.DictWriter(file, fieldnames=fieldnames)    
+#     writer.writeheader()
+#     for i in units:
+#         #writer.writerow({'unit': i, 'x': x[i].varValue, 'y': y[i].varValue, 'l': l[i].varValue, 'd': d[i].varValue, 'De': De.get(i), 'Dc': Dc.get(i)})
+#         writer.writerow({'unit': i, 'x': x[i].varValue, 'y': y[i].varValue, 'l': l[i].varValue, 'd': d[i].varValue, 'De': De.get(i), 'Dc': Dc.get(i)})
 
-filename = 'Optimisation_Results.csv'
-with open(filename, 'w', newline='') as file:
-    # Write value of all variables
-    writer = csv.writer(file, delimiter=',')    
-    for v in layout.variables():
-        writer.writerow([v.name, v.varValue])
+# filename = 'Optimisation_Results.csv'
+# with open(filename, 'w', newline='') as file:
+#     # Write value of all variables
+#     writer = csv.writer(file, delimiter=',')    
+#     for v in layout.variables():
+#         writer.writerow([v.name, v.varValue])
 
 #%%--------------Plot Results--------------
 xpos, ypos = [], []
