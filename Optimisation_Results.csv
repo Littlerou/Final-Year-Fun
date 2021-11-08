@@ -1,4 +1,5 @@
 A_co2abs_eoabs,0.0
+<<<<<<< HEAD
 A_co2abs_flash,16.935999999999982
 A_co2abs_hex1,8.209999999999972
 A_co2abs_hex2,11.219999999999999
@@ -22,25 +23,64 @@ A_hex1_flash,8.72600000000001
 A_hex1_hex2,3.0100000000000264
 A_hex1_pump,8.86600000000001
 A_hex1_reactor,5.066000000000011
+=======
+A_co2abs_flash,0.0
+A_co2abs_hex1,5.920000000000066
+A_co2abs_hex2,9.03
+A_co2abs_pump,14.470000000000008
+A_co2abs_reactor,15.77599999999999
+A_eoabs_co2abs,9.300000000000008
+A_eoabs_flash,9.300000000000008
+A_eoabs_hex1,15.220000000000073
+A_eoabs_hex2,18.330000000000005
+A_eoabs_pump,23.770000000000017
+A_eoabs_reactor,25.075999999999997
+A_flash_co2abs,0.0
+A_flash_eoabs,0.0
+A_flash_hex1,5.920000000000066
+A_flash_hex2,9.029999999999998
+A_flash_pump,14.470000000000004
+A_flash_reactor,15.77599999999999
+A_hex1_co2abs,0.0
+A_hex1_eoabs,0.0
+A_hex1_flash,0.0
+A_hex1_hex2,3.109999999999932
+A_hex1_pump,8.549999999999942
+A_hex1_reactor,9.855999999999923
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 A_hex2_co2abs,0.0
 A_hex2_eoabs,0.0
 A_hex2_flash,5.715999999999983
 A_hex2_hex1,0.0
+<<<<<<< HEAD
 A_hex2_pump,5.855999999999983
 A_hex2_reactor,2.055999999999983
+=======
+A_hex2_pump,5.44000000000001
+A_hex2_reactor,6.745999999999994
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 A_pump_co2abs,0.0
 A_pump_eoabs,0.0
 A_pump_flash,0.0
 A_pump_hex1,0.0
 A_pump_hex2,0.0
+<<<<<<< HEAD
 A_pump_reactor,0.0
+=======
+A_pump_reactor,1.3059999999999814
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 A_reactor_co2abs,0.0
 A_reactor_eoabs,0.0
 A_reactor_flash,3.66
 A_reactor_hex1,0.0
 A_reactor_hex2,0.0
+<<<<<<< HEAD
 A_reactor_pump,3.8
 B_co2abs_eoabs,9.300000000000015
+=======
+A_reactor_pump,0.0
+B_co2abs_eoabs,9.300000000000008
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 B_co2abs_flash,0.0
 B_co2abs_hex1,0.0
 B_co2abs_hex2,0.0
@@ -52,6 +92,7 @@ B_eoabs_hex1,0.0
 B_eoabs_hex2,0.0
 B_eoabs_pump,0.0
 B_eoabs_reactor,0.0
+<<<<<<< HEAD
 B_flash_co2abs,16.935999999999982
 B_flash_eoabs,26.235999999999997
 B_flash_hex1,8.72600000000001
@@ -85,6 +126,41 @@ B_reactor_pump,0.0
 CD_co2abs_co2abs,-9.094947017729282e-13
 CD_co2abs_eoabs,0.0
 CD_co2abs_flash,496.2117750794272
+=======
+B_flash_co2abs,0.0
+B_flash_eoabs,9.300000000000008
+B_flash_hex1,0.0
+B_flash_hex2,0.0
+B_flash_pump,0.0
+B_flash_reactor,0.0
+B_hex1_co2abs,5.920000000000066
+B_hex1_eoabs,15.220000000000073
+B_hex1_flash,5.920000000000066
+B_hex1_hex2,0.0
+B_hex1_pump,0.0
+B_hex1_reactor,0.0
+B_hex2_co2abs,9.03
+B_hex2_eoabs,18.330000000000005
+B_hex2_flash,9.029999999999998
+B_hex2_hex1,3.109999999999932
+B_hex2_pump,0.0
+B_hex2_reactor,0.0
+B_pump_co2abs,14.470000000000008
+B_pump_eoabs,23.770000000000017
+B_pump_flash,14.470000000000004
+B_pump_hex1,8.549999999999942
+B_pump_hex2,5.44000000000001
+B_pump_reactor,0.0
+B_reactor_co2abs,15.77599999999999
+B_reactor_eoabs,25.075999999999997
+B_reactor_flash,15.77599999999999
+B_reactor_hex1,9.855999999999923
+B_reactor_hex2,6.745999999999994
+B_reactor_pump,1.3059999999999814
+CD_co2abs_co2abs,0.0
+CD_co2abs_eoabs,0.0
+CD_co2abs_flash,71335.90274441814
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 CD_co2abs_hex1,0.0
 CD_co2abs_hex2,0.0
 CD_co2abs_pump,501.6718518298611
@@ -93,7 +169,11 @@ CD_eoabs_co2abs,0.0
 CD_eoabs_eoabs,0.0
 CD_eoabs_flash,0.0
 CD_eoabs_hex1,0.0
+<<<<<<< HEAD
 CD_eoabs_hex2,714.7240466317901
+=======
+CD_eoabs_hex2,59514.836579728886
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 CD_eoabs_pump,0.0
 CD_eoabs_reactor,0.0
 CD_flash_co2abs,0.0
@@ -101,7 +181,11 @@ CD_flash_eoabs,0.0
 CD_flash_flash,0.0
 CD_flash_hex1,0.0
 CD_flash_hex2,0.0
+<<<<<<< HEAD
 CD_flash_pump,73.16502845581351
+=======
+CD_flash_pump,101038.7202667783
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 CD_flash_reactor,0.0
 CD_hex1_co2abs,0.0
 CD_hex1_eoabs,595.148365797289
@@ -124,14 +208,22 @@ CD_pump_hex1,0.0
 CD_pump_hex2,0.0
 CD_pump_pump,0.0
 CD_pump_reactor,0.0
+<<<<<<< HEAD
 CD_reactor_co2abs,1044.9494884980286
 CD_reactor_eoabs,0.0
 CD_reactor_flash,0.0
 CD_reactor_hex1,362.43989469379886
+=======
+CD_reactor_co2abs,104494.94884980287
+CD_reactor_eoabs,0.0
+CD_reactor_flash,0.0
+CD_reactor_hex1,36243.98946937986
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 CD_reactor_hex2,0.0
 CD_reactor_pump,0.0
 CD_reactor_reactor,0.0
 D_co2abs_eoabs,21.8
+<<<<<<< HEAD
 D_co2abs_flash,18.17599999999998
 D_co2abs_hex1,24.99999999999997
 D_co2abs_hex2,18.06
@@ -173,6 +265,49 @@ D_reactor_flash,27.419999999999998
 D_reactor_hex1,13.276000000000012
 D_reactor_hex2,20.215999999999983
 D_reactor_pump,30.10000000000002
+=======
+D_co2abs_flash,26.12999999999999
+D_co2abs_hex1,24.999999999999986
+D_co2abs_hex2,18.06
+D_co2abs_pump,18.06
+D_co2abs_reactor,38.27599999999999
+D_eoabs_co2abs,21.8
+D_eoabs_flash,22.930000000000003
+D_eoabs_hex1,21.8
+D_eoabs_hex2,21.799999999999997
+D_eoabs_pump,32.68000000000002
+D_eoabs_reactor,35.07600000000001
+D_flash_co2abs,26.12999999999999
+D_flash_eoabs,22.930000000000003
+D_flash_hex1,12.970000000000134
+D_flash_hex2,26.129999999999985
+D_flash_pump,37.010000000000005
+D_flash_reactor,19.405999999999977
+D_hex1_co2abs,24.999999999999986
+D_hex1_eoabs,21.8
+D_hex1_flash,12.970000000000134
+D_hex1_hex2,13.159999999999853
+D_hex1_pump,24.03999999999987
+D_hex1_reactor,13.276000000000003
+D_hex2_co2abs,18.06
+D_hex2_eoabs,21.799999999999997
+D_hex2_flash,26.129999999999985
+D_hex2_hex1,13.159999999999853
+D_hex2_pump,10.880000000000019
+D_hex2_reactor,20.215999999999994
+D_pump_co2abs,18.06
+D_pump_eoabs,32.68000000000002
+D_pump_flash,37.010000000000005
+D_pump_hex1,24.03999999999987
+D_pump_hex2,10.880000000000019
+D_pump_reactor,20.215999999999994
+D_reactor_co2abs,38.27599999999999
+D_reactor_eoabs,35.07600000000001
+D_reactor_flash,19.405999999999977
+D_reactor_hex1,13.276000000000003
+D_reactor_hex2,20.215999999999994
+D_reactor_pump,20.215999999999994
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Din_co2abs_eoabs,0.0
 Din_co2abs_flash,0.0
 Din_co2abs_hex1,0.0
@@ -181,6 +316,7 @@ Din_co2abs_pump,0.0
 Din_co2abs_reactor,0.0
 Din_eoabs_co2abs,0.0
 Din_eoabs_flash,0.0
+<<<<<<< HEAD
 Din_eoabs_hex1,0.0
 Din_eoabs_hex2,0.0
 Din_eoabs_pump,0.0
@@ -202,13 +338,37 @@ Dout_eoabs_flash,37.49599999999998
 Dout_eoabs_hex1,21.8
 Dout_eoabs_hex2,26.18
 Dout_eoabs_pump,40.17599999999999
+=======
+Din_eoabs_hex1,21.8
+Din_eoabs_hex2,0.0
+Din_eoabs_pump,0.0
+Din_eoabs_reactor,0.0
+Din_reactor_co2abs,38.27599999999999
+Din_reactor_eoabs,35.07600000000001
+Din_reactor_flash,19.405999999999977
+Din_reactor_hex1,13.276000000000003
+Din_reactor_hex2,20.215999999999994
+Din_reactor_pump,20.215999999999994
+Dout_co2abs_eoabs,21.8
+Dout_co2abs_flash,26.12999999999999
+Dout_co2abs_hex1,24.999999999999986
+Dout_co2abs_hex2,18.06
+Dout_co2abs_pump,18.06
+Dout_co2abs_reactor,38.27599999999999
+Dout_eoabs_co2abs,21.8
+Dout_eoabs_flash,22.930000000000003
+Dout_eoabs_hex1,0.0
+Dout_eoabs_hex2,21.799999999999997
+Dout_eoabs_pump,32.68000000000002
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Dout_eoabs_reactor,35.07600000000001
 Dout_reactor_co2abs,0.0
 Dout_reactor_eoabs,0.0
 Dout_reactor_flash,0.0
 Dout_reactor_hex1,0.0
-Dout_reactor_hex2,0.0
+Dout_reactor_hex2,1.7763568394002505e-15
 Dout_reactor_pump,0.0
+<<<<<<< HEAD
 E1_co2abs_flash,0.0
 E1_co2abs_pump,-0.0
 E1_eoabs_co2abs,-0.0
@@ -234,9 +394,37 @@ E2_co2abs_flash,1.0
 E2_co2abs_pump,1.0
 E2_eoabs_co2abs,-0.0
 E2_eoabs_flash,1.0
+=======
+E1_co2abs_flash,1.0
+E1_co2abs_pump,-0.0
+E1_eoabs_co2abs,-0.0
+E1_eoabs_flash,1.0
+E1_eoabs_hex2,0.0
+E1_eoabs_pump,-0.0
+E1_flash_pump,0.0
+E1_hex1_co2abs,-0.0
+E1_hex1_eoabs,1.0
+E1_hex1_flash,1.0
+E1_hex1_hex2,0.0
+E1_hex1_pump,0.0
+E1_hex2_co2abs,0.9999999999999993
+E1_hex2_flash,1.0
+E1_hex2_pump,0.0
+E1_reactor_co2abs,1.0
+E1_reactor_eoabs,1.0
+E1_reactor_flash,1.0
+E1_reactor_hex1,1.0
+E1_reactor_hex2,1.0
+E1_reactor_pump,-0.0
+E2_co2abs_flash,-0.0
+E2_co2abs_pump,1.0
+E2_eoabs_co2abs,1.0
+E2_eoabs_flash,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 E2_eoabs_hex2,1.0
 E2_eoabs_pump,-0.0
 E2_flash_pump,0.0
+<<<<<<< HEAD
 E2_hex1_co2abs,1.0
 E2_hex1_eoabs,1.0
 E2_hex1_flash,1.0
@@ -290,6 +478,61 @@ L_pump_reactor,26.30000000000002
 L_reactor_co2abs,0.0
 L_reactor_eoabs,0.0
 L_reactor_flash,0.0
+=======
+E2_hex1_co2abs,0.0
+E2_hex1_eoabs,1.0
+E2_hex1_flash,-0.0
+E2_hex1_hex2,-0.0
+E2_hex1_pump,0.0
+E2_hex2_co2abs,1.0
+E2_hex2_flash,-0.0
+E2_hex2_pump,0.0
+E2_reactor_co2abs,1.0
+E2_reactor_eoabs,1.0
+E2_reactor_flash,1.0
+E2_reactor_hex1,1.0
+E2_reactor_hex2,1.0
+E2_reactor_pump,-0.0
+L_co2abs_eoabs,12.499999999999993
+L_co2abs_flash,26.12999999999999
+L_co2abs_hex1,19.07999999999992
+L_co2abs_hex2,9.03
+L_co2abs_pump,3.589999999999991
+L_co2abs_reactor,22.5
+L_eoabs_co2abs,0.0
+L_eoabs_flash,13.629999999999995
+L_eoabs_hex1,6.579999999999927
+L_eoabs_hex2,0.0
+L_eoabs_pump,0.0
+L_eoabs_reactor,10.000000000000007
+L_flash_co2abs,0.0
+L_flash_eoabs,0.0
+L_flash_hex1,0.0
+L_flash_hex2,0.0
+L_flash_pump,0.0
+L_flash_reactor,0.0
+L_hex1_co2abs,0.0
+L_hex1_eoabs,0.0
+L_hex1_flash,7.050000000000068
+L_hex1_hex2,0.0
+L_hex1_pump,0.0
+L_hex1_reactor,3.42000000000008
+L_hex2_co2abs,0.0
+L_hex2_eoabs,3.4699999999999935
+L_hex2_flash,17.099999999999987
+L_hex2_hex1,10.04999999999992
+L_hex2_pump,0.0
+L_hex2_reactor,13.47
+L_pump_co2abs,0.0
+L_pump_eoabs,8.910000000000002
+L_pump_flash,22.54
+L_pump_hex1,15.48999999999993
+L_pump_hex2,5.440000000000008
+L_pump_reactor,18.91000000000001
+L_reactor_co2abs,0.0
+L_reactor_eoabs,0.0
+L_reactor_flash,3.6299999999999883
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 L_reactor_hex1,0.0
 L_reactor_hex2,0.0
 L_reactor_pump,0.0
@@ -299,7 +542,11 @@ O_flash,0.0
 O_hex1,0.0
 O_hex2,0.0
 O_pump,0.0
+<<<<<<< HEAD
 O_reactor,0.0
+=======
+O_reactor,1.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Omega0_co2abs,2033658.0000000005
 Omega0_eoabs,2268110.0000000005
 Omega0_reactor,4109790.3726000013
@@ -307,8 +554,9 @@ Omega_co2abs,945650.9700000003
 Omega_eoabs,1054671.1500000004
 Omega_reactor,480845.47359420004
 Psie_co2abs_eoabs,-0.0
-Psie_co2abs_flash,0.0
+Psie_co2abs_flash,-0.0
 Psie_co2abs_hex1,-0.0
+<<<<<<< HEAD
 Psie_co2abs_hex2,-0.0
 Psie_co2abs_pump,-0.0
 Psie_co2abs_reactor,-0.0
@@ -318,6 +566,17 @@ Psie_eoabs_hex1,-0.0
 Psie_eoabs_hex2,-0.0
 Psie_eoabs_pump,-0.0
 Psie_eoabs_reactor,0.0
+=======
+Psie_co2abs_hex2,0.0
+Psie_co2abs_pump,0.0
+Psie_co2abs_reactor,-0.0
+Psie_eoabs_co2abs,-0.0
+Psie_eoabs_flash,-0.0
+Psie_eoabs_hex1,1.0
+Psie_eoabs_hex2,-0.0
+Psie_eoabs_pump,-0.0
+Psie_eoabs_reactor,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Psie_reactor_co2abs,1.0
 Psie_reactor_eoabs,1.0
 Psie_reactor_flash,1.0
@@ -328,6 +587,7 @@ R_co2abs_eoabs,0.0
 R_co2abs_flash,0.0
 R_co2abs_hex1,0.0
 R_co2abs_hex2,0.0
+<<<<<<< HEAD
 R_co2abs_pump,1.3
 R_co2abs_reactor,0.0
 R_eoabs_co2abs,12.499999999999986
@@ -355,11 +615,41 @@ R_hex2_hex1,0.0
 R_hex2_pump,8.14
 R_hex2_reactor,0.0
 R_pump_co2abs,0.0
+=======
+R_co2abs_pump,0.0
+R_co2abs_reactor,0.0
+R_eoabs_co2abs,12.499999999999993
+R_eoabs_flash,0.0
+R_eoabs_hex1,0.0
+R_eoabs_hex2,3.4699999999999935
+R_eoabs_pump,8.910000000000002
+R_eoabs_reactor,0.0
+R_flash_co2abs,26.12999999999999
+R_flash_eoabs,13.629999999999995
+R_flash_hex1,7.050000000000068
+R_flash_hex2,17.099999999999987
+R_flash_pump,22.54
+R_flash_reactor,3.6299999999999883
+R_hex1_co2abs,19.07999999999992
+R_hex1_eoabs,6.579999999999927
+R_hex1_flash,0.0
+R_hex1_hex2,10.04999999999992
+R_hex1_pump,15.48999999999993
+R_hex1_reactor,0.0
+R_hex2_co2abs,9.03
+R_hex2_eoabs,0.0
+R_hex2_flash,0.0
+R_hex2_hex1,0.0
+R_hex2_pump,5.440000000000008
+R_hex2_reactor,0.0
+R_pump_co2abs,3.589999999999991
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 R_pump_eoabs,0.0
 R_pump_flash,0.0
 R_pump_hex1,0.0
 R_pump_hex2,0.0
 R_pump_reactor,0.0
+<<<<<<< HEAD
 R_reactor_co2abs,25.0
 R_reactor_eoabs,12.500000000000014
 R_reactor_flash,23.759999999999998
@@ -368,6 +658,16 @@ R_reactor_hex2,18.16
 R_reactor_pump,26.30000000000002
 SumCD,4281.355381550184
 SumOmega,2481167.5935942004
+=======
+R_reactor_co2abs,22.5
+R_reactor_eoabs,10.000000000000007
+R_reactor_flash,0.0
+R_reactor_hex1,3.42000000000008
+R_reactor_hex2,13.47
+R_reactor_pump,18.91000000000001
+SumCD,530752.2206026722
+SumOmega,2504080.2579402006
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 SumPZ,235000.0
 Ve2_co2abs_co2abs,0.0
 Ve2_co2abs_eoabs,0.0
@@ -383,6 +683,7 @@ Ve2_eoabs_hex1,0.0
 Ve2_eoabs_hex2,0.0
 Ve2_eoabs_pump,0.0
 Ve2_eoabs_reactor,0.0
+<<<<<<< HEAD
 Ve2_reactor_co2abs,132804.0300000012
 Ve2_reactor_eoabs,382471.69999999925
 Ve2_reactor_flash,158822.5
@@ -393,19 +694,39 @@ Ve2_reactor_reactor,0.0
 Ve_co2abs,3081300.0000000005
 Ve_eoabs,3107000.0000000005
 Ve_reactor,4723896.980000001
+=======
+Ve2_reactor_co2abs,132804.03000000073
+Ve2_reactor_eoabs,382471.69999999925
+Ve2_reactor_flash,259999.2500000003
+Ve2_reactor_hex1,341399.1
+Ve2_reactor_hex2,249278.40000000008
+Ve2_reactor_pump,248041.90000000008
+Ve2_reactor_reactor,0.0
+Ve_co2abs,3081300.0000000005
+Ve_eoabs,3107000.0000000005
+Ve_reactor,4948994.380000002
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wx_co2abs_eoabs,0.0
 Wx_co2abs_flash,-0.0
 Wx_co2abs_hex1,0.0
 Wx_co2abs_hex2,0.0
+<<<<<<< HEAD
 Wx_co2abs_pump,1.0
 Wx_co2abs_reactor,0.0
 Wx_eoabs_co2abs,1.0
 Wx_eoabs_flash,1.0
+=======
+Wx_co2abs_pump,0.0
+Wx_co2abs_reactor,0.0
+Wx_eoabs_co2abs,1.0
+Wx_eoabs_flash,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wx_eoabs_hex1,0.0
 Wx_eoabs_hex2,1.0
 Wx_eoabs_pump,1.0
 Wx_eoabs_reactor,0.0
 Wx_flash_co2abs,1.0
+<<<<<<< HEAD
 Wx_flash_eoabs,0.0
 Wx_flash_hex1,0.0
 Wx_flash_hex2,0.0
@@ -414,16 +735,34 @@ Wx_flash_reactor,0.0
 Wx_hex1_co2abs,1.0
 Wx_hex1_eoabs,1.0
 Wx_hex1_flash,1.0
+=======
+Wx_flash_eoabs,1.0
+Wx_flash_hex1,1.0
+Wx_flash_hex2,1.0
+Wx_flash_pump,1.0
+Wx_flash_reactor,1.0
+Wx_hex1_co2abs,1.0
+Wx_hex1_eoabs,1.0
+Wx_hex1_flash,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wx_hex1_hex2,1.0
 Wx_hex1_pump,1.0
 Wx_hex1_reactor,0.0
 Wx_hex2_co2abs,1.0
 Wx_hex2_eoabs,0.0
+<<<<<<< HEAD
 Wx_hex2_flash,1.0
 Wx_hex2_hex1,0.0
 Wx_hex2_pump,1.0
 Wx_hex2_reactor,0.0
 Wx_pump_co2abs,0.0
+=======
+Wx_hex2_flash,0.0
+Wx_hex2_hex1,0.0
+Wx_hex2_pump,1.0
+Wx_hex2_reactor,0.0
+Wx_pump_co2abs,1.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wx_pump_eoabs,0.0
 Wx_pump_flash,0.0
 Wx_pump_hex1,0.0
@@ -431,7 +770,11 @@ Wx_pump_hex2,0.0
 Wx_pump_reactor,0.0
 Wx_reactor_co2abs,1.0
 Wx_reactor_eoabs,1.0
+<<<<<<< HEAD
 Wx_reactor_flash,1.0
+=======
+Wx_reactor_flash,0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wx_reactor_hex1,1.0
 Wx_reactor_hex2,1.0
 Wx_reactor_pump,1.0
@@ -452,16 +795,27 @@ Wy_flash_eoabs,0.0
 Wy_flash_hex1,0.0
 Wy_flash_hex2,0.0
 Wy_flash_pump,1.0
+<<<<<<< HEAD
 Wy_flash_reactor,0.0
 Wy_hex1_co2abs,-0.0
 Wy_hex1_eoabs,0.0
 Wy_hex1_flash,1.0
+=======
+Wy_flash_reactor,1.0
+Wy_hex1_co2abs,0.0
+Wy_hex1_eoabs,-0.0
+Wy_hex1_flash,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wy_hex1_hex2,1.0
 Wy_hex1_pump,1.0
 Wy_hex1_reactor,1.0
 Wy_hex2_co2abs,0.0
 Wy_hex2_eoabs,0.0
+<<<<<<< HEAD
 Wy_hex2_flash,1.0
+=======
+Wy_hex2_flash,-0.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Wy_hex2_hex1,0.0
 Wy_hex2_pump,1.0
 Wy_hex2_reactor,1.0
@@ -473,6 +827,7 @@ Wy_pump_hex2,0.0
 Wy_pump_reactor,0.0
 Wy_reactor_co2abs,0.0
 Wy_reactor_eoabs,0.0
+<<<<<<< HEAD
 Wy_reactor_flash,1.0
 Wy_reactor_hex1,0.0
 Wy_reactor_hex2,0.0
@@ -491,6 +846,26 @@ Y_hex1,10.06600000000001
 Y_hex2,7.055999999999983
 Y_pump,1.2
 Y_reactor,5.0
+=======
+Wy_reactor_flash,0.0
+Wy_reactor_hex1,0.0
+Wy_reactor_hex2,0.0
+Wy_reactor_pump,0.0
+X_co2abs,2.5
+X_eoabs,14.999999999999993
+X_flash,28.62999999999999
+X_hex1,21.57999999999992
+X_hex2,11.53
+X_pump,6.089999999999991
+X_reactor,25.0
+Y_co2abs,18.27599999999999
+Y_eoabs,27.575999999999997
+Y_flash,18.27599999999999
+Y_hex1,12.355999999999923
+Y_hex2,9.245999999999992
+Y_pump,3.8059999999999814
+Y_reactor,2.5
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 Z_co2abs_1,-0.0
 Z_co2abs_2,-0.0
 Z_co2abs_3,-0.0
@@ -515,14 +890,22 @@ d_flash,2.68
 d_hex1,11.42
 d_hex2,8.48
 d_pump,2.4
+<<<<<<< HEAD
 d_reactor,10.0
+=======
+d_reactor,5.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 l_co2abs,5.0
 l_eoabs,7.68
 l_flash,2.68
 l_hex1,11.42
 l_hex2,8.48
 l_pump,2.4
+<<<<<<< HEAD
 l_reactor,5.0
+=======
+l_reactor,10.0
+>>>>>>> 1aa5d12a9696ceb0637418ec7394943c78d356e9
 linOmega0_co2abs_1,0.0
 linOmega0_co2abs_2,0.0
 linOmega0_co2abs_3,0.0
