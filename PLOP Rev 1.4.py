@@ -620,6 +620,8 @@ CD = LpVariable.dicts("CD",(units,units),lowBound=0,upBound=None,cat="Continuous
 # Total connection cost
 SumCD = LpVariable("SumCD",lowBound=0,upBound=None,cat="Continuous")
 
+# pressure drop between pipes
+deltaP = LpVariable.dicts("deltaP",(units,units),lowBound=0,upBound=None,cat="Continuous")
 DIA = np.zeros((len(units), len(units)))
 C = np.zeros((len(units), len(units)))
 PC = np.zeros((len(units), len(units)))
@@ -629,13 +631,37 @@ C = makeDict([units,units],C,0)
 PC = makeDict([units,units],PC,0)
 C_annual = makeDict([units,units],C_annual,0)
 
-# kr = np.zeros((len(units), len(units)))
-# Rey = np.zeros((len(units), len(units)))
-# AA = np.zeros((len(units), len(units)))
-# ff = np.zeros((len(units), len(units)))
+kr = np.zeros((len(units), len(units)))
+kr = makeDict([units,units],kr,0)
+Rey = np.zeros((len(units), len(units)))
+Rey = makeDict([units,units],Rey,0)
+AA = np.zeros((len(units), len(units)))
+AA = makeDict([units,units],AA,0)
+ff = np.zeros((len(units), len(units)))
+ff = makeDict([units,units],ff,0)
 # deltaP = np.zeros((len(units), len(units)))
-# PP = np.zeros((len(units), len(units)))
-# POC = np.zeros((len(units), len(units)))
+# deltaP = makeDict([units,units],deltaP,0)
+# # PP = np.zeros((len(units), len(units)))
+# PP = makeDict([units,units],PP,0)
+# # POC = np.zeros((len(units), len(units)))
+# POC = makeDict([units,units],POC,0)
+
+for idxj, j in enumerate(units):
+    for idxi, i in enumerate(units):
+        if idxj > idxi:
+            DIA[i][j] += np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
+            C[i][j] += C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
+            PC[i][j] += BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
+            C_annual[i][j] += PC[i][j] * (1+F) * (A_f + bb)
+            kr[i][j] += epsilon[i][j] / DIA[i][j]
+            Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
+
+            AA[i][j] += (kr[i][j] ** 1.1098)/2.8257 + (7.149 / Rey[i][j])**0.8981
+            ff[i][j] += (1/ (-2 * math.log(kr[i][j]/3.7065 - (5.0452/Rey[i][j])*math.log(AA[i][j]))) )**2
+
+
+
+
 
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
@@ -715,18 +741,8 @@ for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
             
-            DIA[i][j] += np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
-            C[i][j] += C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
-            PC[i][j] += BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
-            C_annual[i][j] += PC[i][j] * (1+F) * (A_f + bb)
-            
-            # kr[i][j] += epsilon[i][j] / DIA[i][j]
-            # Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
 
-            # AA[i][j] += (kr[i][j] ** 1.1098)/2.8257 + (7.149 / Rey[i][j])**0.8981
-            # ff[i][j] += (1/ (-2 * math.log(kr[i][j]/3.7065 - (5.0452/Rey[i][j])*math.log(AA[i][j]))) )**2
-
-            # deltaP[i][j] += 8 * ff[i][j] * (D[i][j]/DIA[i][j]) *(rhog/2) * velocity[i][j]**2
+            #layout += deltaP[i][j] == 8 * 7 * (D[i][j]/8) *(rhog/2) * 15**2
             # PP[i][j] += Q[i][j] * deltaP[i][j] / (rhog * mechEffic)
             # POC[i][j] += C_elec * OH * PP[i][j] * n[i][j]
             
@@ -1067,10 +1083,7 @@ for i in units:
 for i in range(len(numbers)):
     rect = mpatch.Rectangle((xrect[i], yrect[i]), length[i], depth[i], fill=None, edgecolor="black")
     ax.add_patch(rect)
-# halflength1, halfdepth1 = [], []
-# for i in units:
-#     halflength1.append(halflength[i].varValue)
-#     halfdepth1.append(halfdepth[i].varValue)
+
     
     
 #%%
