@@ -65,22 +65,31 @@ class NoFEIError(Exception):
     """Exception raised when protection devices enabled without FEI constraints"""
 pass
 
-# --------------Switches--------------
+#%%--------------Switches--------------
 # CPLEX free edition only supports up to 1000 variables. For larger land sizes, use CBC or increase coarseness (g)
 # 1 = CPLEX, 2 = CBC
 solver = 1
 
 # Toggle constraints in layout problem (1 is on; 0 is off)
-# Land Use Constraints
-SwitchLandUse = 1
+
+# Land Shape Constraints (1 for non-square polygon, 0 for square based on xmax and ymax)
+SwitchLandShape = 1
+
+# Toggle Minimum Separation Distances switch
+SwitchMinSepDistance = 1
+
+
 # FEI Constraints
-SwitchFEI = 1
+SwitchFEI = 0
+
 # Toggle protection devices (must have FEI enabled if 1)
-SwitchProt = 1
+SwitchProt = 0
+
 # FEI Cost of Life Constraints (only works if SwitchFEI is on)
 SwitchFEIVle = 1
+
 # CEI Constraints
-SwitchCEI = 1
+SwitchCEI = 0
 
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
 #    raise NoFEIError("FEI cost of life constraints not allowed without FEI constraints")        
@@ -94,28 +103,106 @@ pertinent_units = ['furnace','reactor','distil']
 hazardous_chemicals = ['tol','benz','meth','h2','diph']
 Nunits = len(units)
 
-# --------------Define Parameters and Values--------------
+#%% --------------Define Parameters and Values--------------
 # Base layout model
 
 # M (m) is used in the contraints which set A or B, L or R, and Din or Dout.
-# It should be big enough not to constrain the size of the plot, but not too big
+# It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
 M = 1e3
+
+#polygon layout:
+
+X_begin = np.array([0,0,15,30,30])
+X_end = np.array([0,15,30,30,0])
+Ng = max(X_end)
+XDiff = X_end - X_begin
+
+Y_begin = np.array([0,21,35,21,0])
+Y_end = np.array([21,35,21,0,0])
+YDiff = Y_end - Y_begin
+
+#for plotting:
+X_beginplot = list(X_begin)
+X_endplot = list(X_end)
+Y_beginplot = list(Y_begin)
+Y_endplot = list(Y_end)
+
+#check for convex shape or not
+
+#check for vertical lines
+grad0_list = list(reversed(list(np.where(XDiff==0) [0])))
+
+if len(grad0_list)>0:
+    X_begin = list(X_begin)
+    X_end = list(X_end)
+    Y_begin = list(Y_begin)
+    Y_end = list(Y_end)
+    
+    for i in grad0_list:
+        del X_begin[i]
+        del X_end[i]
+        del Y_begin[i]
+        del Y_end[i]
+    
+    X_begin = np.asarray(X_begin)
+    X_end = np.asarray(X_end)
+    Y_begin = np.asarray(Y_begin)
+    Y_end = np.asarray(Y_end)
+
+XDiff = X_end - X_begin
+YDiff = Y_end - Y_begin      
+grad = YDiff/XDiff
+absgrad = abs(grad)
+colin = Y_begin - (grad * X_begin)
+
+# Converting to list for manipulation.
+X_begin = list(X_begin)
+X_end = list(X_end)
+Y_begin = list(Y_begin)
+Y_end = list(Y_end)
+grad = list(grad)
+absgrad = list(absgrad)
+colin = list(colin)
+
+#Area calculation if needed??
+Area = np.trapz(Y_begin, X_begin)
+
 
 # Dimensions of each unit (m)
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
-alpha['UNIT'] = 
+alpha['furnace'] = 
+alpha['reactor'] = 
+alpha['flash'] = 
+alpha['comp'] = 
+alpha['distil'] = 
 
-beta['UNIT'] =
+beta['furnace'] = 
+beta['reactor'] = 
+beta['flash'] = 
+beta['comp'] = 
+beta['distil'] = 
 
 # Purchase cost of each unit (dollars)
 Cp = dict.fromkeys(units)
-Cp['UNIT'] = 
+Cp['furnace'] = 
+Cp['reactor'] = 
+Cp['flash'] = 
+Cp['comp'] = 
+Cp['distil'] = 
+
+
+
 
 # Connection/piping costs (cost per unit length)
 C = np.zeros((len(units), len(units)))  # square matrix with elements unit,unit
 # assign values where flowsheet connection
-C['UNIT']['UNIT2'] =  # connection cost between UNIT and UNIT
+C['furnace']['reactor'] =  # connection cost between furnace and reactor
+C['reactor']['flash'] =  # connection cost between reactor and flash
+C['flash']['comp'] =  # connection cost between flash and comp
+C['flash']['distil'] =  # connection cost between flash and distil
+C['comp']['furnace'] =  # connection cost between comp and furnace
+C['distil']['furnace'] =  # connection cost between distil and furnace
 
 # symmetrise the matrix
 C = C + C.T - np.diag(C.diagonal())

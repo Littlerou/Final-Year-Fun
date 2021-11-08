@@ -654,15 +654,15 @@ ff = makeDict([units,units],ff,0)
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
-            DIA[i][j] += np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
-            C[i][j] += C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
-            PC[i][j] += BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
-            C_annual[i][j] += PC[i][j] * (1+F) * (A_f + bb)
-            kr[i][j] += epsilon[i][j] / DIA[i][j]
-            Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
+            DIA[i][j] = np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
+            C[i][j] = C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
+            PC[i][j] = BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
+            C_annual[i][j] = PC[i][j] * (1+F) * (A_f + bb)
+            kr[i][j] = epsilon[i][j] / DIA[i][j]
+            Rey[i][j] = rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
 
-            AA[i][j] += (kr[i][j] ** 1.1098)/2.8257 + (7.149 / Rey[i][j])**0.8981
-            ff[i][j] += (1/ (-2 * math.log(kr[i][j]/3.7065 - (5.0452/Rey[i][j])*math.log(AA[i][j]))) )**2
+            AA[i][j] = (kr[i][j] ** 1.1098)/2.8257 + (7.149 / Rey[i][j])**0.8981
+            ff[i][j] = (1/ (-2 * math.log(kr[i][j]/3.7065 - (5.0452/Rey[i][j])*math.log(AA[i][j]))) )**2
 
 
 
