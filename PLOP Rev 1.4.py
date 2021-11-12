@@ -59,7 +59,7 @@ solver = 1
 SwitchLandShape = 1
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 1
+SwitchMinSepDistance = 0
 
 # FEI Constraints
 SwitchFEI = 1
@@ -150,7 +150,7 @@ colin = list(colin)
 #Area calculation if needed??
 Area = np.trapz(Y_begin, X_begin)
 
-
+#%%----------------- INPUT SPECIFICATIONS-------------------------
 # Dimensions of each unit (m)
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
@@ -206,7 +206,7 @@ Demin[5][6] = 5
 Demin = Demin + Demin.T - np.diag(Demin.diagonal())
 Demin = makeDict([units,units],Demin,0)
 
-## define the velocities 
+## define the velocities ##PICK A NUMBER
 velocity = np.zeros((len(units), len(units)))
 velocity[0][1] = 3  # connection cost between reactor and hex1
 velocity[0][4] = 3  # connection cost between reactor and co2abs
@@ -234,7 +234,7 @@ Q[5][6] = 5  # connection cost between flash and pump
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
 
-## define epsilon 
+## define epsilon #JUST NUMBER
 epsilon = np.zeros((len(units), len(units)))
 epsilon[0][1] = 0.000046  # connection cost between reactor and hex1
 epsilon[0][4] = 0.000046  # connection cost between reactor and co2abs
@@ -248,7 +248,7 @@ epsilon[5][6] = 0.000046  # connection cost between flash and pump
 epsilon = epsilon + epsilon.T - np.diag(epsilon.diagonal())
 epsilon = makeDict([units,units],epsilon,0)
 
-## define viscosity 
+## define viscosity #STREAM TABLES
 visc = np.zeros((len(units), len(units)))
 visc[0][1] = 0.000254  # connection cost between reactor and hex1
 visc[0][4] = 0.000254  # connection cost between reactor and co2abs
@@ -262,6 +262,7 @@ visc[5][6] = 0.000254  # connection cost between flash and pump
 visc = visc + visc.T - np.diag(visc.diagonal())
 visc = makeDict([units,units],visc,0)
 
+#density of the stream fluid #from aspen
 rhog = np.zeros((len(units), len(units)))
 rhog[0][1] = 882  # connection cost between reactor and hex1
 rhog[0][4] = 882  # connection cost between reactor and co2abs
@@ -275,6 +276,7 @@ rhog[5][6] = 882  # connection cost between flash and pump
 rhog = rhog + rhog.T - np.diag(rhog.diagonal())
 rhog = makeDict([units,units],rhog,0)
 
+# number of pipes 
 npp = np.zeros((len(units), len(units)))
 npp[0][1] = 1  # connection cost between reactor and hex1
 npp[0][4] = 1  # connection cost between reactor and co2abs
@@ -290,21 +292,22 @@ npp = makeDict([units,units],npp,0)
 
 #define constants for piping cost 
 
-C_ref = 7000
-n_1 = 1.08
-n_2 = 1
-CEPCI_ref  = 100
-MF = 0.74
-A_f = 0.1102
-FX_rate = 1
-BB = 880
-F = 1.5
-bb = 0.05 * Cp['reactor']
-CEPCI_2021 = 677.7
-DIA_ref = 2.3
-mechEffic = 0.6
-C_elec = 0.000045
-OH = 8000
+C_ref = 7000  # reference installed cost of duct of $700 per metre
+n_1 = 1.08# parameter for installed cost of ducts 
+n_2 = 1 # paramter for type of material 
+CEPCI_ref  = 100 # accounts for rise of inflation 2006
+MF = 0.74 # material factor (different fro each component)
+A_f = 0.1102  # check report
+FX_rate = 1  # exchange rate
+BB = 880  # paramter dependent on material
+F = 1.5 # parameter dependent on material 
+bb = 0.05 * Cp['reactor'] # 5% of installed cost accounting fro maintanance 
+CEPCI_2021 = 677.7   #ccounts for rise of inflation 2021
+DIA_ref = 2.3 # diameter of pipe
+mechEffic = 0.6  #mechanical efficiency 
+C_elec = 0.000045 # wholesale cost of electircity 
+OH = 8000  # operating hours
+
 
 
 
@@ -763,14 +766,9 @@ for i in units:
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
-            
-            
-            # kr[i][j] += epsilon[i][j] / DIA[i][j]
-            # Rey[i][j] += rhog[i][j] * velocity[i][j] * DIA[i][j] / visc[i][j]
-
-
-            #layout += deltaP[i][j] == 8 * 7 * (D[i][j]/8) *(rhog/2) * 15**2
-            # PP[i][j] += Q[i][j] * deltaP[i][j] / (rhog * mechEffic)
+            # if DIA[i][j] !=0:
+            #    layout += deltaP[i][j] == 8 * ff[i][j] * (D[i][j]/DIA[i][j]) *(rhog[i][j]/2) * velocity[i][j]**2
+                # PP[i][j] += Q[i][j] * deltaP[i][j] / (rhog * mechEffic)
             # POC[i][j] += C_elec * OH * PP[i][j] * n[i][j]
             
             layout += CD[i][j] == (C_annual[i][j]+PC_unit[i][j]) * D[i][j] * npp[i][j]
