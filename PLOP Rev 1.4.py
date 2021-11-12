@@ -9,11 +9,7 @@ Created on Mon Nov  2 17:02:59 2020
 Created on Sat Oct 31 14:31:20 2020
 
 @author: sj1617
-"""
 
-'testing'
-
-"""
 
 Continuous-domain representation of the process plant layout optimisation
 problem with Dow F&EI constraints
@@ -59,7 +55,7 @@ solver = 1
 SwitchLandShape = 1
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 0
+SwitchMinSepDistance = 1
 
 # FEI Constraints
 SwitchFEI = 1
@@ -94,7 +90,6 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-
 X_begin = np.array([0,0,40,80,80])
 X_end = np.array([0,40,80,80,0])
 Ng = max(X_end)
@@ -349,26 +344,8 @@ INV['co2abs'] = 10000
 #%% ----------- SwitchFEI---------
 if SwitchFEI == 1:
     # F&EI factors
-#    MF = dict.fromkeys(pertinent_units)
-#    F1 = dict.fromkeys(pertinent_units)
-#    F2 = dict.fromkeys(pertinent_units)
-#    F = dict.fromkeys(pertinent_units)
     De = dict.fromkeys(pertinent_units)
     DF = dict.fromkeys(pertinent_units)
-#    # assign values
-#    MF['reactor'] = 29
-#    MF['eoabs'] = 29
-#    MF['co2abs'] = 24
-#    F1['reactor'] = 2.2
-#    F1['eoabs'] = 1.2
-#    F1['co2abs'] = 1.2
-#    F2['reactor'] = 2.45
-#    F2['eoabs'] = 2.45
-#    F2['co2abs'] = 2.45
-    # compute factors
-#    F3 = {i: F1[i]*F2[i] for i in pertinent_units}
-#    F = {i: MF[i]*F3[i] for i in pertinent_units}
-#    De = {i: 0.256*F[i] for i in pertinent_units}
 
     DF['reactor'] = 0.87
     DF['eoabs'] = 0.73
@@ -513,66 +490,6 @@ antoineA['EO'] = 4.386
 antoineB['EO'] = 1115.1
 antoineC['EO'] = -29.015
 MW['EO'] = 44.05
-
-#%%-------------- Compute CEI factors -------------------------
-#     # Probit equation
-for h in hazardous_chemicals:
-    Pr[h] = norm.ppf(prob_death[h]) + 5
-    CONC[h] = math.sqrt(math.exp(Pr[h] + 17.5)/te)  # mg/m^3
-for i in pertinent_units:
-    for h in hazardous_chemicals:
-        # Vapour pressure (kPa)
-        Pvap[i][h] = 100 * 10**(antoineA[h] - antoineB[h]/(antoineC[h] + (Tb[h] + 273.15)))
-for i in pertinent_units:
-    # Liquid flowrate (kg/s)
-    Liq[i] = 9.44E-07 * Dh[i]**2 * rhol[i] * math.sqrt(1000*Pg[i]/rhol[i] + 9.8*Deltah[i])
-    if 300*Liq[i] >= INV[i]:
-        Liq[i] = INV[i]/300
-    else:
-         Liq[i] = 9.44E-07 * Dh[i]**2 * rhol[i] * math.sqrt(1000*Pg[i]/rhol[i] + 9.8*Deltah[i])
-    # Total liquid release (kg)
-    if Liq[i] < INV[i]/900:
-        WT[i] = 900*Liq[i]
-    elif Liq[i] >= INV[i]/900:
-        WT[i] = INV[i]
-    else:
-        pass
-    # Fraction flashed
-    for h in hazardous_chemicals:
-        Fv[i][h] = w[i][h] * heatratio[h] * (T[i] - Tb[h])
-        if Fv[i][h]/w[i][h] < 0.2:
-            # Air quantity from flashed (kg/s)
-            AQf[i][h] = 5*Fv[i][h]*Liq[i]
-            # Pool size (kg)
-            WP[i] = WT[i] * (1 - 5*Fv[i][h]/w[i][h])
-        elif Fv[i][h]/w[i][h] >= 0.2:
-            AQf[i][h] = w[i][h]*Liq[i]
-            WP[i] = 0
-        else:
-            pass
-        if AQf[i][h] == 0:
-            WP[i] = WT[i]
-        else:
-            pass
-    # Area of pool (m^2)
-    AP[i] = 100 * WP[i]/rhol[i]
-    for h in hazardous_chemicals:
-        # Air quantity from evaporating pool (kg/s)
-        AQp[i][h] = 9E-04 * AP[i]**0.95 * ((MW[h] * Pvap[i][h] * w[i][h])/(Tb[h] + 273))
-        # Total air quantity
-        AQ[i][h] = AQf[i][h] + AQp[i][h]
-        # Chemical  exposure index
-        CEI[i][h] = 655.1 * math.sqrt(AQ[i][h]/CONC[h])
-        # Hazard distance (m)
-        Dc[i][h] = 6551 * math.sqrt(AQ[i][h]/CONC[h])
-        if Dc[i][h] > 10000:
-            Dc[i][h] = 10000
-# Find max chemical hazard distance
-Dcvalues = []
-for a, b in Dc.items():
-    for c, d in b.items():
-        Dcvalues.append(d)
-maxDc = max(Dcvalues)
 
 #%%----------------- SwitchFEIVle -----------------------
 # # Occupancy calculations
@@ -719,37 +636,13 @@ if SwitchProt == 1:
 else:
     SumPZ = 0
 
-#if SwitchFEIVle == 1:
-#    # value of life in fire and explosion area of exposure
-#    Vle = LpVariable.dicts("Vle",(pertinent_units),lowBound=0,upBound=None,cat="Continuous")
-#    Vle2 = LpVariable.dicts("Vle2",(pertinent_units,units),lowBound=0,upBound=None,cat="Continuous")
-#    # Total cost of life due to fire and explosion
-#    SumVle = LpVariable("SumVle",lowBound=0,upBound=None,cat="Continuous")
-#    SumVle2 = LpVariable.dicts("SumVle2",(pertinent_units),lowBound=0,upBound=None,cat="Continuous")
-
-
-
-if SwitchCEI == 1:
-    # Currently unused variables for cost of life in FEI and CEI
-    # 1 if j is allocated within chemical the area of exposure if i; 0 otherwise
-    Psic = LpVariable.dicts("Psic",(pertinent_units,units,hazardous_chemicals),lowBound=0,upBound=1,cat="Integer")
-    Dc_in = LpVariable.dicts("Dc_in",(pertinent_units,units),lowBound=0,upBound=None,cat="Continuous")
-    Dc_out = LpVariable.dicts("Dc_out",(pertinent_units,units),lowBound=0,upBound=None,cat="Continuous")
-    # value of life in chemical area of exposure
-    Vlc = LpVariable.dicts("Vlc2",(pertinent_units,units),lowBound=0,upBound=None,cat="Continuous")
-    Vlc2 = LpVariable.dicts("Vlc2",(pertinent_units,units,hazardous_chemicals),lowBound=0,upBound=None,cat="Continuous")
-# Total cost of life due to chemical release
-SumVlc = LpVariable("SumVlc",lowBound=0,upBound=None,cat="Continuous")
 
 #%% --------------Define Objective Function--------------
 
 obj_sumOmega = SwitchFEI*SumOmega
 obj_PZ = SwitchProt*SumPZ
-# obj_Vle = SwitchFEIVle*SumVle
-obj_Vlc = SwitchCEI*SumVlc
 obj_CD = SumCD
-layout += obj_CD + obj_sumOmega + obj_PZ + obj_Vlc
-
+layout += obj_CD + obj_sumOmega + obj_PZ
 
 
 #%% --------------Define Constraints and Objective Function Contributions--------------
@@ -766,11 +659,6 @@ for i in units:
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
-            # if DIA[i][j] !=0:
-            #    layout += deltaP[i][j] == 8 * ff[i][j] * (D[i][j]/DIA[i][j]) *(rhog[i][j]/2) * velocity[i][j]**2
-                # PP[i][j] += Q[i][j] * deltaP[i][j] / (rhog * mechEffic)
-            # POC[i][j] += C_elec * OH * PP[i][j] * n[i][j]
-            
             layout += CD[i][j] == (C_annual[i][j]+PC_unit[i][j]) * D[i][j] * npp[i][j]
             # Distance calculation constraints (3 - 10)
             layout += R[i][j] - L[i][j] == x[i] - x[j]
@@ -781,8 +669,7 @@ for idxj, j in enumerate(units):
             layout += B[i][j] <= M*(1 - Wy[i][j])
             layout += D[i][j] == R[i][j] + L[i][j] + A[i][j] + B[i][j]
             layout += D[i][j] == D[j][i]
-   
-            
+
             # Nonoverlapping constraints (15 - 18)
             # Including switch for minimum separation distances
             if SwitchMinSepDistance == 1:
@@ -839,11 +726,7 @@ if SwitchFEI == 1:
                     layout += Din[i][j] <= De[i]*Psie[i][j]
                     layout += Dout[i][j] >= De[i]*(1 - Psie[i][j])
                     layout += Dout[i][j] <= M*(1 - Psie[i][j])
-                    # Cost of life (37)
-                    #Commented out as appeared to prevent Psie taking value of 1 - check later
-                    #layout += Vle[i] == OCC[i]*Cl[i] + lpSum([OCC[j]*Cl[j]*Psie[i][j]])
-                    # Summation term in value of area of exposure constraint (30i)                
-                    #layout += Ve2[i] == lpSum([Cp[j]*Psie[i][j] - Cp[j]*Din[i][j]/De[i]])
+
                     if SwitchFEIVle == 1:
                         layout += Ve2[i][j] == Cp[j]*Psie[i][j] + OCC[j]*Cl[j]*Psie[i][j] - Cp[j]*Din[i][j]/De[i] - OCC[j]*Cl[j]*Din[i][j]/De[i]
                     else:
@@ -857,25 +740,9 @@ if SwitchFEI == 1:
             layout += Ve[i] == Cp[i] + OCC[i]*Cl[i] + lpSum([Ve2[i][j] for j in units])
         else:
             layout += Ve[i] == Cp[i] + lpSum([Ve2[i][j] for j in units])
-        # layout += Vle[i] == OCC[i]*Cl[i] + lpSum([Vle2[i][j] for j in units])
+
         # Base maximum probable property damage cost (31)
         layout += Omega0[i] == DF[i]*Ve[i]
-
-#    if SwitchFEIVle == 1:
-#       for i in units:
-#            if i in pertinent_units: 
-#                for j in units:
-#                    if i != j:
-#                        layout += Vle2[i][j] == OCC[j]*Cl[j]*Psie[i][j]
-#                    else:
-#                        layout += Vle2[i][j] == 0
-#        for i in units:
-#            if i in pertinent_units:
-#                for j in units:
-#                    layout += SumVle2[i] == lpSum([Vle2[i][j]])
-#        for i in pertinent_units:
-#            layout += Vle[i] == OCC[i]*Cl[i] #+ SumVle2[i]
-#            layout += SumVle == lpSum(Vle[i] for i in pertinent_units)
 
     if SwitchProt == 1:
         # for all i in pertinent units,k in configurations
@@ -902,107 +769,6 @@ if SwitchFEI == 1:
     else:
         # Objective function contribution without protection devices
         layout += SumOmega == lpSum(Omega0[i] for i in pertinent_units)
-
-
-#%% CEI Equations
-# All commented out while under review - appears to use same Din and Dout as FEI which is not right - separate case
-# Unused CEI constraints
-# for i in units:
-#     if i in pertinent_units:
-#         for j in units:
-#             if i != j:
-#                 # (26)
-#                 layout += Din[i][j] + Dout[i][j] == D[i][j]
-#                 #for h in hazardous_chemicals:
-#                 #    # (42)
-#                 #    layout += Dout[i][j] <= M*(2 - Psie[i][j] - Psic[i][j][h])
-if SwitchCEI == 1:
-    # for all i in pertinent units, j in units, j != i
-    for i in units:
-        if i in pertinent_units:
-            for j in units:
-                if i != j:
-                    for h in hazardous_chemicals:
-                        #Area of exposure constraints (39 - 40)
-                        layout += Dc_in[i][j] + Dc_out[i][j] == D[i][j]
-                        layout += Dc_in[i][j] <= Dc[i][h]*Psic[i][j][h]
-                        layout += Dc_out[i][j] >= Dc[i][h]*(1 - Psic[i][j][h])
-                        layout += Dc_out[i][j] <= M*(1 - Psic[i][j][h])
-                        layout += Vlc2[i][j][h] == OCC[j]*Cl[j]*Psic[i][j][h] - OCC[j]*Cl[j]*Dc_in[i][j]/Dc[i][h]
-                else:
-                    layout += Vlc2[i][j][h] == 0
-
-
-    for i in pertinent_units:
-        # Value of chemical area of exposure constraint (43)
-        layout += Vlc[i] == OCC[i]*Cl[i] + lpSum([Vlc2[i][j][h] for j in units for h in hazardous_chemicals])
-
-    # Objective function term
-    layout += SumVlc == lpSum(Vlc[i] for i in pertinent_units)
-
-# --------------Fixing Variable Values--------------
-# Define function to fix value
-# def fix_variable(variable, value):
-#     variable.setInitialValue(value)
-#     variable.fixValue()
-
-# For the purpose of solving case with no protection devices, uncomment out this section if desired
-# Fix Z_i,1 = 1, the rest = 0
-# if SwitchProt != 1:
-#    for k in configurations[1:]:
-#        for i in pertinent_units:
-#            fix_variable(Z[i][k], 0)
-#    for i in pertinent_units:
-#        fix_variable(Z[i][1], 1)
-# --------------Initialise--------------
-# Initialise with optimal solution from reference paper
-
-# solution_x = {
-#     ('reactor'): 30,#.39,
-#     ('hex1'): 15.39,
-#     ('eoabs'): 26.04,
-#     ('hex2'): 4.24,
-#     ('co2abs'): 4.24,
-#     ('flash'): 5.58,
-#     ('pump'): 2.9,
-# }
-# solution_y = {
-#     ('reactor'): 30,#.39,
-#     ('hex1'): 15.39,
-#     ('eoabs'): 4.24,
-#     ('hex2'): 4.24,
-#     ('co2abs'): 26.54,
-#     ('flash'): 9.82,
-#     ('pump'): 9.82,
-#}
-
-
-# for i, v in solution_x.items():
-#     x[i].setInitialValue(v)
-
-# for i, v in solution_y.items():
-#     y[i].setInitialValue(v)
-
-# for i, v in solution_x.items():
-#     fix_variable(x[i], v)
-
-# for i, v in solution_y.items():
-#     fix_variable(y[i], v)
-
-
-# fix_variable(Psie['reactor']['hex1'], 1)
-# fix_variable(Psie['reactor']['eoabs'], 1)
-# fix_variable(Psie['reactor']['hex2'], 1)
-# fix_variable(Psie['reactor']['co2abs'], 1)
-# fix_variable(Psie['reactor']['flash'], 1)
-# fix_variable(Psie['reactor']['pump'], 1)
-
-
-# for i, v in solution_x.items():
-#     fix_variable(x[i],v)
-
-# for i, v in solution_y.items():
-#     fix_variable(y[i],v)
 
 #%% --------------Initiate Solve--------------
 layout.writeLP("DowFEI.lp")
