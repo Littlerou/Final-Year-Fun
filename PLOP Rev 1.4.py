@@ -55,7 +55,7 @@ solver = 1
 SwitchLandShape = 1
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 1
+SwitchMinSepDistance = 0
 
 # FEI Constraints
 SwitchFEI = 1
@@ -90,13 +90,13 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_begin = np.array([0,0,40,80,80])
-X_end = np.array([0,40,80,80,0])
+X_begin = np.array([0,0,25,35,35])
+X_end = np.array([0,25,35,35,0])
 Ng = max(X_end)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,40,80,40,0])
-Y_end = np.array([40,80,40,0,0])
+Y_begin = np.array([0,20,40,20,0])
+Y_end = np.array([20,40,20,0,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -157,7 +157,7 @@ alpha['co2abs'] = 5
 alpha['flash'] = 2.68
 alpha['pump'] = 2.40
 beta['reactor'] = 5
-beta['hex1'] = 11.42
+beta['hex1'] = 11.42   
 beta['eoabs'] = 7.68
 beta['hex2'] = 8.48
 beta['co2abs'] = 5
@@ -217,14 +217,14 @@ velocity = makeDict([units,units],velocity,0)
 
 ## define the flowrates Q
 Q = np.zeros((len(units), len(units)))
-Q[0][1] = 5  # connection cost between reactor and hex1
-Q[0][4] = 7  # connection cost between reactor and co2abs
-Q[1][2] = 3  # connection cost between hex1 and eoabs
-Q[2][3] = 10 # connection cost between eoabs and hex2
-Q[3][4] = 12  # connection cost between hex2 and co2abs
-Q[4][5] = 3  # connection cost between co2abs and flash
-Q[4][6] = 5  # connection cost between co2abs and pump
-Q[5][6] = 5  # connection cost between flash and pump
+Q[0][1] = 8.24  # connection cost between reactor and hex1
+Q[0][4] = 2.47  # connection cost between reactor and co2abs
+Q[1][2] = 14.71  # connection cost between hex1 and eoabs
+Q[2][3] = 0.2 # connection cost between eoabs and hex2
+Q[3][4] = 14.71  # connection cost between hex2 and co2abs
+Q[4][5] = 14.71  # connection cost between co2abs and flash
+Q[4][6] = 6.12  # connection cost between co2abs and pump
+Q[5][6] = 0.36  # connection cost between flash and pump
 
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
@@ -245,28 +245,28 @@ epsilon = makeDict([units,units],epsilon,0)
 
 ## define viscosity #STREAM TABLES
 visc = np.zeros((len(units), len(units)))
-visc[0][1] = 0.000254  # connection cost between reactor and hex1
-visc[0][4] = 0.000254  # connection cost between reactor and co2abs
-visc[1][2] = 0.000254  # connection cost between hex1 and eoabs
-visc[2][3] = 0.000254  # connection cost between eoabs and hex2
-visc[3][4] = 0.000254  # connection cost between hex2 and co2abs
-visc[4][5] = 0.000254  # connection cost between co2abs and flash
-visc[4][6] = 0.000254  # connection cost between co2abs and pump
-visc[5][6] = 0.000254  # connection cost between flash and pump
+visc[0][1] = 0.00008  # connection cost between reactor and hex1
+visc[0][4] = 0.00025  # connection cost between reactor and co2abs
+visc[1][2] = 0.00024  # connection cost between hex1 and eoabs
+visc[2][3] = 0.00027  # connection cost between eoabs and hex2
+visc[3][4] = 0.00003  # connection cost between hex2 and co2abs
+visc[4][5] = 0.00013  # connection cost between co2abs and flash
+visc[4][6] = 0.00001  # connection cost between co2abs and pump
+visc[5][6] = 0.00001  # connection cost between flash and pump
 
 visc = visc + visc.T - np.diag(visc.diagonal())
 visc = makeDict([units,units],visc,0)
 
 #density of the stream fluid #from aspen
 rhog = np.zeros((len(units), len(units)))
-rhog[0][1] = 882  # connection cost between reactor and hex1
-rhog[0][4] = 882  # connection cost between reactor and co2abs
-rhog[1][2] = 882  # connection cost between hex1 and eoabs
-rhog[2][3] = 882  # connection cost between eoabs and hex2
-rhog[3][4] = 882  # connection cost between hex2 and co2abs
-rhog[4][5] = 882  # connection cost between co2abs and flash
-rhog[4][6] = 882  # connection cost between co2abs and pump
-rhog[5][6] = 882  # connection cost between flash and pump
+rhog[0][1] = 556  # connection cost between reactor and hex1
+rhog[0][4] = 790  # connection cost between reactor and co2abs
+rhog[1][2] = 23.7  # connection cost between hex1 and eoabs
+rhog[2][3] = 847.99 # connection cost between eoabs and hex2
+rhog[3][4] = 7.90815  # connection cost between hex2 and co2abs
+rhog[4][5] = 23.15  # connection cost between co2abs and flash
+rhog[4][6] = 10.02  # connection cost between co2abs and pump
+rhog[5][6] = 42.70  # connection cost between flash and pump
 
 rhog = rhog + rhog.T - np.diag(rhog.diagonal())
 rhog = makeDict([units,units],rhog,0)
@@ -589,7 +589,7 @@ for idxj, j in enumerate(units):
         if idxj > idxi:
             #Equations for piping cost
             DIA[i][j] = np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
-            C[i][j] = C_ref*(DIA[i][j]*DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
+            C[i][j] = 5* C_ref*(DIA[i][j]/DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
             PC[i][j] = BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
             C_annual[i][j] = PC[i][j] * (1+F) * (A_f + bb) * npp[i][j]
             
@@ -602,7 +602,7 @@ for idxj, j in enumerate(units):
             pPump_unit[i][j] = Q[i][j] * delP_unit[i][j] /(rhog[i][j]*mechEffic)
             PC_unit[i][j] = C_elec * OH * pPump_unit[i][j]*npp[i][j]
             
-            pipetotal_unit[i][j] = PC_unit[i][j]+C_annual[i][j] *npp[i][j]
+            pipetotal_unit[i][j] = PC_unit[i][j]+ C[i][j] *npp[i][j]
 
 
 if SwitchFEI == 1:
@@ -659,7 +659,7 @@ for i in units:
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
         if idxj > idxi:
-            layout += CD[i][j] == (C_annual[i][j]+PC_unit[i][j]) * D[i][j] * npp[i][j]
+            layout += CD[i][j] == (pipetotal_unit[i][j]) * D[i][j] * npp[i][j]
             # Distance calculation constraints (3 - 10)
             layout += R[i][j] - L[i][j] == x[i] - x[j]
             layout += A[i][j] - B[i][j] == y[i] - y[j]
