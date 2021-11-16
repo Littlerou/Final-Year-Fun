@@ -1,6 +1,6 @@
 \* Layout_Problem_Model *\
 Minimize
-OBJ: SumCD + SumOmega + SumPZ
+OBJ: SumCD + SumOmega
 Subject To
 _C1: - 5 O_reactor + l_reactor = 5
 _C10: d_eoabs + l_eoabs = 15.36
@@ -35,7 +35,7 @@ _C120: A_hex1_hex2 - B_hex2_hex1 = 0
 _C121: - A_hex2_hex1 + B_hex1_hex2 = 0
 _C122: Wx_hex1_hex2 + Wx_hex2_hex1 = 1
 _C123: Wy_hex1_hex2 + Wy_hex2_hex1 = 1
-_C124: CD_eoabs_hex2 - 57.0679372562 D_eoabs_hex2 = 0
+_C124: CD_eoabs_hex2 - 1124.63229083 D_eoabs_hex2 = 0
 _C125: - L_eoabs_hex2 + R_eoabs_hex2 - X_eoabs + X_hex2 = 0
 _C126: A_eoabs_hex2 - B_eoabs_hex2 - Y_eoabs + Y_hex2 = 0
 _C127: R_eoabs_hex2 - 1000 Wx_eoabs_hex2 <= 0
@@ -61,7 +61,7 @@ _C14: d_hex2 + l_hex2 = 16.96
 _C140: - A_hex2_eoabs + B_eoabs_hex2 = 0
 _C141: Wx_eoabs_hex2 + Wx_hex2_eoabs = 1
 _C142: Wy_eoabs_hex2 + Wy_hex2_eoabs = 1
-_C143: CD_reactor_co2abs - 226.087664548 D_reactor_co2abs = 0
+_C143: CD_reactor_co2abs - 2509.52870646 D_reactor_co2abs = 0
 _C144: - L_reactor_co2abs + R_reactor_co2abs + X_co2abs - X_reactor = 0
 _C145: A_reactor_co2abs - B_reactor_co2abs + Y_co2abs - Y_reactor = 0
 _C146: R_reactor_co2abs - 1000 Wx_reactor_co2abs <= 0
@@ -140,7 +140,7 @@ _C198: Wx_co2abs_eoabs + Wx_eoabs_co2abs = 1
 _C199: Wy_co2abs_eoabs + Wy_eoabs_co2abs = 1
 _C2: d_reactor + l_reactor = 15
 _C20: Y_co2abs - 0.5 d_co2abs >= 0
-_C200: CD_hex2_co2abs - 6925.85315314 D_hex2_co2abs = 0
+_C200: CD_hex2_co2abs - 388.845409104 D_hex2_co2abs = 0
 _C201: - L_hex2_co2abs + R_hex2_co2abs + X_co2abs - X_hex2 = 0
 _C202: A_hex2_co2abs - B_hex2_co2abs + Y_co2abs - Y_hex2 = 0
 _C203: R_hex2_co2abs - 1000 Wx_hex2_co2abs <= 0
@@ -263,13 +263,13 @@ _C287: 1000 E1_hex2_flash - 1000 E2_hex2_flash - Y_flash + Y_hex2
 _C288: - 1000 E1_hex2_flash - 1000 E2_hex2_flash + Y_flash - Y_hex2
  - 0.5 d_flash - 0.5 d_hex2 >= -2000
 _C289: L_hex2_flash - R_flash_hex2 = 0
-_C29: CD_reactor_hex1 - 517.059335953 D_reactor_hex1 = 0
+_C29: CD_reactor_hex1 - 3088.86090455 D_reactor_hex1 = 0
 _C290: - L_flash_hex2 + R_hex2_flash = 0
 _C291: A_hex2_flash - B_flash_hex2 = 0
 _C292: - A_flash_hex2 + B_hex2_flash = 0
 _C293: Wx_flash_hex2 + Wx_hex2_flash = 1
 _C294: Wy_flash_hex2 + Wy_hex2_flash = 1
-_C295: CD_co2abs_flash - 3879.23871314 D_co2abs_flash = 0
+_C295: CD_co2abs_flash - 131.696129651 D_co2abs_flash = 0
 _C296: - L_co2abs_flash + R_co2abs_flash - X_co2abs + X_flash = 0
 _C297: A_co2abs_flash - B_co2abs_flash - Y_co2abs + Y_flash = 0
 _C298: R_co2abs_flash - 1000 Wx_co2abs_flash <= 0
@@ -403,7 +403,7 @@ _C388: Wx_hex2_pump + Wx_pump_hex2 = 1
 _C389: Wy_hex2_pump + Wy_pump_hex2 = 1
 _C39: - 1000 E1_reactor_hex1 + 1000 E2_reactor_hex1 + X_hex1 - X_reactor
  - 0.5 l_hex1 - 0.5 l_reactor >= -1000
-_C390: CD_co2abs_pump - 3795.89574159 D_co2abs_pump = 0
+_C390: CD_co2abs_pump - 128.404169098 D_co2abs_pump = 0
 _C391: - L_co2abs_pump + R_co2abs_pump - X_co2abs + X_pump = 0
 _C392: A_co2abs_pump - B_co2abs_pump - Y_co2abs + Y_pump = 0
 _C393: R_co2abs_pump - 1000 Wx_co2abs_pump <= 0
@@ -430,7 +430,7 @@ _C405: A_co2abs_pump - B_pump_co2abs = 0
 _C406: - A_pump_co2abs + B_co2abs_pump = 0
 _C407: Wx_co2abs_pump + Wx_pump_co2abs = 1
 _C408: Wy_co2abs_pump + Wy_pump_co2abs = 1
-_C409: CD_flash_pump - 376.170484707 D_flash_pump = 0
+_C409: CD_flash_pump - 203.751021595 D_flash_pump = 0
 _C41: - 1000 E1_reactor_hex1 - 1000 E2_reactor_hex1 + Y_hex1 - Y_reactor
  - 0.5 d_hex1 - 0.5 d_reactor >= -2000
 _C410: - L_flash_pump + R_flash_pump - X_flash + X_pump = 0
@@ -470,44 +470,44 @@ _C428: - CD_co2abs_co2abs - CD_co2abs_eoabs - CD_co2abs_flash - CD_co2abs_hex1
  - CD_pump_reactor - CD_reactor_co2abs - CD_reactor_eoabs - CD_reactor_flash
  - CD_reactor_hex1 - CD_reactor_hex2 - CD_reactor_pump - CD_reactor_reactor
  + SumCD = 0
-_C429: - 0.8 X_reactor + Y_reactor + 0.5 d_reactor + 0.4 l_reactor <= 20
+_C429: - X_reactor + Y_reactor + 0.5 d_reactor + 0.5 l_reactor <= 35
 _C43: - L_hex1_reactor + R_reactor_hex1 = 0
-_C430: 2 X_reactor + Y_reactor + 0.5 d_reactor + l_reactor <= 90
+_C430: 1.4 X_reactor + Y_reactor + 0.5 d_reactor + 0.7 l_reactor <= 119
 _C431: Y_reactor - 0.5 d_reactor >= 0
-_C432: X_reactor + 0.5 l_reactor <= 35
+_C432: X_reactor + 0.5 l_reactor <= 60
 _C433: X_reactor - 0.5 l_reactor >= 0
-_C434: - 0.8 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.4 l_hex1 <= 20
-_C435: 2 X_hex1 + Y_hex1 + 0.5 d_hex1 + l_hex1 <= 90
+_C434: - X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.5 l_hex1 <= 35
+_C435: 1.4 X_hex1 + Y_hex1 + 0.5 d_hex1 + 0.7 l_hex1 <= 119
 _C436: Y_hex1 - 0.5 d_hex1 >= 0
-_C437: X_hex1 + 0.5 l_hex1 <= 35
+_C437: X_hex1 + 0.5 l_hex1 <= 60
 _C438: X_hex1 - 0.5 l_hex1 >= 0
-_C439: - 0.8 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.4 l_eoabs <= 20
+_C439: - X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.5 l_eoabs <= 35
 _C44: A_reactor_hex1 - B_hex1_reactor = 0
-_C440: 2 X_eoabs + Y_eoabs + 0.5 d_eoabs + l_eoabs <= 90
+_C440: 1.4 X_eoabs + Y_eoabs + 0.5 d_eoabs + 0.7 l_eoabs <= 119
 _C441: Y_eoabs - 0.5 d_eoabs >= 0
-_C442: X_eoabs + 0.5 l_eoabs <= 35
+_C442: X_eoabs + 0.5 l_eoabs <= 60
 _C443: X_eoabs - 0.5 l_eoabs >= 0
-_C444: - 0.8 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.4 l_hex2 <= 20
-_C445: 2 X_hex2 + Y_hex2 + 0.5 d_hex2 + l_hex2 <= 90
+_C444: - X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.5 l_hex2 <= 35
+_C445: 1.4 X_hex2 + Y_hex2 + 0.5 d_hex2 + 0.7 l_hex2 <= 119
 _C446: Y_hex2 - 0.5 d_hex2 >= 0
-_C447: X_hex2 + 0.5 l_hex2 <= 35
+_C447: X_hex2 + 0.5 l_hex2 <= 60
 _C448: X_hex2 - 0.5 l_hex2 >= 0
-_C449: - 0.8 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.4 l_co2abs <= 20
+_C449: - X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.5 l_co2abs <= 35
 _C45: - A_hex1_reactor + B_reactor_hex1 = 0
-_C450: 2 X_co2abs + Y_co2abs + 0.5 d_co2abs + l_co2abs <= 90
+_C450: 1.4 X_co2abs + Y_co2abs + 0.5 d_co2abs + 0.7 l_co2abs <= 119
 _C451: Y_co2abs - 0.5 d_co2abs >= 0
-_C452: X_co2abs + 0.5 l_co2abs <= 35
+_C452: X_co2abs + 0.5 l_co2abs <= 60
 _C453: X_co2abs - 0.5 l_co2abs >= 0
-_C454: - 0.8 X_flash + Y_flash + 0.5 d_flash + 0.4 l_flash <= 20
-_C455: 2 X_flash + Y_flash + 0.5 d_flash + l_flash <= 90
+_C454: - X_flash + Y_flash + 0.5 d_flash + 0.5 l_flash <= 35
+_C455: 1.4 X_flash + Y_flash + 0.5 d_flash + 0.7 l_flash <= 119
 _C456: Y_flash - 0.5 d_flash >= 0
-_C457: X_flash + 0.5 l_flash <= 35
+_C457: X_flash + 0.5 l_flash <= 60
 _C458: X_flash - 0.5 l_flash >= 0
-_C459: - 0.8 X_pump + Y_pump + 0.5 d_pump + 0.4 l_pump <= 20
+_C459: - X_pump + Y_pump + 0.5 d_pump + 0.5 l_pump <= 35
 _C46: Wx_hex1_reactor + Wx_reactor_hex1 = 1
-_C460: 2 X_pump + Y_pump + 0.5 d_pump + l_pump <= 90
+_C460: 1.4 X_pump + Y_pump + 0.5 d_pump + 0.7 l_pump <= 119
 _C461: Y_pump - 0.5 d_pump >= 0
-_C462: X_pump + 0.5 l_pump <= 35
+_C462: X_pump + 0.5 l_pump <= 60
 _C463: X_pump - 0.5 l_pump >= 0
 _C464: Ve2_reactor_reactor = 0
 _C465: - D_reactor_hex1 + Din_reactor_hex1 + Dout_reactor_hex1 = 0
@@ -643,72 +643,13 @@ _C561: - Ve2_co2abs_co2abs - Ve2_co2abs_eoabs - Ve2_co2abs_flash
  - Ve2_co2abs_hex1 - Ve2_co2abs_hex2 - Ve2_co2abs_pump - Ve2_co2abs_reactor
  + Ve_co2abs = 3081300
 _C562: Omega0_co2abs - 0.66 Ve_co2abs = 0
-_C563: - 100000000 Z_reactor_1 + linOmega0_reactor_1 <= 0
-_C564: - 100000000 Z_reactor_2 + linOmega0_reactor_2 <= 0
-_C565: - 100000000 Z_reactor_3 + linOmega0_reactor_3 <= 0
-_C566: - 100000000 Z_reactor_4 + linOmega0_reactor_4 <= 0
-_C567: - 100000000 Z_reactor_5 + linOmega0_reactor_5 <= 0
-_C568: - 100000000 Z_reactor_6 + linOmega0_reactor_6 <= 0
-_C569: - 100000000 Z_eoabs_1 + linOmega0_eoabs_1 <= 0
+_C563: - Omega0_co2abs - Omega0_eoabs - Omega0_reactor + SumOmega = 0
 _C57: 1000 E1_reactor_eoabs + 1000 E2_reactor_eoabs - X_eoabs + X_reactor
  - 0.5 l_eoabs - 0.5 l_reactor >= 0
-_C570: - 100000000 Z_eoabs_2 + linOmega0_eoabs_2 <= 0
-_C571: - 100000000 Z_eoabs_3 + linOmega0_eoabs_3 <= 0
-_C572: - 100000000 Z_eoabs_4 + linOmega0_eoabs_4 <= 0
-_C573: - 100000000 Z_eoabs_5 + linOmega0_eoabs_5 <= 0
-_C574: - 100000000 Z_eoabs_6 + linOmega0_eoabs_6 <= 0
-_C575: - 100000000 Z_co2abs_1 + linOmega0_co2abs_1 <= 0
-_C576: - 100000000 Z_co2abs_2 + linOmega0_co2abs_2 <= 0
-_C577: - 100000000 Z_co2abs_3 + linOmega0_co2abs_3 <= 0
-_C578: - 100000000 Z_co2abs_4 + linOmega0_co2abs_4 <= 0
-_C579: - 100000000 Z_co2abs_5 + linOmega0_co2abs_5 <= 0
 _C58: - 1000 E1_reactor_eoabs + 1000 E2_reactor_eoabs + X_eoabs - X_reactor
  - 0.5 l_eoabs - 0.5 l_reactor >= -1000
-_C580: - 100000000 Z_co2abs_6 + linOmega0_co2abs_6 <= 0
-_C581: Z_reactor_1 + Z_reactor_2 + Z_reactor_3 + Z_reactor_4 + Z_reactor_5
- + Z_reactor_6 = 1
-_C582: Omega0_reactor - linOmega0_reactor_1 - linOmega0_reactor_2
- - linOmega0_reactor_3 - linOmega0_reactor_4 - linOmega0_reactor_5
- - linOmega0_reactor_6 = 0
-_C583: Omega_reactor - linOmega0_reactor_1 - 0.9 linOmega0_reactor_2
- - 0.75 linOmega0_reactor_3 - 0.365 linOmega0_reactor_4
- - 0.292 linOmega0_reactor_5 - 0.117 linOmega0_reactor_6 = 0
-_C584: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
-_C585: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
-_C586: Z_eoabs_1 + Z_eoabs_2 + Z_eoabs_3 + Z_eoabs_4 + Z_eoabs_5 + Z_eoabs_6
- = 1
-_C587: Omega0_eoabs - linOmega0_eoabs_1 - linOmega0_eoabs_2
- - linOmega0_eoabs_3 - linOmega0_eoabs_4 - linOmega0_eoabs_5
- - linOmega0_eoabs_6 = 0
-_C588: Omega_eoabs - linOmega0_eoabs_1 - 0.9 linOmega0_eoabs_2
- - 0.76 linOmega0_eoabs_3 - 0.684 linOmega0_eoabs_4 - 0.612 linOmega0_eoabs_5
- - 0.465 linOmega0_eoabs_6 = 0
-_C589: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
 _C59: 1000 E1_reactor_eoabs - 1000 E2_reactor_eoabs - Y_eoabs + Y_reactor
  - 0.5 d_eoabs - 0.5 d_reactor >= -1000
-_C590: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
-_C591: Z_co2abs_1 + Z_co2abs_2 + Z_co2abs_3 + Z_co2abs_4 + Z_co2abs_5
- + Z_co2abs_6 = 1
-_C592: Omega0_co2abs - linOmega0_co2abs_1 - linOmega0_co2abs_2
- - linOmega0_co2abs_3 - linOmega0_co2abs_4 - linOmega0_co2abs_5
- - linOmega0_co2abs_6 = 0
-_C593: Omega_co2abs - linOmega0_co2abs_1 - 0.9 linOmega0_co2abs_2
- - 0.76 linOmega0_co2abs_3 - 0.684 linOmega0_co2abs_4
- - 0.612 linOmega0_co2abs_5 - 0.465 linOmega0_co2abs_6 = 0
-_C594: - Omega_co2abs - Omega_eoabs - Omega_reactor + SumOmega = 0
-_C595: SumPZ - 5000 Z_co2abs_2 - 20000 Z_co2abs_3 - 25000 Z_co2abs_4
- - 35000 Z_co2abs_5 - 55000 Z_co2abs_6 - 5000 Z_eoabs_2 - 20000 Z_eoabs_3
- - 25000 Z_eoabs_4 - 35000 Z_eoabs_5 - 55000 Z_eoabs_6 - 5000 Z_reactor_2
- - 15000 Z_reactor_3 - 40000 Z_reactor_4 - 60000 Z_reactor_5
- - 125000 Z_reactor_6 = 0
 _C6: d_hex1 + l_hex1 = 22.84
 _C60: - 1000 E1_reactor_eoabs - 1000 E2_reactor_eoabs + Y_eoabs - Y_reactor
  - 0.5 d_eoabs - 0.5 d_reactor >= -2000
@@ -718,7 +659,7 @@ _C63: A_reactor_eoabs - B_eoabs_reactor = 0
 _C64: - A_eoabs_reactor + B_reactor_eoabs = 0
 _C65: Wx_eoabs_reactor + Wx_reactor_eoabs = 1
 _C66: Wy_eoabs_reactor + Wy_reactor_eoabs = 1
-_C67: CD_hex1_eoabs - 3830.68284056 D_hex1_eoabs = 0
+_C67: CD_hex1_eoabs - 130.868502248 D_hex1_eoabs = 0
 _C68: - L_hex1_eoabs + R_hex1_eoabs + X_eoabs - X_hex1 = 0
 _C69: A_hex1_eoabs - B_hex1_eoabs + Y_eoabs - Y_hex1 = 0
 _C7: X_hex1 - 0.5 l_hex1 >= 0
@@ -931,22 +872,4 @@ Wy_reactor_flash
 Wy_reactor_hex1
 Wy_reactor_hex2
 Wy_reactor_pump
-Z_co2abs_1
-Z_co2abs_2
-Z_co2abs_3
-Z_co2abs_4
-Z_co2abs_5
-Z_co2abs_6
-Z_eoabs_1
-Z_eoabs_2
-Z_eoabs_3
-Z_eoabs_4
-Z_eoabs_5
-Z_eoabs_6
-Z_reactor_1
-Z_reactor_2
-Z_reactor_3
-Z_reactor_4
-Z_reactor_5
-Z_reactor_6
 End

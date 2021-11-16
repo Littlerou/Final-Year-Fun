@@ -80,10 +80,10 @@ SwitchMinSepDistance = 1
 
 
 # FEI Constraints
-SwitchFEI = 0
+SwitchFEI = 1
 
 # Toggle protection devices (must have FEI enabled if 1)
-SwitchProt = 0
+SwitchProt = 1
 
 # FEI Cost of Life Constraints (only works if SwitchFEI is on)
 SwitchFEIVle = 1

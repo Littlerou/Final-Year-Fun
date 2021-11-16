@@ -61,7 +61,7 @@ SwitchMinSepDistance = 0
 SwitchFEI = 1
 
 # Toggle protection devices (must have FEI enabled if 1)
-SwitchProt = 1
+SwitchProt = 0
 
 # FEI Cost of Life Constraints (only works if SwitchFEI is on)
 SwitchFEIVle = 1
@@ -90,13 +90,13 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_begin = np.array([0,0,25,35,35])
-X_end = np.array([0,25,35,35,0])
+X_begin = np.array([0,0,35,60,60])
+X_end = np.array([0,35,60,60,0])
 Ng = max(X_end)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,20,40,20,0])
-Y_end = np.array([20,40,20,0,0])
+Y_begin = np.array([0,35,70,35,0])
+Y_end = np.array([35,70,35,0,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -176,41 +176,41 @@ Cp['pump'] = 1500
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
-Demin[0][1] = 5
-Demin[0][2] = 5
-Demin[0][3] = 5
-Demin[0][4] = 5
-Demin[0][5] = 5
-Demin[0][6] = 5
-Demin[1][2] = 5
-Demin[1][3] = 5
-Demin[1][4] = 5
-Demin[1][5] = 5
-Demin[1][6] = 5
-Demin[2][3] = 5
-Demin[2][4] = 5
-Demin[2][5] = 5
-Demin[2][6] = 5
-Demin[3][4] = 5
-Demin[3][5] = 5
-Demin[3][6] = 5
-Demin[4][5] = 5
-Demin[4][6] =5
-Demin[5][6] = 5
+Demin[0][1] = 15
+Demin[0][2] = 15
+Demin[0][3] = 15
+Demin[0][4] = 15
+Demin[0][5] = 15
+Demin[0][6] = 15
+Demin[1][2] = 15
+Demin[1][3] = 15
+Demin[1][4] = 15
+Demin[1][5] = 15
+Demin[1][6] = 15
+Demin[2][3] = 15
+Demin[2][4] = 15
+Demin[2][5] = 15
+Demin[2][6] = 15
+Demin[3][4] = 15
+Demin[3][5] = 15
+Demin[3][6] = 15
+Demin[4][5] = 15
+Demin[4][6] =15
+Demin[5][6] = 15
 
 Demin = Demin + Demin.T - np.diag(Demin.diagonal())
 Demin = makeDict([units,units],Demin,0)
 
 ## define the velocities ##PICK A NUMBER
 velocity = np.zeros((len(units), len(units)))
-velocity[0][1] = 3  # connection cost between reactor and hex1
-velocity[0][4] = 3  # connection cost between reactor and co2abs
+velocity[0][1] = 30  # connection cost between reactor and hex1
+velocity[0][4] = 30  # connection cost between reactor and co2abs
 velocity[1][2] = 3  # connection cost between hex1 and eoabs
-velocity[2][3] = 3  # connection cost between eoabs and hex2
-velocity[3][4] = 3  # connection cost between hex2 and co2abs
+velocity[2][3] = 30  # connection cost between eoabs and hex2
+velocity[3][4] = 30  # connection cost between hex2 and co2abs
 velocity[4][5] = 3  # connection cost between co2abs and flash
 velocity[4][6] = 3  # connection cost between co2abs and pump
-velocity[5][6] = 3  # connection cost between flash and pump
+velocity[5][6] = 30  # connection cost between flash and pump
 
 velocity = velocity + velocity.T - np.diag(velocity.diagonal())#
 velocity = makeDict([units,units],velocity,0)
@@ -289,15 +289,16 @@ npp = makeDict([units,units],npp,0)
 
 C_ref = 7000  # reference installed cost of duct of $700 per metre
 n_1 = 1.08# parameter for installed cost of ducts 
-n_2 = 1 # paramter for type of material 
-CEPCI_ref  = 100 # accounts for rise of inflation 2006
-MF = 0.74 # material factor (different fro each component)
+n_2 = 0.74 # paramter for type of material 
+CEPCI_1959  = 100 # accounts for rise of inflation 1959
+CEPCI_2006 = 499.6 #accounts for rise of inflation 2006
+CEPCI_2021 = 677.7   #ccounts for rise of inflation 2021
+MF = 1 # material factor (different fro each component)
 A_f = 0.1102  # check report
-FX_rate = 1  # exchange rate
+FX_rate = 0.64  # exchange rate
 BB = 880  # paramter dependent on material
 F = 1.5 # parameter dependent on material 
-bb = 0.05 * Cp['reactor'] # 5% of installed cost accounting fro maintanance 
-CEPCI_2021 = 677.7   #ccounts for rise of inflation 2021
+bb = 0.05 # 5% of installed cost accounting fro maintanance 
 DIA_ref = 2.3 # diameter of pipe
 mechEffic = 0.6  #mechanical efficiency 
 C_elec = 0.000045 # wholesale cost of electircity 
@@ -310,8 +311,8 @@ OH = 8000  # operating hours
 
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
-    xmax = 40
-    ymax = 40
+    xmax = 52.08166664
+    ymax = 52.08166664
 
 
 #%% ----------F&EI model parameter input-----------
@@ -589,9 +590,10 @@ for idxj, j in enumerate(units):
         if idxj > idxi:
             #Equations for piping cost
             DIA[i][j] = np.sqrt( (4*Q[i][j] / (velocity[i][j] * np.pi * rhog[i][j])))
-            C[i][j] = 5* C_ref*(DIA[i][j]/DIA_ref)**n_1 * (CEPCI_2021/CEPCI_ref) * MF * FX_rate * A_f
-            PC[i][j] = BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_ref) *FX_rate
-            C_annual[i][j] = PC[i][j] * (1+F) * (A_f + bb) * npp[i][j]
+            C[i][j] = C_ref*(DIA[i][j]/DIA_ref)**n_1 * (CEPCI_2021/CEPCI_1959) * MF * FX_rate * A_f
+            PC[i][j] = BB * (DIA[i][j]**n_2) * (CEPCI_2021/CEPCI_2006) *FX_rate
+            # bb = 0.05 * Cp[i]
+            C_annual[i][j] = PC[i][j] * (1+F) * (A_f)
             
             #Equations for pumping cost
             kr[i][j] = epsilon[i][j] / DIA[i][j]
@@ -602,7 +604,7 @@ for idxj, j in enumerate(units):
             pPump_unit[i][j] = Q[i][j] * delP_unit[i][j] /(rhog[i][j]*mechEffic)
             PC_unit[i][j] = C_elec * OH * pPump_unit[i][j]*npp[i][j]
             
-            pipetotal_unit[i][j] = PC_unit[i][j]+ C[i][j] *npp[i][j]
+            pipetotal_unit[i][j] = PC_unit[i][j]+ C_annual[i][j] *npp[i][j]
 
 
 if SwitchFEI == 1:
