@@ -324,24 +324,24 @@ rhol = dict.fromkeys(pertinent_units)
 MWunit = dict.fromkeys(pertinent_units)
 INV = dict.fromkeys(pertinent_units)
 # Assign values
-T['reactor'] = 275  # degc
-T['eoabs'] = 40
-T['co2abs'] = 20
-Pg['reactor'] = 2200  # kPa
-Pg['eoabs'] = 2000
-Pg['co2abs'] = 500
-w['reactor']['EO'] = 0.94  # mass frac
-w['eoabs']['EO'] = 0.995
-w['co2abs']['EO'] = 0.05
-rhol['reactor'] = 1000
-rhol['eoabs'] = 1000
-rhol['co2abs'] = 1000
-MWunit['reactor'] = 44.05  # g/mol #EO=ethylene oxide
-MWunit['eoabs'] = 44.05
-MWunit['co2abs'] = 44.05
-INV['reactor'] = 10000  # kg
-INV['eoabs'] = 10000
-INV['co2abs'] = 10000
+# T['reactor'] = 275  # degc
+# T['eoabs'] = 40
+# T['co2abs'] = 20    
+# Pg['reactor'] = 2200  # kPa
+# Pg['eoabs'] = 2000
+# Pg['co2abs'] = 500
+# w['reactor']['EO'] = 0.94  # mass frac
+# w['eoabs']['EO'] = 0.995
+# w['co2abs']['EO'] = 0.05
+# rhol['reactor'] = 1000
+# rhol['eoabs'] = 1000
+# rhol['co2abs'] = 1000
+# MWunit['reactor'] = 44.05  # g/mol #EO=ethylene oxide
+# MWunit['eoabs'] = 44.05
+# MWunit['co2abs'] = 44.05
+# INV['reactor'] = 10000  # kg
+# INV['eoabs'] = 10000
+# INV['co2abs'] = 10000
 #%% ----------- SwitchFEI---------
 if SwitchFEI == 1:
     # F&EI factors
