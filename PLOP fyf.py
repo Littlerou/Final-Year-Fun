@@ -52,13 +52,16 @@ solver = 1
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
 # Land Shape Constraints (1 for non-square polygon, 0 for square based on xmax and ymax)
-SwitchLandShape = 1
+SwitchLandShape = 0
+
+# Land Cost constraints (1 is on; 0 is off)
+SwitchLandUse = 0
 
 # Toggle Minimum Separation Distances switch
 SwitchMinSepDistance = 0
 
 # FEI Constraints
-SwitchFEI = 1
+SwitchFEI = 0
 
 # Toggle protection devices (must have FEI enabled if 1)
 SwitchProt = 0
@@ -68,6 +71,19 @@ SwitchFEIVle = 1
 
 # CEI Constraints
 SwitchCEI = 0
+
+#%% Case selection:
+Case = 1
+
+if Case == 1:
+    SwitchFEI = 1
+    SwitchLandUse = 1
+elif Case == 2:
+    SwitchMinSepDistance = 1
+    SwitchLandUse = 1
+elif Case == 3:
+    SwitchLandShape = 1
+    
 
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
 #    raise NoFEIError("FEI cost of life constraints not allowed without FEI constraints")        
@@ -91,13 +107,13 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_begin = np.array([0,0,35,60,60])
-X_end = np.array([0,35,60,60,0])
+X_begin = np.array([0,0,60,60])
+X_end = np.array([0,60,60,0])
 Ng = max(X_end)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,35,70,35,0])
-Y_end = np.array([35,70,35,0,0])
+Y_begin = np.array([0,60,60,0])
+Y_end = np.array([60,60,0,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -171,9 +187,9 @@ Cp = dict.fromkeys(units)
 Cp['furnace'] = 556300
 Cp['reactor'] = 888300
 Cp['flash'] = 545600
-Cp['comp'] = 1223800
+Cp['comp'] = 2447600
 Cp['distil'] = 3077600
-Cp['store'] = 4480862 
+Cp['store'] = 4480862 # to be checked
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
@@ -182,22 +198,16 @@ Demin[0][2] = 15
 Demin[0][3] = 15
 Demin[0][4] = 15
 Demin[0][5] = 15
-Demin[0][6] = 15
 Demin[1][2] = 15
 Demin[1][3] = 15
 Demin[1][4] = 15
 Demin[1][5] = 15
-Demin[1][6] = 15
 Demin[2][3] = 15
 Demin[2][4] = 15
 Demin[2][5] = 15
-Demin[2][6] = 15
 Demin[3][4] = 15
 Demin[3][5] = 15
-Demin[3][6] = 15
 Demin[4][5] = 15
-Demin[4][6] =15
-Demin[5][6] = 15
 
 Demin = Demin + Demin.T - np.diag(Demin.diagonal())
 Demin = makeDict([units,units],Demin,0)
@@ -210,7 +220,7 @@ velocity[2][3] = 30  # velocity between flash and comp
 velocity[2][4] = 3  # velocity between flash and distil
 velocity[3][0] = 30  # velocity between comp and furnace
 velocity[4][5] = 30  # velocity between distil and store
-velocity[4][0] = 3  # velocity between store and furnace
+velocity[5][0] = 3  # velocity between store and furnace
 
 velocity = velocity + velocity.T - np.diag(velocity.diagonal())#
 velocity = makeDict([units,units],velocity,0)
@@ -223,7 +233,7 @@ Q[2][3] = 4.34105  # flowrate between flash and comp
 Q[2][4] = 8.87631  # flowrate between flash and distil
 Q[3][0] = 15.0778  # flowrate between comp and furnace
 Q[4][5] = 5.94936  # flowrate between distil and store
-Q[4][0] = 7.66106  # flowrate between store and furnace
+Q[5][0] = 7.66106  # flowrate between store and furnace
 
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
@@ -236,7 +246,7 @@ visc[2][3] = 0.0000115938 # viscosity between flash and comp
 visc[2][4] = 0.00039666  # viscosity between flash and distil
 visc[3][0] = 0.000017046  # viscosity between comp and furnace
 visc[4][5] = 0.00000900998  # viscosity between distil and store
-visc[4][0] = 0.000587848  # viscosity between store and furnace
+visc[5][0] = 0.000587848  # viscosity between store and furnace
 
 visc = visc + visc.T - np.diag(visc.diagonal())
 visc = makeDict([units,units],visc,0)
@@ -249,7 +259,7 @@ rhog[2][3] = 10.0488  # density between flash and comp
 rhog[2][4] = 842.605  # density between flash and distil
 rhog[3][0] = 13.5901  # density between comp and furnace
 rhog[4][5] = 2.73253  # density between distil and store
-rhog[4][0] = 869.273  # density between store and furnace
+rhog[5][0] = 869.273  # density between store and furnace
 
 rhog = rhog + rhog.T - np.diag(rhog.diagonal())
 rhog = makeDict([units,units],rhog,0)
@@ -262,7 +272,7 @@ npp[2][3] = 1  # number of pipes between flash and comp
 npp[2][4] = 1  # number of pipes between flash and distil
 npp[3][0] = 1  # number of pipes between comp and furnace
 npp[4][5] = 1  # number of pipes between distil and store
-npp[4][0] = 1  # number of pipes between store and furnace
+npp[5][0] = 1  # number of pipes between store and furnace
 
 npp = npp + npp.T - np.diag(npp.diagonal())
 npp = makeDict([units,units],npp,0)
@@ -287,11 +297,23 @@ mechEffic = 0.6  #mechanical efficiency
 C_elec = 0.000045 # wholesale cost of electircity 
 OH = 8000  # operating hours
 
-
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
-    xmax = 52.08166664
-    ymax = 52.08166664
+    xmax = 60
+    ymax = 60
+    #%% Land use constraint: 
+    if SwitchLandUse == 1:
+        # Land cost per squared distance (m^2)
+        LC = 3e3
+        # Number of grid points in square plot
+        N = 60
+        # Length and width of one grid square (m)
+        g_x = xmax/N
+        g_y = ymax/N
+        # g = xmax/N
+        # Defining set for binary variable Gn
+        gridsize = list(range(1,N))
+        
 
 #%% ----------- SwitchFEI---------
 if SwitchFEI == 1:
@@ -303,11 +325,21 @@ if SwitchFEI == 1:
     De['reactor'] = 23.9
     De['distil'] = 35.4
     De['store'] = 45.0
+    # De['furnace'] =  1
+    # De['reactor'] = 1
+    # De['distil'] = 11
+    # De['store'] = 2
 
     DF['furnace'] =  0.75
     DF['reactor'] = 0.66
     DF['distil'] = 0.77
     DF['store'] = 0.82
+    
+    # DF['furnace'] =  0.5
+    # DF['reactor'] = 0.4
+    # DF['distil'] = 0.4
+    # DF['store'] = 0.4
+
 
     # Upper bound for actual maximum probable property damage cost
     U = 1e8
@@ -412,7 +444,7 @@ Nw['reactor'] = 3
 Nw['flash'] = 2
 Nw['comp'] = 3
 Nw['distil'] = 4 
-Nw['store'] = 3
+Nw['store'] = 2
 # Percentage of time present at unit
 tw = dict.fromkeys(units)
 tw['furnace'] = 0.1
@@ -429,7 +461,7 @@ OCC = {i: Nw[i]*tw[i] for i in units}
 # Cost of life (dollars)
 Cl = dict.fromkeys(units)
 for i in units:
-    Cl[i] = 10e6
+    Cl[i] = 1e6
 
 #%% --------------Define Variables--------------
 # Base layout model
@@ -516,7 +548,15 @@ for idxj, j in enumerate(units):
             
             pipetotal_unit[i][j] = PC_unit[i][j]+ C_annual[i][j] *npp[i][j]
 
-
+if SwitchLandUse == 1:
+    # N binary variables representing plot grid
+    Gn = LpVariable.dicts("Gn",(gridsize), lowBound=0, upBound=1, cat="Integer")
+    # For g_x[i] and g_y[i], select the larger as g    
+    # Total Land Cost
+    TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
+else:
+    TLC = 0
+    
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
     Psie = LpVariable.dicts("Psie",(pertinent_units,units),lowBound=0,upBound=1,cat="Integer")
@@ -554,7 +594,8 @@ else:
 obj_sumOmega = SwitchFEI*SumOmega
 obj_PZ = SwitchProt*SumPZ
 obj_CD = SumCD
-layout += obj_CD + obj_sumOmega + obj_PZ
+obj_TLC = SwitchLandUse *TLC
+layout += obj_CD + obj_sumOmega + obj_PZ + obj_TLC
 
 
 #%% --------------Define Constraints and Objective Function Contributions--------------
@@ -622,10 +663,34 @@ if SwitchLandShape == 1:
         layout += x[i] -0.5*l[i] >= 0
                
 else:
-    for i in units:
-        layout += x[i] + 0.5*l[i] <= xmax
-        layout += y[i] + 0.5*d[i] <= ymax
+    if SwitchLandUse == 1:
+        for i in units:
+            # Land area approximation constraints for plot
+            layout += x[i] + 0.5*l[i] <= lpSum(n*g_x*Gn[n] for n in range(1,N))
+            layout += y[i] + 0.5*d[i] <= lpSum(n*g_y*Gn[n] for n in range(1,N))
         
+            # Only 1 grid size selected
+            layout+= lpSum(Gn[n] for n in range(1,N)) == 1
+        
+            # Objective function contribution for land use model
+            layout += TLC == LC*lpSum(Gn[n]*n*g_x*n*g_y for n in range(1,N))
+    else:
+        for i in units:
+            layout += x[i] + 0.5*l[i] <= xmax
+            layout += y[i] + 0.5*d[i] <= ymax
+        
+#%% Land use constraints
+# if SwitchLandUse == 1:
+#     # Land area approximation constraints for plot
+#     layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+#     layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
+    
+#     # Only 1 grid size selected
+#     layout+= lpSum(Gn[n] for n in range(1,N)) == 1
+    
+#     # Objective function contribution for land use model
+#     layout += TLC == LC*lpSum(Gn[n]*(n*g)**2 for n in range(1,N))    
+    
 #%% F&EI Constraints
 if SwitchFEI == 1:
     # for all i in pertinent units, j in units, j != i
@@ -682,6 +747,40 @@ if SwitchFEI == 1:
         # Objective function contribution without protection devices
         layout += SumOmega == lpSum(Omega0[i] for i in pertinent_units)
 
+
+#%% Fixing blocks to certain areas
+def fix_variable(variable, value):
+    variable.setInitialValue(value)
+    variable.fixValue()
+
+x_store = alpha["store"]/2
+y_store = beta["store"]/2
+
+# solution_x = {('store'): x_store,
+#               ('furnace'): 90,
+#               ('reactor'): 9,
+#               ('comp'): 88}
+# solution_y = {('store'): y_store,
+#               ('furnace'):90,
+#               ('reactor'):90,
+#               ('comp'):12}
+
+solution_x = {('store'): x_store}
+              # ('comp'): 45}
+solution_y = {('store'): y_store}
+              # ('comp'): 37}
+
+for i, v in solution_x.items():
+    x[i].setInitialValue(v)
+
+for i, v in solution_y.items():
+    y[i].setInitialValue(v)
+
+for i, v in solution_x.items():
+    fix_variable(x[i], v)
+
+for i, v in solution_y.items():
+    fix_variable(y[i], v)
 #%% --------------Initiate Solve--------------
 layout.writeLP("DowFEI.lp")
 #CPLEXsolver = CPLEX_PY(msg=1, warmStart=1, gapRel=0, logPath='cplex.log')
@@ -702,14 +801,22 @@ for v in layout.variables():
     print(v.name, "=", v.varValue)
 print("Total cost of connections =", SumCD.varValue)
 
+if SwitchLandUse == 1:
+    for n in range(1, N):
+        if Gn[n].varValue == 1:
+            print("Number of grids", n, "Size of land area =", (n*n*g_x*g_y), "metres square")
+
 if SwitchFEI == 1:
     print("Total actual MPPD =", SumOmega.varValue)
-if SwitchProt == 1:
-    print("Total cost of protection devices =", SumPZ.varValue)
+    
+if SwitchLandUse == 1:
+    print("Total Land Use =", TLC.varValue)
+# if SwitchProt == 1:
+#     print("Total cost of protection devices =", SumPZ.varValue)
 #    if SwitchFEIVle == 1:
 #        print("Total cost of fatality due to fire/explosion =", SumVle.varValue)
-if SwitchCEI == 1:
-    print("Total cost of fatality due to chemical release =", SumVlc.varValue)
+# if SwitchCEI == 1:
+#     print("Total cost of fatality due to chemical release =", SumVlc.varValue)
 print ("Total cost of layout =", value(layout.objective))
 
 print("Elapsed time =", totaltime)
@@ -770,8 +877,12 @@ else:
 plt.axis('square')
 # ax.set_xlim(0,max(xpos+ypos)+15)
 # ax.set_ylim(0,max(xpos+ypos)+15)
-ax.set_xlim(0,max(X_beginplot))
-ax.set_ylim(0,max(Y_beginplot))
+if SwitchLandShape == 1:
+    ax.set_xlim(0,max(X_beginplot))
+    ax.set_ylim(0,max(Y_beginplot))
+else:
+    ax.set_xlim(0,xmax)
+    ax.set_ylim(0,ymax)
 
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))

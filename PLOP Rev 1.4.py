@@ -52,7 +52,7 @@ solver = 1
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
 # Land Shape Constraints (1 for non-square polygon, 0 for square based on xmax and ymax)
-SwitchLandShape = 1
+SwitchLandShape = 0
 
 # Toggle Minimum Separation Distances switch
 SwitchMinSepDistance = 0
