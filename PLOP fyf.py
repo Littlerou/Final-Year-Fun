@@ -31,7 +31,7 @@ from pulp import *
 import numpy as np
 import matplotlib.pylab as plt
 import matplotlib.patches as mpatch
-from scipy.stats import norm
+# from scipy.stats import norm
 import math
 import csv
 import time
@@ -40,9 +40,9 @@ import time
 layout = pulp.LpProblem("Layout_Problem_Model",LpMinimize)
 
 #%% --------------Errors--------------
-class NoFEIError(Exception):
-    """Exception raised when protection devices enabled without FEI constraints"""
-pass #pass here as class has no definition so avoids error 
+# class NoFEIError(Exception):
+#     """Exception raised when protection devices enabled without FEI constraints"""
+# pass #pass here as class has no definition so avoids error 
 
 #%%--------------Switches--------------
 # CPLEX free edition only supports up to 1000 variables. For larger land sizes, use CBC or increase coarseness (g)
@@ -73,16 +73,18 @@ SwitchFEIVle = 1
 SwitchCEI = 0
 
 #%% Case selection:
-Case = 1
+Casee = 1
 
-if Case == 1:
-    SwitchFEI = 1
-    SwitchLandUse = 1
-elif Case == 2:
+if Casee == 1:
+     SwitchFEI = 1
+     SwitchLandUse = 0
+elif Casee == 2:    
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
-elif Case == 3:
+    SwitchFEI = 1
+elif Casee == 3:
     SwitchLandShape = 1
+    SwitchFEI = 1
     
 
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
@@ -107,13 +109,13 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_begin = np.array([0,0,60,60])
-X_end = np.array([0,60,60,0])
+X_begin = np.array([0,0,25,50,50])
+X_end = np.array([0,25,50,50,0])
 Ng = max(X_end)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,60,60,0])
-Y_end = np.array([60,60,0,0])
+Y_begin = np.array([0,40,60,40,0])
+Y_end = np.array([40,60,40,0,0])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -167,19 +169,19 @@ Area = np.trapz(Y_begin, X_begin)
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
 alpha['furnace'] = 1
-alpha['reactor'] = 2 #to be checked
+alpha['reactor'] = 9 #to be checked reactor itself is vertical column, 10 feet or 3m. HEX has got 6.1m length, approximately diameter = 
 alpha['flash'] = 2.3
 alpha['comp'] = 12
 alpha['distil'] = 5.5
-alpha['store'] = 22.8 #to be checked
+alpha['store'] = 24 # Squeezing them into a rectangle
 
 
 beta['furnace'] = 1
-beta['reactor'] = 2
+beta['reactor'] = 5 #reactor diameter + 2m allowance for diameter of shell.
 beta['flash'] = 2.3
 beta['comp'] = 12
 beta['distil'] = 5.5
-beta['store'] = 22.8
+beta['store'] = 33
 
 
 # Purchase cost of each unit (dollars)
@@ -189,7 +191,7 @@ Cp['reactor'] = 888300
 Cp['flash'] = 545600
 Cp['comp'] = 2447600
 Cp['distil'] = 3077600
-Cp['store'] = 4480862 # to be checked
+Cp['store'] = 1890074 # to be checked
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
@@ -284,7 +286,7 @@ n_1 = 1.08# parameter for installed cost of ducts
 n_2 = 0.74 # paramter for type of material 
 CEPCI_1959  = 100 # accounts for rise of inflation 1959
 CEPCI_2006 = 499.6 #accounts for rise of inflation 2006
-CEPCI_2021 = 677.7   #ccounts for rise of inflation 2021
+CEPCI_2021 = 677.7   #accounts for rise of inflation 2021
 MF = 1 # material factor (different fro each component)
 A_f = 0.1102  # check report
 FX_rate = 0.64  # exchange rate
@@ -292,7 +294,7 @@ BB = 880  # paramter dependent on material
 F = 1.5 # parameter dependent on material 
 # bb = 0.05 # 5% of installed cost accounting fro maintanance 
 DIA_ref = 2.3 # diameter of pipe
-epsilon = 0.000046 #absolute roughness of steel pipe/dict [m]. check chin chern paper for reference.
+epsilon = 0.0046 #absolute roughness of steel pipe/dict [m]. check chin chern paper for reference.
 mechEffic = 0.6  #mechanical efficiency 
 C_elec = 0.000045 # wholesale cost of electircity 
 OH = 8000  # operating hours
@@ -304,7 +306,7 @@ if SwitchLandShape == 0: #sets default max available plot area.
     #%% Land use constraint: 
     if SwitchLandUse == 1:
         # Land cost per squared distance (m^2)
-        LC = 3e3
+        LC = 125
         # Number of grid points in square plot
         N = 60
         # Length and width of one grid square (m)
@@ -595,7 +597,10 @@ obj_sumOmega = SwitchFEI*SumOmega
 obj_PZ = SwitchProt*SumPZ
 obj_CD = SumCD
 obj_TLC = SwitchLandUse *TLC
-layout += obj_CD + obj_sumOmega + obj_PZ + obj_TLC
+if Casee == 2:
+    layout += obj_CD + obj_TLC
+else:
+    layout += obj_CD + obj_sumOmega + obj_PZ + obj_TLC
 
 
 #%% --------------Define Constraints and Objective Function Contributions--------------
@@ -808,6 +813,9 @@ if SwitchLandUse == 1:
 
 if SwitchFEI == 1:
     print("Total actual MPPD =", SumOmega.varValue)
+else:
+    print("Total actual MPPD =", SumOmega.varValue)
+
     
 if SwitchLandUse == 1:
     print("Total Land Use =", TLC.varValue)
@@ -916,4 +924,15 @@ for i in range(len(numbers)):
 
     
     
-#%%
+#%% Data processing
+## Actual area used
+#Collect all vertices of units
+# xvertices = []
+# for i in units:
+#     xvertices.append(x[units].varValue + x[units].varValue)
+#     xvertices.append(x[units].varValue - x[units].varValue)
+#     yvertices.append(y[units].varValue + y[units]).varValue)
+#     yvertices.append(y[units].varValue + y[units].varValue)
+#create convex hull
+
+#find area of convex hull
