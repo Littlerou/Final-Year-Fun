@@ -58,11 +58,14 @@ solver = 1
 
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
-# Land Shape Constraints (1 for non-square polygon, 0 for square based on xmax and ymax)
+# Land Shape Constraints (1 for non-square polygon, 0 for rectangles or square)
 SwitchLandShape = 0
 
 # Land Cost constraints (1 is on; 0 is off)
 SwitchLandUse = 0
+
+# Fixed aspect ratio grids or variable aspect ratio grids
+SwitchAspRatio = 0
 
 # Toggle Minimum Separation Distances switch
 SwitchMinSepDistance = 0
@@ -84,11 +87,13 @@ Casee = 1
 
 if Casee == 1:
      SwitchFEI = 1
-     SwitchLandUse = 0
+     SwitchLandUse = 1
+     SwitchAspRatio = 1
 elif Casee == 2:    
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
     SwitchFEI = 1
+    SwitchAspRatio = 1
 elif Casee == 3:
     SwitchLandShape = 1
     SwitchFEI = 1
@@ -312,16 +317,27 @@ if SwitchLandShape == 0: #sets default max available plot area.
     ymax = 60
     #%% Land use constraint: 
     if SwitchLandUse == 1:
+        ## Fixed Aspect Ratio!
         # Land cost per squared distance (m^2)
         LC = 125
         # Number of grid points in square plot
         N = 60
         # Length and width of one grid square (m)
         g_x = xmax/N
-        g_y = ymax/N
-        # g = xmax/N
-        # Defining set for binary variable Gn
+        g_y = ymax/N       
         gridsize = list(range(1,N))
+
+    ## Variable Aspect Ratio!
+        #Number of grids in each direction
+        N1 = 10
+        N2 = 10
+        #Length and width of one grid square
+        g = 10
+        
+        # Defining set for binary variable Gn and Gn1n2
+        gridsizen1n2 = list(range(1,N1+1))
+        
+        
         
 
 #%% ----------- SwitchFEI---------
@@ -560,7 +576,7 @@ for idxj, j in enumerate(units):
 if SwitchLandUse == 1:
     # N binary variables representing plot grid
     Gn = LpVariable.dicts("Gn",(gridsize), lowBound=0, upBound=1, cat="Integer")
-    # For g_x[i] and g_y[i], select the larger as g    
+    Gn1n2 = LpVariable.dicts("Gn1n2", (gridsizen1n2, gridsizen1n2), lowBound = 0, upBound = 1, cat = "Integer")# For g_x[i] and g_y[i], select the larger as g    
     # Total Land Cost
     TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
 else:
@@ -676,32 +692,39 @@ if SwitchLandShape == 1:
                
 else:
     if SwitchLandUse == 1:
-        for i in units:
-            # Land area approximation constraints for plot
-            layout += x[i] + 0.5*l[i] <= lpSum(n*g_x*Gn[n] for n in range(1,N))
-            layout += y[i] + 0.5*d[i] <= lpSum(n*g_y*Gn[n] for n in range(1,N))
         
-            # Only 1 grid size selected
-            layout+= lpSum(Gn[n] for n in range(1,N)) == 1
+        if SwitchAspRatio == 0:    
+            for i in units:
+                # Fixed aspect ratio land area approximation constraints for plot
+                layout += x[i] + 0.5*l[i] <= lpSum(n*g_x*Gn[n] for n in range(1,N))
+                layout += y[i] + 0.5*d[i] <= lpSum(n*g_y*Gn[n] for n in range(1,N))
+            
+                # Only 1 grid size selected (fixed aspect ratio)
+                layout+= lpSum(Gn[n] for n in range(1,N)) == 1
+            
+                # Objective function contribution for fixed aspect ratio land use model
+                layout += TLC == LC*lpSum(Gn[n]*n*g_x*n*g_y for n in range(1,N))
         
-            # Objective function contribution for land use model
-            layout += TLC == LC*lpSum(Gn[n]*n*g_x*n*g_y for n in range(1,N))
+        else:
+            for i in units:              
+                # Variable aspect ratio up to limits N1 and N2 * g            
+                layout += x[i] + 0.5 * l[i] <= lpSum(n1 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
+                layout += y[i] + 0.5 * d[i] <= lpSum(n2 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
+                                                             
+                # #Keeps the area always greater than a specified area. 
+                layout += lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2)) >= xmax * ymax
+    
+                # Only 1 grid size selected (rectangle)
+                layout += lpSum((Gn1n2[n1][n2]) for n1 in range(1,N1) for n2 in range(1,N2)) == 1
+    
+    
+                # Objective function contribution for variable aspect ratio land use model
+                layout += TLC == LC*lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2))
+
     else:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
             layout += y[i] + 0.5*d[i] <= ymax
-        
-#%% Land use constraints
-# if SwitchLandUse == 1:
-#     # Land area approximation constraints for plot
-#     layout += x[i] + 0.5*l[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-#     layout += y[i] + 0.5*d[i] <= lpSum(n*g*Gn[n] for n in range(1,N))
-    
-#     # Only 1 grid size selected
-#     layout+= lpSum(Gn[n] for n in range(1,N)) == 1
-    
-#     # Objective function contribution for land use model
-#     layout += TLC == LC*lpSum(Gn[n]*(n*g)**2 for n in range(1,N))    
     
 #%% F&EI Constraints
 if SwitchFEI == 1:
@@ -882,11 +905,11 @@ if SwitchLandShape == 1:
             line = plt.Line2D((X_beginplot[i], X_endplot[i]), (Y_beginplot[i], Y_endplot[i]), lw = 1.5)
             plt.gca().add_line(line)
             
-else:
-    line = plt.Line2D((0, xmax), (ymax,ymax))
-    plt.gca().add_line(line)
-    line = plt.Line2D((xmax, xmax), (0, ymax))
-    plt.gca().add_line(line)
+# else:
+#     line = plt.Line2D((0, xmax), (ymax,ymax))
+#     plt.gca().add_line(line)
+#     line = plt.Line2D((xmax, xmax), (0, ymax))
+#     plt.gca().add_line(line)
     
 # Set bounds of axis
 plt.axis('square')
@@ -896,8 +919,12 @@ if SwitchLandShape == 1:
     ax.set_xlim(0,max(X_beginplot))
     ax.set_ylim(0,max(Y_beginplot))
 else:
-    ax.set_xlim(0,xmax)
-    ax.set_ylim(0,ymax)
+    if SwitchAspRatio == 0:
+        ax.set_xlim(0,xmax)
+        ax.set_ylim(0,ymax)
+    else:
+        ax.set_xlim(0,max(xpos) + 25)
+        ax.set_ylim(0,max(ypos)+25)
 
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))
