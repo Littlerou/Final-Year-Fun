@@ -72,17 +72,30 @@ SwitchFEIVle = 1
 # CEI Constraints
 SwitchCEI = 0
 
+# Non-convex shape 
+SwitchNonconvexShape = 0
+
+# Fix a certain unit in place
+SwitchFixVariable = 0
+
 #%% Case selection:
-Case = 1
+Case = 4
 
 if Case == 1:
     SwitchFEI = 1
     SwitchLandUse = 1
+    SwitchFixVariable = 1
 elif Case == 2:
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
+    SwitchFixVariable = 1
 elif Case == 3:
     SwitchLandShape = 1
+    SwitchFixVariable = 1
+elif Case == 4:
+    SwitchNonconvexShape = 1
+    SwitchFEI = 1
+    
     
 
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
@@ -105,7 +118,12 @@ Nunits = len(units)
 # M (m) is used in the contraints which set A or B, L or R, and Din or Dout.
 # It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
 M = 1e3
-
+# Non-convex shape layout
+A69 = 100 #Size of land 
+a69 = 20 # Size of land removed 
+r69 = A69-a69 # ratio of land area to land removed
+m69 = r69 - 2 # middle section of T, cross and shitty tetras block 
+shape = 3 # 1: L-shape; 2: T-shape ; 3: the shitty tetras shape ; 4: teh cross
 #polygon layout:
 X_begin = np.array([0,0,60,60])
 X_end = np.array([0,60,60,0])
@@ -285,7 +303,7 @@ n_2 = 0.74 # paramter for type of material
 CEPCI_1959  = 100 # accounts for rise of inflation 1959
 CEPCI_2006 = 499.6 #accounts for rise of inflation 2006
 CEPCI_2021 = 677.7   #ccounts for rise of inflation 2021
-MF = 1 # material factor (different fro each component)
+MF = 1 # material factor (different for each component)
 A_f = 0.1102  # check report
 FX_rate = 0.64  # exchange rate
 BB = 880  # paramter dependent on material
@@ -299,20 +317,20 @@ OH = 8000  # operating hours
 
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
-    xmax = 60
-    ymax = 60
-    #%% Land use constraint: 
-    if SwitchLandUse == 1:
-        # Land cost per squared distance (m^2)
-        LC = 3e3
-        # Number of grid points in square plot
-        N = 60
-        # Length and width of one grid square (m)
-        g_x = xmax/N
-        g_y = ymax/N
-        # g = xmax/N
-        # Defining set for binary variable Gn
-        gridsize = list(range(1,N))
+    xmax = 70
+    ymax = 70
+#%% Land use constraint: 
+if SwitchLandUse == 1:
+    # Land cost per squared distance (m^2)
+    LC = 3e3
+    # Number of grid points in square plot
+    N = 60
+    # Length and width of one grid square (m)
+    g_x = xmax/N
+    g_y = ymax/N
+    # g = xmax/N
+    # Defining set for binary variable Gn
+    gridsize = list(range(1,N))
         
 
 #%% ----------- SwitchFEI---------
@@ -344,7 +362,7 @@ if SwitchFEI == 1:
     # Upper bound for actual maximum probable property damage cost
     U = 1e8
     
-# #%%--------------- SwitchProt-----------------------------
+# %%--------------- SwitchProt-----------------------------
 #     # Protection device model
 #     if SwitchProt == 1:
 #         # Define protection device configuration
@@ -475,6 +493,9 @@ E2 = LpVariable.dicts("E2",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wx = LpVariable.dicts("Wx",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wy = LpVariable.dicts("Wy",(units,units),lowBound=0,upBound=1,cat="Integer")
 
+# Binary variable for non-convex land area 
+G69 = LpVariable.dicts("G69",(units),lowBound=0,upBound=1,cat="Integer")
+E69 = LpVariable.dicts("E69",(units),lowBound=0,upBound=1,cat="Integer")
 # Define continuous variables for base layout model
 l = LpVariable.dicts("l",(units),lowBound=0,upBound=None,cat="Continuous")
     # breadth of item i
@@ -678,6 +699,38 @@ else:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
             layout += y[i] + 0.5*d[i] <= ymax
+# Nonconvex shaping 
+if SwitchNonconvexShape == 1 and shape == 1: 
+    for i in units:
+        layout += y[i] + 0.5*d[i] <= A69
+        layout += x[i] + 0.5*l[i] <= A69
+        layout += y[i] - 0.5*d[i] >= a69*G69[i]
+        layout += x[i] - 0.5*l[i] >= a69 - a69*G69[i]
+
+if SwitchNonconvexShape == 1 and shape == 2:
+    for i in units:
+        layout += y[i] + 0.5*d[i] <= A69
+        layout += x[i] + 0.5*l[i] <= (A69-a69) + a69*G69[i]
+        layout += y[i] - 0.5*d[i] >= a69*G69[i]
+        layout += x[i] - 0.5*l[i] >= a69 - a69*G69[i]
+        
+if SwitchNonconvexShape == 1 and shape == 3:  
+    for i in units:
+        layout += y[i] + 0.5*d[i] <= a69 + a69*E69[i]  + a69*(1 - G69[i])
+        layout += x[i] + 0.5*l[i] <= r69 + a69*E69[i] + a69*(1 - G69[i]) - a69*(1 - G69[i])
+        layout += y[i] - 0.5*d[i] >= a69*E69[i] + a69*(1 - G69[i])
+        layout += x[i] - 0.5*l[i] >= a69*(1 - E69[i]) + a69*(1-G69[i])
+        layout += G69[i] + E69[i] >= 1 
+        
+if SwitchNonconvexShape == 1 and shape == 4:  
+    for i in units: 
+        layout += y[i] + 0.5*d[i] <= a69 + a69*E69[i] + a69*(1-G69[i])
+        layout += x[i] + 0.5*l[i] <= A69 - a69*(1-E69[i]) - a69*(1-G69[i])
+        layout += y[i] - 0.5*d[i] >= a69*E69[i] + a69*(1-G69[i])
+        layout += x[i] - 0.5*l[i] >= a69*(1-G69[i]) + a69*(1-E69[i])
+        layout += G69[i] + E69[i] >= 1 
+        
+    
         
 #%% Land use constraints
 # if SwitchLandUse == 1:
@@ -749,12 +802,13 @@ if SwitchFEI == 1:
 
 
 #%% Fixing blocks to certain areas
-def fix_variable(variable, value):
-    variable.setInitialValue(value)
-    variable.fixValue()
+if SwitchFixVariable == 1:
+    def fix_variable(variable, value):
+        variable.setInitialValue(value)
+        variable.fixValue()
 
-x_store = alpha["store"]/2
-y_store = beta["store"]/2
+        x_store = alpha["store"]/2
+        y_store = beta["store"]/2
 
 # solution_x = {('store'): x_store,
 #               ('furnace'): 90,
@@ -765,22 +819,22 @@ y_store = beta["store"]/2
 #               ('reactor'):90,
 #               ('comp'):12}
 
-solution_x = {('store'): x_store}
+        solution_x = {('store'): x_store}
               # ('comp'): 45}
-solution_y = {('store'): y_store}
+        solution_y = {('store'): y_store}
               # ('comp'): 37}
 
-for i, v in solution_x.items():
-    x[i].setInitialValue(v)
+        for i, v in solution_x.items():
+            x[i].setInitialValue(v)
 
-for i, v in solution_y.items():
-    y[i].setInitialValue(v)
+        for i, v in solution_y.items():
+            y[i].setInitialValue(v)
 
-for i, v in solution_x.items():
-    fix_variable(x[i], v)
+        for i, v in solution_x.items():
+            fix_variable(x[i], v)
 
-for i, v in solution_y.items():
-    fix_variable(y[i], v)
+        for i, v in solution_y.items():
+            fix_variable(y[i], v)
 #%% --------------Initiate Solve--------------
 layout.writeLP("DowFEI.lp")
 #CPLEXsolver = CPLEX_PY(msg=1, warmStart=1, gapRel=0, logPath='cplex.log')
@@ -873,6 +927,83 @@ else:
     line = plt.Line2D((xmax, xmax), (0, ymax))
     plt.gca().add_line(line)
     
+## Nonconvex shaping 
+if SwitchNonconvexShape == 1 and shape == 1:
+    plt.axis('square')
+    line1 = plt.Line2D((0,a69),(a69,a69))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((a69,a69),(a69,0))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((0,A69),(A69,A69))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((A69,A69),(A69,0))
+    plt.gca().add_line(line4)
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)
+if SwitchNonconvexShape == 1 and shape == 2:
+    plt.axis('square')
+    line1 = plt.Line2D((0,a69),(a69,a69))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((a69,a69),(a69,0))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((0,A69),(A69,A69))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((A69,A69),(A69,a69))
+    plt.gca().add_line(line4)
+    line5 = plt.Line2D((A69,r69),(a69,a69))
+    plt.gca().add_line(line5)
+    line6 = plt.Line2D((r69,r69),(a69,0))
+    plt.gca().add_line(line6)
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)
+if SwitchNonconvexShape == 1 and shape == 3:
+    plt.axis('square')
+    line1 = plt.Line2D((0,a69),(a69,a69))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((a69,a69),(a69,0))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((0,a69),(r69,r69))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((a69,a69),(A69,r69))
+    plt.gca().add_line(line4)
+    line5 = plt.Line2D((a69,A69),(A69,A69))
+    plt.gca().add_line(line5)
+    line6 = plt.Line2D((A69,A69),(A69,a69))
+    plt.gca().add_line(line6)
+    line7 = plt.Line2D((A69,r69),(a69,a69))
+    plt.gca().add_line(line7)
+    line8 = plt.Line2D((r69,r69),(a69,0))
+    plt.gca().add_line(line8)
+
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)
+
+if SwitchNonconvexShape == 1 and shape == 4:
+    plt.axis('square')
+    line1 = plt.Line2D((0,a69),(a69,a69))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((a69,a69),(a69,0))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((0,a69),(r69,r69))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((a69,a69),(A69,r69))
+    plt.gca().add_line(line4)
+    line5 = plt.Line2D((a69,r69),(A69,A69))
+    plt.gca().add_line(line5)
+    line6 = plt.Line2D((r69,r69),(A69,r69))
+    plt.gca().add_line(line6)
+    line7 = plt.Line2D((r69,A69),(r69,r69))
+    plt.gca().add_line(line7)
+    line8 = plt.Line2D((A69,A69),(r69,a69))
+    plt.gca().add_line(line8)
+    line9 = plt.Line2D((A69,r69),(a69,a69))
+    plt.gca().add_line(line9)
+    line10 = plt.Line2D((r69,r69),(a69,0))
+    plt.gca().add_line(line10)
+
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)
+
 # Set bounds of axis
 plt.axis('square')
 # ax.set_xlim(0,max(xpos+ypos)+15)
