@@ -32,7 +32,7 @@ Notes:
 - Consider adding switches to toggle terms in objective function while constraints are still in problem
 
 """
-#%% --------------Set-up--------------
+#%% --------------Library set-up--------------
 # Import functions
 from pulp import *
 import numpy as np
@@ -47,9 +47,14 @@ import time
 layout = pulp.LpProblem("Layout_Problem_Model",LpMinimize)
 
 #%% --------------Errors--------------
-# class NoFEIError(Exception):
-#     """Exception raised when protection devices enabled without FEI constraints"""
-# pass #pass here as class has no definition so avoids error 
+class NoFEIError(Exception):
+    """Exception raised when protection devices enabled without FEI constraints"""
+pass #pass here as class has no definition so avoids error
+
+class LandshapeError(Exception):
+    """Exception raised when Land Feasible region does not tally with grid size definition."""
+pass #pass here as class has no definition so avoids error 
+ 
 
 #%%--------------Switches--------------
 # CPLEX free edition only supports up to 1000 variables. For larger land sizes, use CBC or increase coarseness (g)
@@ -86,48 +91,80 @@ SwitchCEI = 0
 Casee = 1
 
 if Casee == 1:
-     SwitchFEI = 1
-     SwitchLandUse = 1
-     SwitchAspRatio = 1
+    SwitchFEI = 1
+    # SwitchLandUse = 1
+    # SwitchAspRatio = 0
+
 elif Casee == 2:    
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
-    SwitchFEI = 1
     SwitchAspRatio = 1
+    SwitchFEI = 1
+    
 elif Casee == 3:
     SwitchLandShape = 1
     SwitchFEI = 1
     
-
+#%% Error checking
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
 #    raise NoFEIError("FEI cost of life constraints not allowed without FEI constraints")        
 if SwitchProt == 1 and SwitchFEI == 0:
-    raise NoFEIError("Protection devices not allowed without FEI constraints") 
+    raise NoFEIError("Protection devices not allowed without FEI constraints")
 
+#%% Checklist of variables to input:
+#     1. units - block of units
+#     2. pertinent_units - units designated as dangerous, as defined in Dow F&EI
+#     3. X_coord - x coordinates to specify the vertices of a non-rectangular polygon
+#     4. Y_coord - y coordinates to specify the vertices of a non-rectangular polygon
+#     5. alpha - length of unit (m)
+#     6. beta - height of unit (m)
+#     7. Cp - cost price of unit (£)
+#     8. freq_event - frequency of event of a unit (/year)
+#     9. Demin - minimum separation distance (m)
+#     10.velocity - velocity of flow in pipe (m/s)
+#     11.Q -flowrate of flow in pipe (kg/s)
+#     12.visc - viscosity of flow in pipe (Pa.s)
+#     13.rhog - density of flow (kg/cum)
+#     14.npp - number of pipes from a unit to another
+#     15.constants for piping cost - adjust as see fit
+#     16.xmax - when not utilising non-rectangular shapes, defines maximum feasible region in x direction
+#     17.ymax - when not utilising non-rectangular shapes, defines maximum feasible region in y direction
+#     18.LC - Land cost (£/m)
+#     19.N - for square plots, defines the degree of fineness of area calculation
+#     20.N1 - for rectangular plots, defines degree of fineness of grid length (x) in area calculation
+#     21.N2 - for rectangular plots, defines degree of fineness of grid length (y) in area calculation
+#     22.g - for rectangular plots, defines length/height of a unit grid (m)
+#     23.De - explosion radius derived from F&EI calculation for each unit (m)
+#     24.Df - damage factor derived from F&EI calculation for each unit
+#     25.Nw - number of workers in each unit
+#     26.tw - fraction of time the workers are present at the unit (/time).
+    
 #%% --------------Define Sets--------------
 # Define the process units
 # furnace = furnace, reactor = FEHE + reactor, Flash = C1 + flash, Comp = Comp, Distil = RECCOL + STAB + PRODCOL + C2 + P2, Store = storage tanks + P1
 units =  ['furnace', 'reactor', 'flash','comp','distil', 'store'] #3distill comlmns in total
 pertinent_units = ['furnace', 'reactor', 'distil', 'store']
-hazardous_chemicals = ['tol','benz','meth','h2','diph']
+# hazardous_chemicals = ['tol','benz','meth','h2','diph']
 Nunits = len(units)
-
 
 #%% --------------Define Parameters and Values--------------
 # Base layout model
 
 # M (m) is used in the contraints which set A or B, L or R, and Din or Dout.
-# It should be big enough not to constrain the size of the plot, but not too big ##for use of big M method?
+# It should be big enough not to constrain the size of the plot, but not too big
 M = 1e3
 
 #polygon layout:
-X_begin = np.array([0,0,25,50,50])
-X_end = np.array([0,25,50,50,0])
+X_coord = [0,0,25,50,50,0]
+Y_coord = [0,40,60,40,0,0]
+
+X_begin = np.array(X_coord[:-1])
+X_end = np.array(X_coord[1:])
 Ng = max(X_end)
 XDiff = X_end - X_begin
 
-Y_begin = np.array([0,40,60,40,0])
-Y_end = np.array([40,60,40,0,0])
+Y_begin = np.array(Y_coord[:-1])
+Y_end = np.array(Y_coord[1:])
 YDiff = Y_end - Y_begin
 
 #for plotting:
@@ -135,8 +172,6 @@ X_beginplot = list(X_begin)
 X_endplot = list(X_end)
 Y_beginplot = list(Y_begin)
 Y_endplot = list(Y_end)
-
-#check for convex shape or not
 
 #check for vertical lines
 grad0_list = list(reversed(list(np.where(XDiff==0) [0])))
@@ -185,7 +220,8 @@ alpha['reactor'] = 9 #to be checked reactor itself is vertical column, 10 feet o
 alpha['flash'] = 2.3
 alpha['comp'] = 12
 alpha['distil'] = 5.5
-alpha['store'] = 24 # Squeezing them into a rectangle
+alpha['store'] = 20 # Squeezing them into a rectangle
+# alpha['ctrlroom'] = 15
 
 
 beta['furnace'] = 1
@@ -193,7 +229,8 @@ beta['reactor'] = 5 #reactor diameter + 2m allowance for diameter of shell.
 beta['flash'] = 2.3
 beta['comp'] = 12
 beta['distil'] = 5.5
-beta['store'] = 33
+beta['store'] = 10
+# beta['ctrlroom'] = 15
 
 
 # Purchase cost of each unit (dollars)
@@ -203,7 +240,18 @@ Cp['reactor'] = 888300
 Cp['flash'] = 545600
 Cp['comp'] = 2447600
 Cp['distil'] = 3077600
-Cp['store'] = 1890074 # to be checked
+Cp['store'] = 100000000 #454322 # to be checked. Make it larger to keep items away from it
+# Cp['ctrlroom'] = 326250 # approximted £1450/m^2 see reference in write up doc.
+
+# Probability of event occuring (per year)
+freq_event = dict.fromkeys(units)
+freq_event['furnace'] = 1e-2
+freq_event['reactor'] = 1e-2
+freq_event['flash']   = 1e-2
+freq_event['comp']    = 1e-2
+freq_event['distil']  = 1e-2
+freq_event['store']   = 1e-2
+# freq_event['ctrlroom'] = 1e-3
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
@@ -212,16 +260,22 @@ Demin[0][2] = 15
 Demin[0][3] = 15
 Demin[0][4] = 15
 Demin[0][5] = 15
+# Demin[0][6] = 200
 Demin[1][2] = 15
 Demin[1][3] = 15
 Demin[1][4] = 15
 Demin[1][5] = 15
+# Demin[1][6] = 200
 Demin[2][3] = 15
 Demin[2][4] = 15
 Demin[2][5] = 15
+# Demin[2][6] = 200
 Demin[3][4] = 15
 Demin[3][5] = 15
+# Demin[3][6] = 200
 Demin[4][5] = 15
+# Demin[4][6] = 200
+# Demin[5][6] = 200
 
 Demin = Demin + Demin.T - np.diag(Demin.diagonal())
 Demin = makeDict([units,units],Demin,0)
@@ -314,28 +368,41 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
     xmax = 60
-    ymax = 60
-    #%% Land use constraint: 
-    if SwitchLandUse == 1:
-        ## Fixed Aspect Ratio!
-        # Land cost per squared distance (m^2)
-        LC = 125
-        # Number of grid points in square plot
-        N = 60
-        # Length and width of one grid square (m)
-        g_x = xmax/N
-        g_y = ymax/N       
-        gridsize = list(range(1,N))
+    ymax = 40
+    
+# # If its a rectangle, automatically employ variable aspect ratio
+# if (xmax/ymax)!= 1:
+#     SwitchAspRatio = 1
+
+#%% Land use constraint: 
+if SwitchLandUse == 1:
+    # Land cost per squared distance (m^2)
+    LC = 125
+
+    ## Fixed Aspect Ratio!
+    # Number of grid points in square plot
+    N = 60
+    # Length and width of one grid square (m)
+    g_x = xmax/N
+    g_y = ymax/N       
+    gridsize = list(range(1,N))
 
     ## Variable Aspect Ratio!
-        #Number of grids in each direction
-        N1 = 10
-        N2 = 10
-        #Length and width of one grid square
-        g = 10
-        
-        # Defining set for binary variable Gn and Gn1n2
-        gridsizen1n2 = list(range(1,N1+1))
+    #Number of grids in each direction
+    N1 = 8
+    N2 = 8
+    #Length and width of one grid square: each grid square is g * g in dimension
+    g = 10
+    
+    # Defining set for binary variable Gn and Gn1n2
+    gridsizen1 = list(range(1,N1+1))
+    gridsizen2 = list(range(1,N2+1))
+    
+    if SwitchAspRatio == 1:
+        #Check for whether N1*g and N2*g is = xmax,ymax
+        if N1*g != xmax or N2*g != ymax:
+            raise LandshapeError("Please check N1, N2 and g value to ensure N1*g = xmax, N2*g = ymax")
+
         
         
         
@@ -350,115 +417,16 @@ if SwitchFEI == 1:
     De['reactor'] = 23.9
     De['distil'] = 35.4
     De['store'] = 45.0
-    # De['furnace'] =  1
-    # De['reactor'] = 1
-    # De['distil'] = 11
-    # De['store'] = 2
 
     DF['furnace'] =  0.75
     DF['reactor'] = 0.66
     DF['distil'] = 0.77
     DF['store'] = 0.82
-    
-    # DF['furnace'] =  0.5
-    # DF['reactor'] = 0.4
-    # DF['distil'] = 0.4
-    # DF['store'] = 0.4
 
 
     # Upper bound for actual maximum probable property damage cost
     U = 1e8
     
-# #%%--------------- SwitchProt-----------------------------
-#     # Protection device model
-#     if SwitchProt == 1:
-#         # Define protection device configuration
-#         configurations = list(range(1, len(units)))
-#         # Loss control credit factor of protection device configuration k on item i
-#         gamma = np.zeros((len(pertinent_units), len(configurations)))
-#         gamma = makeDict([pertinent_units,configurations],gamma,0)
-#         # assign values
-#         gamma['reactor'][1] = 1
-#         gamma['reactor'][2] = 0.900
-#         gamma['reactor'][3] = 0.750
-#         gamma['reactor'][4] = 0.365
-#         gamma['reactor'][5] = 0.292
-#         gamma['reactor'][6] = 0.117
-#         gamma['eoabs'][1] = 1
-#         gamma['eoabs'][2] = 0.900
-#         gamma['eoabs'][3] = 0.760
-#         gamma['eoabs'][4] = 0.684
-#         gamma['eoabs'][5] = 0.612
-#         gamma['eoabs'][6] = 0.465
-#         gamma['co2abs'][1] = 1
-#         gamma['co2abs'][2] = 0.900
-#         gamma['co2abs'][3] = 0.760
-#         gamma['co2abs'][4] = 0.684
-#         gamma['co2abs'][5] = 0.612
-#         gamma['co2abs'][6] = 0.465
-#         # purchase cost of configuration k on unit i
-#         P = np.zeros((len(pertinent_units),len(configurations)))
-#         P = makeDict([pertinent_units,configurations],P,0)
-#         # assign values
-#         P['reactor'][1] = 0
-#         P['reactor'][2] = 5000
-#         P['reactor'][3] = 15000
-#         P['reactor'][4] = 40000
-#         P['reactor'][5] = 60000
-#         P['reactor'][6] = 125000
-#         P['eoabs'][1] = 0
-#         P['eoabs'][2] = 5000
-#         P['eoabs'][3] = 20000
-#         P['eoabs'][4] = 25000
-#         P['eoabs'][5] = 35000
-#         P['eoabs'][6] = 55000
-#         P['co2abs'][1] = 0
-#         P['co2abs'][2] = 5000
-#         P['co2abs'][3] = 20000
-#         P['co2abs'][4] = 25000
-#         P['co2abs'][5] = 35000
-#         P['co2abs'][6] = 55000
-
-#%%--------------------CEI Factors parameters---------------------------
-# # # Initialise dictionaries
-# AQ = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}  # airborne quantity produced
-# AQf = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}  # airborne quantity produced by flash
-# AQp = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}  # airborne quantity produced by pool
-# Fv = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}  # fraction flashed
-# Pvap = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}
-# CEI = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}
-# Dc = {i: dict.fromkeys(hazardous_chemicals) for i in pertinent_units}
-# Dh = dict.fromkeys(pertinent_units)
-# Liq = dict.fromkeys(pertinent_units)
-# Deltah = dict.fromkeys(pertinent_units)
-# WT = dict.fromkeys(pertinent_units)
-# WP = dict.fromkeys(pertinent_units)
-# AP = dict.fromkeys(pertinent_units)
-# heatratio = dict.fromkeys(hazardous_chemicals)
-# Tb = dict.fromkeys(hazardous_chemicals)
-# antoineA = dict.fromkeys(hazardous_chemicals)
-# antoineB = dict.fromkeys(hazardous_chemicals)
-# antoineC = dict.fromkeys(hazardous_chemicals)
-# MW = dict.fromkeys(hazardous_chemicals)
-# Pr = dict.fromkeys(hazardous_chemicals)
-# prob_death = dict.fromkeys(hazardous_chemicals)
-# CONC = dict.fromkeys(hazardous_chemicals)
-# # # Assign values
-# te = 10  # minutes of exposure time
-# prob_death['EO'] = 0.5  # probability of death for probit
-# Dh['reactor'] = 50.8  # mm
-# Dh['eoabs'] = 50.8  # hole diameter
-# Dh['co2abs'] = 50.8
-# Deltah['reactor'] = 1  # m
-# Deltah['eoabs'] = 1
-# Deltah['co2abs'] = 1
-# heatratio['EO'] = 0.00365  # 1/degc
-# Tb['EO'] = 10.5  # degc
-# antoineA['EO'] = 4.386
-# antoineB['EO'] = 1115.1
-# antoineC['EO'] = -29.015
-# MW['EO'] = 44.05
-
 #%%----------------- SwitchFEIVle -----------------------
 # # Occupancy calculations
 # # Number of workers
@@ -470,6 +438,7 @@ Nw['flash'] = 2
 Nw['comp'] = 3
 Nw['distil'] = 4 
 Nw['store'] = 2
+# Nw['ctrlroom'] = 10
 # Percentage of time present at unit
 tw = dict.fromkeys(units)
 tw['furnace'] = 0.1
@@ -478,6 +447,7 @@ tw['flash'] = 0.1
 tw['comp'] = 0.1
 tw['distil'] = 0.1
 tw['store'] = 0.1
+# tw['ctrlroom'] = 0.375
 
 # Occupancy
 OCC = dict.fromkeys(units)
@@ -486,7 +456,7 @@ OCC = {i: Nw[i]*tw[i] for i in units}
 # Cost of life (dollars)
 Cl = dict.fromkeys(units)
 for i in units:
-    Cl[i] = 1e6
+    Cl[i] = 10e6
 
 #%% --------------Define Variables--------------
 # Base layout model
@@ -575,8 +545,10 @@ for idxj, j in enumerate(units):
 
 if SwitchLandUse == 1:
     # N binary variables representing plot grid
-    Gn = LpVariable.dicts("Gn",(gridsize), lowBound=0, upBound=1, cat="Integer")
-    Gn1n2 = LpVariable.dicts("Gn1n2", (gridsizen1n2, gridsizen1n2), lowBound = 0, upBound = 1, cat = "Integer")# For g_x[i] and g_y[i], select the larger as g    
+    if SwitchAspRatio == 1: 
+        Gn1n2 = LpVariable.dicts("Gn1n2", (gridsizen1, gridsizen2), lowBound = 0, upBound = 1, cat = "Integer")# For g_x[i] and g_y[i], select the larger as g    
+    else:
+        Gn = LpVariable.dicts("Gn",(gridsize), lowBound=0, upBound=1, cat="Integer")
     # Total Land Cost
     TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
 else:
@@ -693,7 +665,20 @@ if SwitchLandShape == 1:
 else:
     if SwitchLandUse == 1:
         
-        if SwitchAspRatio == 0:    
+        if SwitchAspRatio == 1:    
+            for i in units:              
+                # Variable aspect ratio up to limits N1 and N2 * g            
+                layout += x[i] + 0.5 * l[i] <= lpSum(n1 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
+                layout += y[i] + 0.5 * d[i] <= lpSum(n2 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
+                                                             
+                # Only 1 grid size selected (rectangle)
+                layout += lpSum((Gn1n2[n1][n2]) for n1 in range(1,N1) for n2 in range(1,N2)) == 1
+    
+    
+                # Objective function contribution for variable aspect ratio land use model
+                layout += TLC == LC*lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2))    
+        
+        else:
             for i in units:
                 # Fixed aspect ratio land area approximation constraints for plot
                 layout += x[i] + 0.5*l[i] <= lpSum(n*g_x*Gn[n] for n in range(1,N))
@@ -704,23 +689,7 @@ else:
             
                 # Objective function contribution for fixed aspect ratio land use model
                 layout += TLC == LC*lpSum(Gn[n]*n*g_x*n*g_y for n in range(1,N))
-        
-        else:
-            for i in units:              
-                # Variable aspect ratio up to limits N1 and N2 * g            
-                layout += x[i] + 0.5 * l[i] <= lpSum(n1 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
-                layout += y[i] + 0.5 * d[i] <= lpSum(n2 * g * Gn1n2[n1][n2] for n1 in range(1,N1) for n2 in range(1, N2))
-                                                             
-                # #Keeps the area always greater than a specified area. 
-                layout += lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2)) >= xmax * ymax
-    
-                # Only 1 grid size selected (rectangle)
-                layout += lpSum((Gn1n2[n1][n2]) for n1 in range(1,N1) for n2 in range(1,N2)) == 1
-    
-    
-                # Objective function contribution for variable aspect ratio land use model
-                layout += TLC == LC*lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2))
-
+            
     else:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
@@ -748,10 +717,10 @@ if SwitchFEI == 1:
     # for all i in pertinent units
     for i in pertinent_units:
         # Value of area of exposure constraint (30ii)
-        if SwitchFEIVle == 1:
-            layout += Ve[i] == Cp[i] + OCC[i]*Cl[i] + lpSum([Ve2[i][j] for j in units])
+        if SwitchFEIVle == 1: # Cost of replacing unit that explodes is not included, since its just a constant and doesnt actually tell us anything useful.
+            layout += Ve[i] == freq_event[i]*(lpSum([Ve2[i][j] for j in units]))
         else:
-            layout += Ve[i] == Cp[i] + lpSum([Ve2[i][j] for j in units])
+            layout += Ve[i] == freq_event[i]*(lpSum([Ve2[i][j] for j in units]))
 
         # Base maximum probable property damage cost (31)
         layout += Omega0[i] == DF[i]*Ve[i]
@@ -837,9 +806,18 @@ for v in layout.variables():
 print("Total cost of connections =", SumCD.varValue)
 
 if SwitchLandUse == 1:
-    for n in range(1, N):
-        if Gn[n].varValue == 1:
-            print("Number of grids", n, "Size of land area =", (n*n*g_x*g_y), "metres square")
+    if SwitchAspRatio == 1:
+        for n1 in range(1,N1):
+            for n2 in range(1,N2):
+                if Gn1n2[n1][n2].varValue ==1:
+                    xfinalaxis = n1
+                    yfinalaxis = n2
+                    
+        print("Number of grids", xfinalaxis, "x", yfinalaxis, ". Size of land area =", (xfinalaxis*yfinalaxis*g*g), "metres square")
+    else:
+        for n in range(1, N):
+            if Gn[n].varValue == 1:
+                print("Number of grids", n, "Size of land area =", (n*n*g_x*g_y), "metres square")
 
 if SwitchFEI == 1:
     print("Total actual MPPD =", SumOmega.varValue)
@@ -919,13 +897,14 @@ if SwitchLandShape == 1:
     ax.set_xlim(0,max(X_beginplot))
     ax.set_ylim(0,max(Y_beginplot))
 else:
-    if SwitchAspRatio == 0:
+    if SwitchAspRatio == 1:
+        ax.set_xlim(0,xfinalaxis*g)
+        ax.set_ylim(0,yfinalaxis*g)
+        
+    else:
         ax.set_xlim(0,xmax)
         ax.set_ylim(0,ymax)
-    else:
-        ax.set_xlim(0,max(xpos) + 25)
-        ax.set_ylim(0,max(ypos)+25)
-
+        
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))
 for i,txt in enumerate(numbers):
