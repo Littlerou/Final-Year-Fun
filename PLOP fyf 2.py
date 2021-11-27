@@ -87,22 +87,34 @@ SwitchFEIVle = 1
 # CEI Constraints
 SwitchCEI = 0
 
+# Choose non convex shape: 1 = L-shape, 2 = T-shape
+shape = 1
+
+SwitchNonConvex = 1
+
 #%% Case selection:
-Casee = 1
+Casee = 3
 
 if Casee == 1:
     SwitchFEI = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 0
+    SwitchNonConvex = 0
 
 elif Casee == 2:    
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
     SwitchAspRatio = 1
     SwitchFEI = 1
+    SwitchNonConvex = 0
     
 elif Casee == 3:
     SwitchLandShape = 1
+    SwitchFEI = 1
+    SwitchNonConvex = 0
+
+elif Casee == 4:
+    SwitchNonConvex = 1
     SwitchFEI = 1
     
 #%% Error checking
@@ -368,7 +380,7 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
     xmax = 60
-    ymax = 40
+    ymax = 60
     
 # # If its a rectangle, automatically employ variable aspect ratio
 # if (xmax/ymax)!= 1:
@@ -469,6 +481,10 @@ E2 = LpVariable.dicts("E2",(units,units),lowBound=0,upBound=1,cat="Integer")
 # is unit i to the right or above unit j
 Wx = LpVariable.dicts("Wx",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wy = LpVariable.dicts("Wy",(units,units),lowBound=0,upBound=1,cat="Integer")
+
+# binary variables for non-convex shapes 
+G1 = LpVariable.dicts("G1",(units),lowBound=0,upBound=1,cat="Integer")
+G2 = LpVariable.dicts("G2",(units),lowBound=0,upBound=1,cat="Integer")
 
 # Define continuous variables for base layout model
 l = LpVariable.dicts("l",(units),lowBound=0,upBound=None,cat="Continuous")
@@ -694,6 +710,21 @@ else:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
             layout += y[i] + 0.5*d[i] <= ymax
+            
+if SwitchNonConvex == 1 and shape == 1: 
+    for i in units:
+        layout += y[i] + 0.5*d[i] <= 46.77*(1-G1[i]) + 23.39*G1[i]
+        layout += x[i] + 0.5*l[i] <= 23.39*G1[i] + 46.77*(1-G1[i])
+        layout += y[i] - 0.5*d[i] >= 23.39*(1-G1[i])
+        layout += x[i] - 0.5*l[i] >= 0
+
+if SwitchNonConvex == 1 and shape == 2:
+    for i in units:
+        layout += y[i] + 0.5*d[i] <= 45.93*G1[i] + 30.62*(1-G1[i])
+        layout += x[i] + 0.5*l[i] <= 30.62*G1[i] + 45.93*(1-G1[i])
+        layout += y[i] - 0.5*d[i] >= 15.31*(1-G1[i])
+        layout += x[i] - 0.5*l[i] >= 30.62*(1-G1[i])
+    
     
 #%% F&EI Constraints
 if SwitchFEI == 1:
@@ -888,7 +919,36 @@ if SwitchLandShape == 1:
 #     plt.gca().add_line(line)
 #     line = plt.Line2D((xmax, xmax), (0, ymax))
 #     plt.gca().add_line(line)
+
+if SwitchNonConvex == 1 and shape == 1:
+    plt.axis('square')
+    line1 = plt.Line2D((0,46.77),(46.77,46.77))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((46.77,46.77),(46.77,23.39))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((46.77,23.39),(23.39,23.39))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((23.39,23.39),(23.39,0))
+    plt.gca().add_line(line4)
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)
     
+if SwitchNonConvex == 1 and shape == 2:
+    plt.axis('square')
+    line1 = plt.Line2D((0,30.62),(45.93,45.93))
+    plt.gca().add_line(line1)
+    line2 = plt.Line2D((30.62,30.62),(45.93,30.62))
+    plt.gca().add_line(line2)
+    line3 = plt.Line2D((30.62,45.93),(30.62,30.62))
+    plt.gca().add_line(line3)
+    line4 = plt.Line2D((45.93,45.93),(30.62,15.31))
+    plt.gca().add_line(line4)
+    line5 = plt.Line2D((45.93,30.62),(15.31,15.31))
+    plt.gca().add_line(line5)
+    line6 = plt.Line2D((30.62,30.62),(15.31,0))
+    plt.gca().add_line(line6)
+    ax.set_xlim(0,70)
+    ax.set_ylim(0,70)    
 # Set bounds of axis
 plt.axis('square')
 # ax.set_xlim(0,max(xpos+ypos)+15)
