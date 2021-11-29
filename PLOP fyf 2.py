@@ -88,7 +88,7 @@ SwitchFEIVle = 1
 SwitchCEI = 0
 
 # Choose non convex shape: 1 = L-shape, 2 = T-shape
-shape = 1
+shape = 2
 
 SwitchNonConvex = 0
 
@@ -222,6 +222,11 @@ colin = list(colin)
 
 #Area calculation if needed??
 Area = np.trapz(X_coord, Y_coord)
+
+## dimensions for the non convex shapes from given area 
+Ac = 1361.55
+lc = (Ac/3)**0.5
+tc = (Ac/7)**0.5
 
 #%%----------------- INPUT SPECIFICATIONS-------------------------
 # Dimensions of each unit (m)
@@ -714,17 +719,17 @@ else:
             
 if SwitchNonConvex == 1 and shape == 1: 
     for i in units:
-        layout += y[i] + 0.5*d[i] <= 46.77*(1-G1[i]) + 23.39*G1[i]
-        layout += x[i] + 0.5*l[i] <= 23.39*G1[i] + 46.77*(1-G1[i])
-        layout += y[i] - 0.5*d[i] >= 23.39*(1-G1[i])
+        layout += y[i] + 0.5*d[i] <= (2*lc)*(1-G1[i]) + lc*G1[i]
+        layout += x[i] + 0.5*l[i] <= lc*G1[i] + (2*lc)*(1-G1[i])
+        layout += y[i] - 0.5*d[i] >= lc*(1-G1[i])
         layout += x[i] - 0.5*l[i] >= 0
 
 if SwitchNonConvex == 1 and shape == 2:
     for i in units:
-        layout += y[i] + 0.5*d[i] <= 45.93*G1[i] + 30.62*(1-G1[i])
-        layout += x[i] + 0.5*l[i] <= 30.62*G1[i] + 45.93*(1-G1[i])
-        layout += y[i] - 0.5*d[i] >= 15.31*(1-G1[i])
-        layout += x[i] - 0.5*l[i] >= 30.62*(1-G1[i])
+        layout += y[i] + 0.5*d[i] <= (3*tc)*G1[i] + (2*tc)*(1-G1[i])
+        layout += x[i] + 0.5*l[i] <= (2*tc)*G1[i] + (3*tc)*(1-G1[i])
+        layout += y[i] - 0.5*d[i] >= tc*(1-G1[i])
+        layout += x[i] - 0.5*l[i] >= (2*tc)*(1-G1[i])
     
     
 #%% F&EI Constraints
@@ -922,34 +927,41 @@ if SwitchLandShape == 1:
 #     plt.gca().add_line(line)
 
 if SwitchNonConvex == 1 and shape == 1:
+    Lc = 2*lc
     plt.axis('square')
-    line1 = plt.Line2D((0,46.77),(46.77,46.77))
+    line1 = plt.Line2D((0,Lc),(Lc,Lc))
     plt.gca().add_line(line1)
-    line2 = plt.Line2D((46.77,46.77),(46.77,23.39))
+    line2 = plt.Line2D((Lc,Lc),(Lc,lc))
     plt.gca().add_line(line2)
-    line3 = plt.Line2D((46.77,23.39),(23.39,23.39))
+    line3 = plt.Line2D((Lc,lc),(lc,lc))
     plt.gca().add_line(line3)
-    line4 = plt.Line2D((23.39,23.39),(23.39,0))
+    line4 = plt.Line2D((lc,lc),(lc,0))
     plt.gca().add_line(line4)
     ax.set_xlim(0,70)
     ax.set_ylim(0,70)
+    print('Ycoordinates:',0,Lc,Lc,lc,lc,0,0)
+    print('Xcoordinates:',0,0,Lc,Lc,lc,lc,0)
     
 if SwitchNonConvex == 1 and shape == 2:
+    Tc = 2*tc
+    TTc = 3*tc
     plt.axis('square')
-    line1 = plt.Line2D((0,30.62),(45.93,45.93))
+    line1 = plt.Line2D((0,Tc),(TTc,TTc))
     plt.gca().add_line(line1)
-    line2 = plt.Line2D((30.62,30.62),(45.93,30.62))
+    line2 = plt.Line2D((Tc,Tc),(TTc,Tc))
     plt.gca().add_line(line2)
-    line3 = plt.Line2D((30.62,45.93),(30.62,30.62))
+    line3 = plt.Line2D((Tc,TTc),(Tc,Tc))
     plt.gca().add_line(line3)
-    line4 = plt.Line2D((45.93,45.93),(30.62,15.31))
+    line4 = plt.Line2D((TTc,TTc),(Tc,tc))
     plt.gca().add_line(line4)
-    line5 = plt.Line2D((45.93,30.62),(15.31,15.31))
+    line5 = plt.Line2D((TTc,Tc),(tc,tc))
     plt.gca().add_line(line5)
-    line6 = plt.Line2D((30.62,30.62),(15.31,0))
+    line6 = plt.Line2D((Tc,Tc),(tc,0))
     plt.gca().add_line(line6)
     ax.set_xlim(0,70)
-    ax.set_ylim(0,70)    
+    ax.set_ylim(0,70)  
+    print('Ycoordinates:',0,TTc,TTc,Tc,Tc,tc,tc,0,0)
+    print('Xcoordinates:',0,0,Tc,Tc,TTc,TTc,Tc,Tc,0)
 # Set bounds of axis
 plt.axis('square')
 # ax.set_xlim(0,max(xpos+ypos)+15)
