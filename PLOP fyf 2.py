@@ -88,7 +88,7 @@ SwitchFEIVle = 1
 SwitchCEI = 0
 
 #%% Case selection:
-Casee = 1
+Casee = 3
 
 if Casee == 1:
     SwitchFEI = 1
@@ -155,8 +155,8 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_coord = [0,0,25,50,50,0]
-Y_coord = [0,40,60,40,0,0]
+X_coord = [0,0,40.504,40.504,0]
+Y_coord = [0,40.504,40.504,0,0]
 
 X_begin = np.array(X_coord[:-1])
 X_end = np.array(X_coord[1:])
@@ -245,35 +245,35 @@ Cp['store'] = 100000000 #454322 # to be checked. Make it larger to keep items aw
 
 # Probability of event occuring (per year)
 freq_event = dict.fromkeys(units)
-freq_event['furnace'] = 1e-2
-freq_event['reactor'] = 1e-2
-freq_event['flash']   = 1e-2
-freq_event['comp']    = 1e-2
-freq_event['distil']  = 1e-2
-freq_event['store']   = 1e-2
+freq_event['furnace'] = 1e-3
+freq_event['reactor'] = 1e-3
+freq_event['flash']   = 1e-3
+freq_event['comp']    = 1e-3
+freq_event['distil']  = 1e-3
+freq_event['store']   = 1e-3
 # freq_event['ctrlroom'] = 1e-3
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
-Demin[0][1] = 15
-Demin[0][2] = 15
-Demin[0][3] = 15
-Demin[0][4] = 15
-Demin[0][5] = 15
+Demin[0][1] = 50
+Demin[0][2] = 50
+Demin[0][3] = 50
+Demin[0][4] = 50
+Demin[0][5] = 46
 # Demin[0][6] = 200
 Demin[1][2] = 15
 Demin[1][3] = 15
 Demin[1][4] = 15
-Demin[1][5] = 15
+Demin[1][5] = 46
 # Demin[1][6] = 200
 Demin[2][3] = 15
 Demin[2][4] = 15
-Demin[2][5] = 15
+Demin[2][5] = 46
 # Demin[2][6] = 200
 Demin[3][4] = 15
-Demin[3][5] = 15
+Demin[3][5] = 46
 # Demin[3][6] = 200
-Demin[4][5] = 15
+Demin[4][5] = 46
 # Demin[4][6] = 200
 # Demin[5][6] = 200
 
@@ -367,8 +367,8 @@ OH = 8000  # operating hours
 
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
-    xmax = 60
-    ymax = 40
+    xmax = 200
+    ymax = 200
     
 # # If its a rectangle, automatically employ variable aspect ratio
 # if (xmax/ymax)!= 1:
@@ -381,7 +381,7 @@ if SwitchLandUse == 1:
 
     ## Fixed Aspect Ratio!
     # Number of grid points in square plot
-    N = 60
+    N = 80
     # Length and width of one grid square (m)
     g_x = xmax/N
     g_y = ymax/N       
@@ -389,10 +389,10 @@ if SwitchLandUse == 1:
 
     ## Variable Aspect Ratio!
     #Number of grids in each direction
-    N1 = 8
-    N2 = 8
+    N1 = 25
+    N2 = 25
     #Length and width of one grid square: each grid square is g * g in dimension
-    g = 10
+    g = 200/25
     
     # Defining set for binary variable Gn and Gn1n2
     gridsizen1 = list(range(1,N1+1))
@@ -902,13 +902,19 @@ else:
         ax.set_ylim(0,yfinalaxis*g)
         
     else:
-        ax.set_xlim(0,xmax)
-        ax.set_ylim(0,ymax)
+        ax.set_xlim(0,max(xpos)*1.2)
+        ax.set_ylim(0,max(ypos)*1.2)
+        
+if Casee == 1:
+    ax.set_xlim(0, max(xpos) * 1.2)
+    ax.set_ylim(0, max(ypos) * 1.2)
+    
         
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))
+sizes = [3,3,3,3,3,3]
 for i,txt in enumerate(numbers):
-    ax.annotate(txt, (xpos[i]-.5,ypos[i]-.5))
+    ax.annotate(txt, (xpos[i]-.5,ypos[i]-.5), fontsize = 8)
 # Value of objective function as title of plot
 ax.set_title(('Cost = '+str(round(value(layout.objective)))),loc='center')
 
