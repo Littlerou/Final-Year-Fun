@@ -90,21 +90,21 @@ SwitchCEI = 0
 # Choose non convex shape: 1 = L-shape, 2 = T-shape
 shape = 1
 
-SwitchNonConvex = 1
+SwitchNonConvex = 0
 
 #%% Case selection:
-Casee = 3
+Casee = 4
 
 if Casee == 1:
     SwitchFEI = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 0
-    SwitchNonConvex = 0
+    # SwitchNonConvex = 1
 
 elif Casee == 2:    
     SwitchMinSepDistance = 1
     SwitchLandUse = 1
-    SwitchAspRatio = 1
+    # SwitchAspRatio = 1
     SwitchFEI = 1
     SwitchNonConvex = 0
     
@@ -167,8 +167,8 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_coord = [0,0,40.504,40.504,0]
-Y_coord = [0,40.504,40.504,0,0]
+X_coord = [0,0,16.5,33,33,0]
+Y_coord = [0,33,49.5,33,0,0]
 
 X_begin = np.array(X_coord[:-1])
 X_end = np.array(X_coord[1:])
@@ -221,7 +221,7 @@ absgrad = list(absgrad)
 colin = list(colin)
 
 #Area calculation if needed??
-Area = np.trapz(Y_begin, X_begin)
+Area = np.trapz(X_coord, Y_coord)
 
 #%%----------------- INPUT SPECIFICATIONS-------------------------
 # Dimensions of each unit (m)
@@ -257,7 +257,7 @@ Cp['store'] = 100000000 #454322 # to be checked. Make it larger to keep items aw
 
 # Probability of event occuring (per year)
 freq_event = dict.fromkeys(units)
-freq_event['furnace'] = 1e-3
+freq_event['furnace'] = 1e-3 #1e-3 is used as it is maximum tolerable risk for workforce. 
 freq_event['reactor'] = 1e-3
 freq_event['flash']   = 1e-3
 freq_event['comp']    = 1e-3
@@ -267,25 +267,25 @@ freq_event['store']   = 1e-3
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
-Demin[0][1] = 50
-Demin[0][2] = 50
-Demin[0][3] = 50
-Demin[0][4] = 50
-Demin[0][5] = 46
+Demin[0][1] = 15.24 #50 ft
+Demin[0][2] = 15.24
+Demin[0][3] = 15.24
+Demin[0][4] = 15.24
+Demin[0][5] = 15.24
 # Demin[0][6] = 200
-Demin[1][2] = 15
-Demin[1][3] = 15
-Demin[1][4] = 15
-Demin[1][5] = 46
+Demin[1][2] = 4.572 #15 feet
+Demin[1][3] = 4.572
+Demin[1][4] = 4.572
+Demin[1][5] = 15.24
 # Demin[1][6] = 200
-Demin[2][3] = 15
-Demin[2][4] = 15
-Demin[2][5] = 46
+Demin[2][3] = 4.572
+Demin[2][4] = 4.572
+Demin[2][5] = 15.24
 # Demin[2][6] = 200
-Demin[3][4] = 15
-Demin[3][5] = 46
+Demin[3][4] = 4.572
+Demin[3][5] = 15.24
 # Demin[3][6] = 200
-Demin[4][5] = 46
+Demin[4][5] = 15.24
 # Demin[4][6] = 200
 # Demin[5][6] = 200
 
@@ -380,8 +380,8 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
 
-    xmax = 60
-    ymax = 60
+    xmax = 150
+    ymax = 150
     
 # # If its a rectangle, automatically employ variable aspect ratio
 # if (xmax/ymax)!= 1:
@@ -405,7 +405,7 @@ if SwitchLandUse == 1:
     N1 = 25
     N2 = 25
     #Length and width of one grid square: each grid square is g * g in dimension
-    g = 200/25
+    g = xmax/N1
     
     # Defining set for binary variable Gn and Gn1n2
     gridsizen1 = list(range(1,N1+1))
@@ -427,12 +427,12 @@ if SwitchFEI == 1:
     DF = dict.fromkeys(pertinent_units)
 
     De['furnace'] =  28.8
-    De['reactor'] = 23.9
+    De['reactor'] = 32
     De['distil'] = 35.4
     De['store'] = 45.0
 
     DF['furnace'] =  0.75
-    DF['reactor'] = 0.66
+    DF['reactor'] = 0.74
     DF['distil'] = 0.77
     DF['store'] = 0.82
 
