@@ -93,20 +93,20 @@ shape = 2
 SwitchNonConvex = 0
 
 #%% Case selection:
-Casee = 4
+Casee = 1
 
 if Casee == 1:
     SwitchFEI = 1
     # SwitchLandUse = 1
-    # SwitchAspRatio = 0
+    # SwitchAspRatio = 1
     # SwitchNonConvex = 1
 
 elif Casee == 2:    
     SwitchMinSepDistance = 1
-    SwitchLandUse = 1
+    # SwitchLandUse = 1
     # SwitchAspRatio = 1
     SwitchFEI = 1
-    SwitchNonConvex = 0
+    # SwitchNonConvex = 0
     
 elif Casee == 3:
     SwitchLandShape = 1
@@ -154,9 +154,9 @@ if SwitchProt == 1 and SwitchFEI == 0:
 #%% --------------Define Sets--------------
 # Define the process units
 # furnace = furnace, reactor = FEHE + reactor, Flash = C1 + flash, Comp = Comp, Distil = RECCOL + STAB + PRODCOL + C2 + P2, Store = storage tanks + P1
-units =  ['furnace', 'reactor', 'flash','comp','distil', 'store'] #3distill comlmns in total
+units =  ['furnace', 'reactor', 'flash','comp','distil', 'store','ctrlroom'] #3distill comlmns in total
 pertinent_units = ['furnace', 'reactor', 'distil', 'store']
-# hazardous_chemicals = ['tol','benz','meth','h2','diph']
+unitsBarCtrlroom = ['furnace', 'reactor', 'flash','comp','distil', 'store']
 Nunits = len(units)
 
 #%% --------------Define Parameters and Values--------------
@@ -167,8 +167,8 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_coord = [0,0,16.5,33,33,0]
-Y_coord = [0,33,49.5,33,0,0]
+X_coord = [0,0,36.899,36.899,0]
+Y_coord = [0,36.899,36.899,0,0]
 
 X_begin = np.array(X_coord[:-1])
 X_end = np.array(X_coord[1:])
@@ -232,22 +232,22 @@ tc = (Ac/7)**0.5
 # Dimensions of each unit (m)
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
-alpha['furnace'] = 1
-alpha['reactor'] = 9 #to be checked reactor itself is vertical column, 10 feet or 3m. HEX has got 6.1m length, approximately diameter = 
-alpha['flash'] = 2.3
-alpha['comp'] = 12
-alpha['distil'] = 5.5
-alpha['store'] = 20 # Squeezing them into a rectangle
-# alpha['ctrlroom'] = 15
+alpha['furnace'] = 7
+alpha['reactor'] = 9
+alpha['flash'] = 4
+alpha['comp'] = 14
+alpha['distil'] = 8
+alpha['store'] = 22 
+alpha['ctrlroom'] = 15
 
 
-beta['furnace'] = 1
-beta['reactor'] = 5 #reactor diameter + 2m allowance for diameter of shell.
-beta['flash'] = 2.3
-beta['comp'] = 12
-beta['distil'] = 5.5
-beta['store'] = 10
-# beta['ctrlroom'] = 15
+beta['furnace'] = 16
+beta['reactor'] = 5#5 #reactor diameter + 2m allowance for diameter of shell.
+beta['flash'] = 4
+beta['comp'] = 14
+beta['distil'] = 8
+beta['store'] = 12
+beta['ctrlroom'] = 15
 
 
 # Purchase cost of each unit (dollars)
@@ -257,18 +257,15 @@ Cp['reactor'] = 888300
 Cp['flash'] = 545600
 Cp['comp'] = 2447600
 Cp['distil'] = 3077600
-Cp['store'] = 100000000 #454322 # to be checked. Make it larger to keep items away from it
-# Cp['ctrlroom'] = 326250 # approximted £1450/m^2 see reference in write up doc.
+Cp['store'] = 3679834  
+Cp['ctrlroom'] = 912150 
 
-# Probability of event occuring (per year)
+# Probability of event occuring (per year) --> pertinent units only
 freq_event = dict.fromkeys(units)
-freq_event['furnace'] = 1e-3 #1e-3 is used as it is maximum tolerable risk for workforce. 
+freq_event['furnace'] = 1e-3 
 freq_event['reactor'] = 1e-3
-freq_event['flash']   = 1e-3
-freq_event['comp']    = 1e-3
 freq_event['distil']  = 1e-3
 freq_event['store']   = 1e-3
-# freq_event['ctrlroom'] = 1e-3
 
 #Minimum separation distances
 Demin = np.zeros((len(units), len(units)))
@@ -277,22 +274,22 @@ Demin[0][2] = 15.24
 Demin[0][3] = 15.24
 Demin[0][4] = 15.24
 Demin[0][5] = 15.24
-# Demin[0][6] = 200
+Demin[0][6] = 60.96 #200 ft
 Demin[1][2] = 4.572 #15 feet
 Demin[1][3] = 4.572
 Demin[1][4] = 4.572
 Demin[1][5] = 15.24
-# Demin[1][6] = 200
+Demin[1][6] = 60.96
 Demin[2][3] = 4.572
 Demin[2][4] = 4.572
 Demin[2][5] = 15.24
-# Demin[2][6] = 200
+Demin[2][6] = 60.96
 Demin[3][4] = 4.572
 Demin[3][5] = 15.24
-# Demin[3][6] = 200
+Demin[3][6] = 60.96
 Demin[4][5] = 15.24
-# Demin[4][6] = 200
-# Demin[5][6] = 200
+Demin[4][6] = 60.96
+Demin[5][6] = 60.96
 
 Demin = Demin + Demin.T - np.diag(Demin.diagonal())
 Demin = makeDict([units,units],Demin,0)
@@ -372,10 +369,9 @@ CEPCI_2006 = 499.6 #accounts for rise of inflation 2006
 CEPCI_2021 = 677.7   #accounts for rise of inflation 2021
 MF = 1 # material factor (different fro each component)
 A_f = 0.1102  # check report
-FX_rate = 0.64  # exchange rate
+FX_rate = 0.75  # exchange rate
 BB = 880  # paramter dependent on material
 F = 1.5 # parameter dependent on material 
-# bb = 0.05 # 5% of installed cost accounting fro maintanance 
 DIA_ref = 2.3 # diameter of pipe
 epsilon = 0.0046 #absolute roughness of steel pipe/dict [m]. check chin chern paper for reference.
 mechEffic = 0.6  #mechanical efficiency 
@@ -387,15 +383,11 @@ if SwitchLandShape == 0: #sets default max available plot area.
 
     xmax = 150
     ymax = 150
-    
-# # If its a rectangle, automatically employ variable aspect ratio
-# if (xmax/ymax)!= 1:
-#     SwitchAspRatio = 1
 
 #%% Land use constraint: 
 if SwitchLandUse == 1:
     # Land cost per squared distance (m^2)
-    LC = 125
+    LC = 61.76
 
     ## Fixed Aspect Ratio!
     # Number of grid points in square plot
@@ -407,8 +399,8 @@ if SwitchLandUse == 1:
 
     ## Variable Aspect Ratio!
     #Number of grids in each direction
-    N1 = 25
-    N2 = 25
+    N1 = 80
+    N2 = 80
     #Length and width of one grid square: each grid square is g * g in dimension
     g = xmax/N1
     
@@ -432,12 +424,12 @@ if SwitchFEI == 1:
     DF = dict.fromkeys(pertinent_units)
 
     De['furnace'] =  28.8
-    De['reactor'] = 32
+    De['reactor'] = 40.44
     De['distil'] = 35.4
     De['store'] = 45.0
 
     DF['furnace'] =  0.75
-    DF['reactor'] = 0.74
+    DF['reactor'] = 0.8
     DF['distil'] = 0.77
     DF['store'] = 0.82
 
@@ -456,7 +448,7 @@ Nw['flash'] = 2
 Nw['comp'] = 3
 Nw['distil'] = 4 
 Nw['store'] = 2
-# Nw['ctrlroom'] = 10
+Nw['ctrlroom'] = 10
 # Percentage of time present at unit
 tw = dict.fromkeys(units)
 tw['furnace'] = 0.1
@@ -465,7 +457,7 @@ tw['flash'] = 0.1
 tw['comp'] = 0.1
 tw['distil'] = 0.1
 tw['store'] = 0.1
-# tw['ctrlroom'] = 0.375
+tw['ctrlroom'] = 0.375
 
 # Occupancy
 OCC = dict.fromkeys(units)
@@ -573,8 +565,12 @@ if SwitchLandUse == 1:
         Gn = LpVariable.dicts("Gn",(gridsize), lowBound=0, upBound=1, cat="Integer")
     # Total Land Cost
     TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
+    roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
+
 else:
     TLC = 0
+    roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
+
     
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
@@ -665,9 +661,15 @@ for idxj, j in enumerate(units):
             layout += B[i][j] == A[j][i]
             layout += Wx[i][j] == 1 - Wx[j][i]
             layout += Wy[i][j] == 1 - Wy[j][i]
+            
+
+# layout += roadLength == lpSum(x[i] + y[i] for i in unitsBarCtrlroom)/6
+layout += roadCost == (x["ctrlroom"] - lpSum(x[i] for i in unitsBarCtrlroom) + y["ctrlroom"] - lpSum(y[i] for i in unitsBarCtrlroom))
+# layout+= roadCost == x["ctrlroom"] - x["reactor"] - x["comp"] -x["furnace"]-x["distil"]
+
 
 # Objective function contribution for base model
-layout += SumCD == lpSum([CD[i][j] for i in units for j in units])        
+layout += SumCD == lpSum([CD[i][j] for i in units for j in units])# + (x["ctrlroom"] - x["reactor"])*50 +  (y["ctrlroom"] - y["reactor"])*50 
 
 #%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
@@ -716,7 +718,8 @@ else:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
             layout += y[i] + 0.5*d[i] <= ymax
-            
+
+#%% Non convex shapes            
 if SwitchNonConvex == 1 and shape == 1: 
     for i in units:
         layout += y[i] + 0.5*d[i] <= (2*lc)*(1-G1[i]) + lc*G1[i]
