@@ -94,6 +94,8 @@ SwitchNonConvex = 0
 
 #%% Case selection:
 Casee = 1
+q = 1
+r = 1
 
 if Casee == 1:
     SwitchFEI = 1
@@ -381,8 +383,8 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
 
-    xmax = 150
-    ymax = 150
+    xmax = 300
+    ymax = 300
 
 #%% Land use constraint: 
 if SwitchLandUse == 1:
@@ -423,10 +425,10 @@ if SwitchFEI == 1:
     De = dict.fromkeys(pertinent_units)
     DF = dict.fromkeys(pertinent_units)
 
-    De['furnace'] =  28.8
-    De['reactor'] = 40.44
-    De['distil'] = 35.4
-    De['store'] = 45.0
+    De['furnace'] =  28.8 * np.sqrt(2)
+    De['reactor'] = 40.44 * np.sqrt(2)
+    De['distil'] = 35.4* np.sqrt(2)
+    De['store'] = 45.0* np.sqrt(2)
 
     DF['furnace'] =  0.75
     DF['reactor'] = 0.8
@@ -479,7 +481,9 @@ E2 = LpVariable.dicts("E2",(units,units),lowBound=0,upBound=1,cat="Integer")
 # is unit i to the right or above unit j
 Wx = LpVariable.dicts("Wx",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wy = LpVariable.dicts("Wy",(units,units),lowBound=0,upBound=1,cat="Integer")
-
+# same as above, but for road distance calculation
+Wx2 = LpVariable("Wx2",lowBound=0,upBound=1,cat="Integer")
+Wy2 = LpVariable("Wy2",lowBound=0,upBound=1,cat="Integer")
 # binary variables for non-convex shapes 
 G1 = LpVariable.dicts("G1",(units),lowBound=0,upBound=1,cat="Integer")
 G2 = LpVariable.dicts("G2",(units),lowBound=0,upBound=1,cat="Integer")
@@ -496,6 +500,13 @@ L = LpVariable.dicts("L",(units,units),lowBound=0,upBound=None,cat="Continuous")
 A = LpVariable.dicts("A",(units,units),lowBound=0,upBound=None,cat="Continuous")
     # relative distance in y coordinates between items i and j, if i is below j
 B = LpVariable.dicts("B",(units,units),lowBound=0,upBound=None,cat="Continuous")
+
+#Define continuous variables for road distance calculation
+R2 = LpVariable("R2",lowBound=0,upBound=None,cat="Continuous")
+L2 = LpVariable("L2",lowBound=0,upBound=None,cat="Continuous")
+A2 = LpVariable("A2",lowBound=0,upBound=None,cat="Continuous")
+B2= LpVariable("B2",lowBound=0,upBound=None,cat="Continuous")
+
     # total rectilinear distance between items i and j
 D = LpVariable.dicts("D",(units,units),lowBound=0,upBound=None,cat="Continuous")
     # coordinates of the geometrical centre of item i
@@ -566,12 +577,16 @@ if SwitchLandUse == 1:
     # Total Land Cost
     TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
+    avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
+    avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
 
 else:
     TLC = 0
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
+    avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
+    avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
+    D_road =  LpVariable("D_road",lowBound=0,upBound=None,cat="Continuous")
 
-    
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
     Psie = LpVariable.dicts("Psie",(pertinent_units,units),lowBound=0,upBound=1,cat="Integer")
@@ -625,7 +640,21 @@ for i in units:
     # Lower bounds of coordinates (19 - 22)
     layout += x[i] >= 0.5*l[i]
     layout += y[i] >= 0.5*d[i]
-        
+     
+# For road from control room to centre of process plants.
+layout += avgX == lpSum(x[i] for i in unitsBarCtrlroom)/6 #6 being the number of process units bar control room.
+layout += avgY == lpSum(y[i] for i in unitsBarCtrlroom)/6
+
+layout += R2 - L2 == x["ctrlroom"] - avgX
+layout += A2 - B2 == y["ctrlroom"] - avgY
+layout += R2 <= M*Wx2
+layout += L2 <= M* (1-Wx2)
+layout += A2 <= M*Wy2
+layout += B2 <= M* (1-Wy2)
+layout += D_road == R2 + L2 + A2 + B2
+
+# layout += D_road == q * (x["ctrlroom"]- avgX) + (1-q)* (avgX- x["ctrlroom"]) + r * (y["ctrlroom"] - avgY) +  (1-r) * (avgY - y["ctrlroom"])
+layout += roadCost == 30 * 4 * D_road
 
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
@@ -640,6 +669,8 @@ for idxj, j in enumerate(units):
             layout += B[i][j] <= M*(1 - Wy[i][j])
             layout += D[i][j] == R[i][j] + L[i][j] + A[i][j] + B[i][j]
             layout += D[i][j] == D[j][i]
+            
+
 
             # Nonoverlapping constraints (15 - 18)
             # Including switch for minimum separation distances
@@ -662,14 +693,12 @@ for idxj, j in enumerate(units):
             layout += Wx[i][j] == 1 - Wx[j][i]
             layout += Wy[i][j] == 1 - Wy[j][i]
             
-
 # layout += roadLength == lpSum(x[i] + y[i] for i in unitsBarCtrlroom)/6
-layout += roadCost == (x["ctrlroom"] - lpSum(x[i] for i in unitsBarCtrlroom) + y["ctrlroom"] - lpSum(y[i] for i in unitsBarCtrlroom))
+# layout += roadCost == (x["ctrlroom"] - lpSum(x[i] for i in unitsBarCtrlroom) + y["ctrlroom"] - lpSum(y[i] for i in unitsBarCtrlroom))
 # layout+= roadCost == x["ctrlroom"] - x["reactor"] - x["comp"] -x["furnace"]-x["distil"]
 
-
 # Objective function contribution for base model
-layout += SumCD == lpSum([CD[i][j] for i in units for j in units])# + (x["ctrlroom"] - x["reactor"])*50 +  (y["ctrlroom"] - y["reactor"])*50 
+layout += SumCD == roadCost + lpSum([CD[i][j] for i in units for j in units])# + (x["ctrlroom"] - x["reactor"])*50 +  (y["ctrlroom"] - y["reactor"])*50 
 
 #%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
