@@ -94,8 +94,6 @@ SwitchNonConvex = 0
 
 #%% Case selection:
 Casee = 1
-q = 1
-r = 1
 
 if Casee == 1:
     SwitchFEI = 1
@@ -235,7 +233,7 @@ tc = (Ac/7)**0.5
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
 alpha['furnace'] = 7
-alpha['reactor'] = 9
+alpha['reactor'] = 8.6
 alpha['flash'] = 4
 alpha['comp'] = 14
 alpha['distil'] = 8
@@ -244,7 +242,7 @@ alpha['ctrlroom'] = 15
 
 
 beta['furnace'] = 16
-beta['reactor'] = 5#5 #reactor diameter + 2m allowance for diameter of shell.
+beta['reactor'] = 5.8 #5 #reactor diameter + 2m allowance for diameter of shell.
 beta['flash'] = 4
 beta['comp'] = 14
 beta['distil'] = 8
@@ -254,13 +252,13 @@ beta['ctrlroom'] = 15
 
 # Purchase cost of each unit (dollars)
 Cp = dict.fromkeys(units)
-Cp['furnace'] = 556300
-Cp['reactor'] = 888300
-Cp['flash'] = 545600
-Cp['comp'] = 2447600
-Cp['distil'] = 3077600
-Cp['store'] = 3679834  
-Cp['ctrlroom'] = 912150 
+Cp['furnace'] = 778820
+Cp['reactor'] = 1243620
+Cp['flash'] = 763840
+Cp['comp'] = 3426640
+Cp['distil'] = 4308640
+Cp['store'] = 5151768     
+Cp['ctrlroom'] = 1227010 
 
 # Probability of event occuring (per year) --> pertinent units only
 freq_event = dict.fromkeys(units)
@@ -383,13 +381,13 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
 
-    xmax = 300
-    ymax = 300
+    xmax = 50
+    ymax = 50
 
 #%% Land use constraint: 
 if SwitchLandUse == 1:
     # Land cost per squared distance (m^2)
-    LC = 61.76
+    LC = 61.78
 
     ## Fixed Aspect Ratio!
     # Number of grid points in square plot
@@ -431,10 +429,9 @@ if SwitchFEI == 1:
     De['store'] = 45.0* np.sqrt(2)
 
     DF['furnace'] =  0.75
-    DF['reactor'] = 0.8
+    DF['reactor'] = 0.82
     DF['distil'] = 0.77
     DF['store'] = 0.82
-
 
     # Upper bound for actual maximum probable property damage cost
     U = 1e8
@@ -451,6 +448,7 @@ Nw['comp'] = 3
 Nw['distil'] = 4 
 Nw['store'] = 2
 Nw['ctrlroom'] = 10
+
 # Percentage of time present at unit
 tw = dict.fromkeys(units)
 tw['furnace'] = 0.1
@@ -653,7 +651,6 @@ layout += A2 <= M*Wy2
 layout += B2 <= M* (1-Wy2)
 layout += D_road == R2 + L2 + A2 + B2
 
-# layout += D_road == q * (x["ctrlroom"]- avgX) + (1-q)* (avgX- x["ctrlroom"]) + r * (y["ctrlroom"] - avgY) +  (1-r) * (avgY - y["ctrlroom"])
 layout += roadCost == 30 * 4 * D_road
 
 for idxj, j in enumerate(units):
@@ -693,10 +690,6 @@ for idxj, j in enumerate(units):
             layout += Wx[i][j] == 1 - Wx[j][i]
             layout += Wy[i][j] == 1 - Wy[j][i]
             
-# layout += roadLength == lpSum(x[i] + y[i] for i in unitsBarCtrlroom)/6
-# layout += roadCost == (x["ctrlroom"] - lpSum(x[i] for i in unitsBarCtrlroom) + y["ctrlroom"] - lpSum(y[i] for i in unitsBarCtrlroom))
-# layout+= roadCost == x["ctrlroom"] - x["reactor"] - x["comp"] -x["furnace"]-x["distil"]
-
 # Objective function contribution for base model
 layout += SumCD == roadCost + lpSum([CD[i][j] for i in units for j in units])# + (x["ctrlroom"] - x["reactor"])*50 +  (y["ctrlroom"] - y["reactor"])*50 
 
