@@ -106,7 +106,7 @@ elif Casee == 2:
     # SwitchLandUse = 1
     # SwitchAspRatio = 1
     SwitchFEI = 1
-    # SwitchNonConvex = 0
+    SwitchNonConvex = 1
     
 elif Casee == 3:
     SwitchLandShape = 1
@@ -116,6 +116,8 @@ elif Casee == 3:
 elif Casee == 4:
     SwitchNonConvex = 1
     SwitchFEI = 1
+    # SwitchMinSepDistance = 1
+
     
     
 #%% Error checking
@@ -225,7 +227,7 @@ colin = list(colin)
 Area = np.trapz(X_coord, Y_coord)
 
 ## dimensions for the non convex shapes from given area 
-Ac = 60 #put any area into this for the original sqaure area 
+Ac = 75 #put any area into this for the original sqaure area 
 lc = Ac/2
 tc = Ac/3
 
@@ -382,8 +384,8 @@ OH = 8000  # operating hours
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
 
-    xmax = 50
-    ymax = 50
+    xmax = 150
+    ymax = 150
 
 #%% Land use constraint: 
 if SwitchLandUse == 1:
@@ -480,9 +482,9 @@ E2 = LpVariable.dicts("E2",(units,units),lowBound=0,upBound=1,cat="Integer")
 # is unit i to the right or above unit j
 Wx = LpVariable.dicts("Wx",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wy = LpVariable.dicts("Wy",(units,units),lowBound=0,upBound=1,cat="Integer")
-# same as above, but for road distance calculation
-Wx2 = LpVariable("Wx2",lowBound=0,upBound=1,cat="Integer")
-Wy2 = LpVariable("Wy2",lowBound=0,upBound=1,cat="Integer")
+# # same as above, but for road distance calculation
+# Wx2 = LpVariable("Wx2",lowBound=0,upBound=1,cat="Integer")
+# Wy2 = LpVariable("Wy2",lowBound=0,upBound=1,cat="Integer")
 # binary variables for non-convex shapes 
 G1 = LpVariable.dicts("G1",(units),lowBound=0,upBound=1,cat="Integer")
 G2 = LpVariable.dicts("G2",(units),lowBound=0,upBound=1,cat="Integer")
@@ -500,11 +502,11 @@ A = LpVariable.dicts("A",(units,units),lowBound=0,upBound=None,cat="Continuous")
     # relative distance in y coordinates between items i and j, if i is below j
 B = LpVariable.dicts("B",(units,units),lowBound=0,upBound=None,cat="Continuous")
 
-#Define continuous variables for road distance calculation
-R2 = LpVariable("R2",lowBound=0,upBound=None,cat="Continuous")
-L2 = LpVariable("L2",lowBound=0,upBound=None,cat="Continuous")
-A2 = LpVariable("A2",lowBound=0,upBound=None,cat="Continuous")
-B2= LpVariable("B2",lowBound=0,upBound=None,cat="Continuous")
+# Define continuous variables for road distance calculation
+# R2 = LpVariable("R2",lowBound=0,upBound=None,cat="Continuous")
+# L2 = LpVariable("L2",lowBound=0,upBound=None,cat="Continuous")
+# A2 = LpVariable("A2",lowBound=0,upBound=None,cat="Continuous")
+# B2= LpVariable("B2",lowBound=0,upBound=None,cat="Continuous")
 
     # total rectilinear distance between items i and j
 D = LpVariable.dicts("D",(units,units),lowBound=0,upBound=None,cat="Continuous")
@@ -578,13 +580,14 @@ if SwitchLandUse == 1:
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
     avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
     avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
+    D_road =  LpVariable.dicts("D_road",(units, units),lowBound=0,upBound=None,cat="Continuous")
 
 else:
     TLC = 0
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
     avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
     avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
-    D_road =  LpVariable("D_road",lowBound=0,upBound=None,cat="Continuous")
+    D_road =  LpVariable.dicts("D_road",(units, units),lowBound=0,upBound=None,cat="Continuous")
 
 if SwitchFEI == 1:
     # 1 if j is allocated within the area of exposure if i; 0 otherwise
@@ -640,19 +643,24 @@ for i in units:
     layout += x[i] >= 0.5*l[i]
     layout += y[i] >= 0.5*d[i]
      
-# For road from control room to centre of process plants.
-layout += avgX == lpSum(x[i] for i in unitsBarCtrlroom)/6 #6 being the number of process units bar control room.
-layout += avgY == lpSum(y[i] for i in unitsBarCtrlroom)/6
+# # For road from control room to centre of process plants.
+# layout += avgX == lpSum(x[i] for i in unitsBarCtrlroom)/6 #6 being the number of process units bar control room.
+# layout += avgY == lpSum(y[i] for i in unitsBarCtrlroom)/6
 
-layout += R2 - L2 == x["ctrlroom"] - avgX
-layout += A2 - B2 == y["ctrlroom"] - avgY
-layout += R2 <= M*Wx2
-layout += L2 <= M* (1-Wx2)
-layout += A2 <= M*Wy2
-layout += B2 <= M* (1-Wy2)
-layout += D_road == R2 + L2 + A2 + B2
+# layout += R2 - L2 == x["ctrlroom"] - avgX
+# layout += A2 - B2 == y["ctrlroom"] - avgY
+# layout += R2 <= M*Wx2
+# layout += L2 <= M* (1-Wx2)
+# layout += A2 <= M*Wy2
+# layout += B2 <= M* (1-Wy2)
+# layout += D_road == R2 + L2 + A2 + B2
 
-layout += roadCost == 30 * 4 * D_road
+# layout += roadCost == 30 * 4 * D_road
+
+for idxj, j in enumerate(units):
+    if idxj<6:
+        layout += D_road["ctrlroom"][j] == D["ctrlroom"][j]    
+layout += roadCost == 30 * 4 * lpSum([D_road["ctrlroom"][k] for k in units])    
 
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
@@ -668,6 +676,13 @@ for idxj, j in enumerate(units):
             layout += D[i][j] == R[i][j] + L[i][j] + A[i][j] + B[i][j]
             layout += D[i][j] == D[j][i]
             
+            # These constraints ensure consistency in interdependent variables
+            layout += L[i][j] == R[j][i]
+            layout += R[i][j] == L[j][i]
+            layout += A[i][j] == B[j][i]
+            layout += B[i][j] == A[j][i]
+            layout += Wx[i][j] == 1 - Wx[j][i]
+            layout += Wy[i][j] == 1 - Wy[j][i]
 
 
             # Nonoverlapping constraints (15 - 18)
@@ -683,16 +698,8 @@ for idxj, j in enumerate(units):
                 layout += y[i] - y[j] + M*(1 + E1[i][j] - E2[i][j]) >= (d[i] + d[j])/2
                 layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  (d[i] + d[j])/2
             
-            # These constraints ensure consistency in interdependent variables
-            layout += L[i][j] == R[j][i]
-            layout += R[i][j] == L[j][i]
-            layout += A[i][j] == B[j][i]
-            layout += B[i][j] == A[j][i]
-            layout += Wx[i][j] == 1 - Wx[j][i]
-            layout += Wy[i][j] == 1 - Wy[j][i]
-            
 # Objective function contribution for base model
-layout += SumCD == roadCost + lpSum([CD[i][j] for i in units for j in units])# + (x["ctrlroom"] - x["reactor"])*50 +  (y["ctrlroom"] - y["reactor"])*50 
+layout += SumCD == roadCost + lpSum([CD[i][j] for i in units for j in units])
 
 #%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
@@ -711,7 +718,6 @@ if SwitchLandShape == 1:
                
 else:
     if SwitchLandUse == 1:
-        
         if SwitchAspRatio == 1:    
             for i in units:              
                 # Variable aspect ratio up to limits N1 and N2 * g            
@@ -725,7 +731,7 @@ else:
                 # Objective function contribution for variable aspect ratio land use model
                 layout += TLC == LC*lpSum((Gn1n2[n1][n2] * n1*g * n2*g) for n1 in range(1,N1) for n2 in range(1,N2))    
         
-        else:
+        elif SwitchAspRatio == 0:
             for i in units:
                 # Fixed aspect ratio land area approximation constraints for plot
                 layout += x[i] + 0.5*l[i] <= lpSum(n*g_x*Gn[n] for n in range(1,N))
@@ -737,7 +743,7 @@ else:
                 # Objective function contribution for fixed aspect ratio land use model
                 layout += TLC == LC*lpSum(Gn[n]*n*g_x*n*g_y for n in range(1,N))
             
-    else:
+    elif SwitchLandUse == 0:
         for i in units:
             layout += x[i] + 0.5*l[i] <= xmax
             layout += y[i] + 0.5*d[i] <= ymax
@@ -874,12 +880,12 @@ if SwitchLandUse == 1:
             for n2 in range(1,N2):
                 if Gn1n2[n1][n2].varValue ==1:
                     xfinalaxis = n1
-                    yfinalaxis = n2
-                    
+                    yfinalaxis = n2                    
         print("Number of grids", xfinalaxis, "x", yfinalaxis, ". Size of land area =", (xfinalaxis*yfinalaxis*g*g), "metres square")
     else:
         for n in range(1, N):
             if Gn[n].varValue == 1:
+                xyfinalaxis = n
                 print("Number of grids", n, "Size of land area =", (n*n*g_x*g_y), "metres square")
 
 if SwitchFEI == 1:
@@ -936,7 +942,7 @@ fig, ax = plt.subplots()
 ax.scatter(xpos,ypos,alpha=0)
 #### LINE THING IS X1,X2 AND Y1,Y2 WTF
 
-#Pentagon:
+#irregular shape:
 if SwitchLandShape == 1:
     for k in X_begin:
         line = plt.Line2D((k, X_end[X_begin.index(k)]), (Y_begin[X_begin.index(k)], Y_end[X_begin.index(k)]), lw = 1.5)
@@ -946,11 +952,11 @@ if SwitchLandShape == 1:
             line = plt.Line2D((X_beginplot[i], X_endplot[i]), (Y_beginplot[i], Y_endplot[i]), lw = 1.5)
             plt.gca().add_line(line)
             
-# else:
-#     line = plt.Line2D((0, xmax), (ymax,ymax))
-#     plt.gca().add_line(line)
-#     line = plt.Line2D((xmax, xmax), (0, ymax))
-#     plt.gca().add_line(line)
+else:
+    line = plt.Line2D((0, xmax), (ymax,ymax))
+    plt.gca().add_line(line)
+    line = plt.Line2D((xmax, xmax), (0, ymax))
+    plt.gca().add_line(line)
 
 if SwitchNonConvex == 1 and shape == 1:
     Lc = Ac + lc
@@ -988,26 +994,24 @@ if SwitchNonConvex == 1 and shape == 2:
     ax.set_ylim(0,70)  
     print('Ycoordinates:',0,TTc,TTc,Tc,Tc,tc,tc,0,0)
     print('Xcoordinates:',0,0,Tc,Tc,TTc,TTc,Tc,Tc,0)
+    
 # Set bounds of axis
 plt.axis('square')
-# ax.set_xlim(0,max(xpos+ypos)+15)
-# ax.set_ylim(0,max(xpos+ypos)+15)
+
 if SwitchLandShape == 1:
     ax.set_xlim(0,max(X_beginplot))
     ax.set_ylim(0,max(Y_beginplot))
-else:
-    if SwitchAspRatio == 1:
-        ax.set_xlim(0,xfinalaxis*g)
-        ax.set_ylim(0,yfinalaxis*g)
-        
-    else:
-        ax.set_xlim(0,120)
-        ax.set_ylim(0,100)
-        
-if Casee == 1:
-    ax.set_xlim(0, max(xpos) * 1.2)
-    ax.set_ylim(0, max(ypos) * 1.2)
-    
+elif SwitchLandShape == 0:
+    if SwitchLandUse == 1:
+        if SwitchAspRatio == 1:
+            ax.set_xlim(0,xfinalaxis*g)
+            ax.set_ylim(0,yfinalaxis*g)        
+        elif SwitchAspRatio == 0:
+            ax.set_xlim(0,xyfinalaxis*g_x)
+            ax.set_ylim(0,xyfinalaxis*g_y)       
+    elif SwitchLandUse == 0:   
+        ax.set_xlim(0,max(xpos)+0.5*l[units[xpos.index(max(xpos))]].varValue)
+        ax.set_ylim(0,max(ypos)+0.5*d[units[ypos.index(max(ypos))]].varValue)   
         
 # Place unit number at each scatter point
 numbers = list(range(1,len(xpos)+1))
