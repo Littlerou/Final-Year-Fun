@@ -117,6 +117,7 @@ elif Casee == 4:
     SwitchNonConvex = 1
     SwitchFEI = 1
     
+    
 #%% Error checking
 # Check for errors if SwitchProt == 1 and SwitchFEI == 0:
 #    raise NoFEIError("FEI cost of life constraints not allowed without FEI constraints")        
@@ -224,9 +225,9 @@ colin = list(colin)
 Area = np.trapz(X_coord, Y_coord)
 
 ## dimensions for the non convex shapes from given area 
-Ac = 1361.55
-lc = (Ac/3)**0.5
-tc = (Ac/7)**0.5
+Ac = 60 #put any area into this for the original sqaure area 
+lc = Ac/2
+tc = Ac/3
 
 #%%----------------- INPUT SPECIFICATIONS-------------------------
 # Dimensions of each unit (m)
@@ -744,17 +745,17 @@ else:
 #%% Non convex shapes            
 if SwitchNonConvex == 1 and shape == 1: 
     for i in units:
-        layout += y[i] + 0.5*d[i] <= (2*lc)*(1-G1[i]) + lc*G1[i]
-        layout += x[i] + 0.5*l[i] <= lc*G1[i] + (2*lc)*(1-G1[i])
+        layout += y[i] + 0.5*d[i] <= Ac
+        layout += x[i] + 0.5*l[i] <= Ac*G1[i] + (Ac + lc)*(1-G1[i])
         layout += y[i] - 0.5*d[i] >= lc*(1-G1[i])
         layout += x[i] - 0.5*l[i] >= 0
 
 if SwitchNonConvex == 1 and shape == 2:
     for i in units:
-        layout += y[i] + 0.5*d[i] <= (3*tc)*G1[i] + (2*tc)*(1-G1[i])
-        layout += x[i] + 0.5*l[i] <= (2*tc)*G1[i] + (3*tc)*(1-G1[i])
+        layout += y[i] + 0.5*d[i] <= Ac*G1[i] + (2*tc)*(1-G1[i])
+        layout += x[i] + 0.5*l[i] <= Ac*G1[i] + (Ac+lc)*(1-G1[i])
         layout += y[i] - 0.5*d[i] >= tc*(1-G1[i])
-        layout += x[i] - 0.5*l[i] >= (2*tc)*(1-G1[i])
+        layout += x[i] - 0.5*l[i] >= 0
     
     
 #%% F&EI Constraints
@@ -952,36 +953,36 @@ if SwitchLandShape == 1:
 #     plt.gca().add_line(line)
 
 if SwitchNonConvex == 1 and shape == 1:
-    Lc = 2*lc
+    Lc = Ac + lc
     plt.axis('square')
-    line1 = plt.Line2D((0,Lc),(Lc,Lc))
+    line1 = plt.Line2D((0,Lc),(Ac,Ac))
     plt.gca().add_line(line1)
-    line2 = plt.Line2D((Lc,Lc),(Lc,lc))
+    line2 = plt.Line2D((Lc,Lc),(Ac,lc))
     plt.gca().add_line(line2)
-    line3 = plt.Line2D((Lc,lc),(lc,lc))
+    line3 = plt.Line2D((Lc,Ac),(lc,lc))
     plt.gca().add_line(line3)
-    line4 = plt.Line2D((lc,lc),(lc,0))
+    line4 = plt.Line2D((Ac,Ac),(lc,0))
     plt.gca().add_line(line4)
-    ax.set_xlim(0,70)
-    ax.set_ylim(0,70)
+    ax.set_xlim(0,150)
+    ax.set_ylim(0,150)
     print('Ycoordinates:',0,Lc,Lc,lc,lc,0,0)
     print('Xcoordinates:',0,0,Lc,Lc,lc,lc,0)
     
 if SwitchNonConvex == 1 and shape == 2:
-    Tc = 2*tc
-    TTc = 3*tc
+    Tc = Ac+lc
+    TTc = 2*tc
     plt.axis('square')
-    line1 = plt.Line2D((0,Tc),(TTc,TTc))
+    line1 = plt.Line2D((0,Ac),(Ac,Ac))
     plt.gca().add_line(line1)
-    line2 = plt.Line2D((Tc,Tc),(TTc,Tc))
+    line2 = plt.Line2D((Ac,Ac),(Ac,TTc))
     plt.gca().add_line(line2)
-    line3 = plt.Line2D((Tc,TTc),(Tc,Tc))
+    line3 = plt.Line2D((Ac,Tc),(TTc,TTc))
     plt.gca().add_line(line3)
-    line4 = plt.Line2D((TTc,TTc),(Tc,tc))
+    line4 = plt.Line2D((Tc,Tc),(TTc,tc))
     plt.gca().add_line(line4)
-    line5 = plt.Line2D((TTc,Tc),(tc,tc))
+    line5 = plt.Line2D((Tc,Ac),(tc,tc))
     plt.gca().add_line(line5)
-    line6 = plt.Line2D((Tc,Tc),(tc,0))
+    line6 = plt.Line2D((Ac,Ac),(tc,0))
     plt.gca().add_line(line6)
     ax.set_xlim(0,70)
     ax.set_ylim(0,70)  
@@ -1000,8 +1001,8 @@ else:
         ax.set_ylim(0,yfinalaxis*g)
         
     else:
-        ax.set_xlim(0,max(xpos)*1.2)
-        ax.set_ylim(0,max(ypos)*1.2)
+        ax.set_xlim(0,120)
+        ax.set_ylim(0,100)
         
 if Casee == 1:
     ax.set_xlim(0, max(xpos) * 1.2)
