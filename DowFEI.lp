@@ -502,205 +502,233 @@ _C45: B_furnace_reactor + 1000 Wy_furnace_reactor <= 1000
 _C450: Y_store + 0.5 d_store <= 300
 _C451: X_ctrlroom + 0.5 l_ctrlroom <= 300
 _C452: Y_ctrlroom + 0.5 d_ctrlroom <= 300
-_C453: Ve2_furnace_furnace = 0
-_C454: - D_furnace_reactor + Din_furnace_reactor + Dout_furnace_reactor = 0
-_C455: Din_furnace_reactor - 40.7293505963 Psie_furnace_reactor <= 0
-_C456: Dout_furnace_reactor + 40.7293505963 Psie_furnace_reactor
- >= 40.7293505963
-_C457: Dout_furnace_reactor + 1000 Psie_furnace_reactor <= 1000
-_C458: 95466.7811558 Din_furnace_reactor - 3888300 Psie_furnace_reactor
- + Ve2_furnace_reactor = 0
-_C459: - D_furnace_flash + Din_furnace_flash + Dout_furnace_flash = 0
+_C453: - 20 G1_furnace + Y_furnace + 0.5 d_furnace <= 40
+_C454: 30 G1_furnace + X_furnace + 0.5 l_furnace <= 90
+_C455: 20 G1_furnace + Y_furnace - 0.5 d_furnace >= 20
+_C456: X_furnace - 0.5 l_furnace >= 0
+_C457: - 20 G1_reactor + Y_reactor + 0.5 d_reactor <= 40
+_C458: 30 G1_reactor + X_reactor + 0.5 l_reactor <= 90
+_C459: 20 G1_reactor + Y_reactor - 0.5 d_reactor >= 20
 _C46: - A_furnace_reactor - B_furnace_reactor + D_furnace_reactor
  - L_furnace_reactor - R_furnace_reactor = 0
-_C460: Din_furnace_flash - 40.7293505963 Psie_furnace_flash <= 0
-_C461: Dout_furnace_flash + 40.7293505963 Psie_furnace_flash >= 40.7293505963
-_C462: Dout_furnace_flash + 1000 Psie_furnace_flash <= 1000
-_C463: 62500.3827149 Din_furnace_flash - 2545600 Psie_furnace_flash
- + Ve2_furnace_flash = 0
-_C464: - D_furnace_comp + Din_furnace_comp + Dout_furnace_comp = 0
-_C465: Din_furnace_comp - 40.7293505963 Psie_furnace_comp <= 0
-_C466: Dout_furnace_comp + 40.7293505963 Psie_furnace_comp >= 40.7293505963
-_C467: Dout_furnace_comp + 1000 Psie_furnace_comp <= 1000
-_C468: 133751.211847 Din_furnace_comp - 5447600 Psie_furnace_comp
- + Ve2_furnace_comp = 0
-_C469: - D_furnace_distil + Din_furnace_distil + Dout_furnace_distil = 0
+_C460: X_reactor - 0.5 l_reactor >= 0
+_C461: - 20 G1_flash + Y_flash + 0.5 d_flash <= 40
+_C462: 30 G1_flash + X_flash + 0.5 l_flash <= 90
+_C463: 20 G1_flash + Y_flash - 0.5 d_flash >= 20
+_C464: X_flash - 0.5 l_flash >= 0
+_C465: - 20 G1_comp + Y_comp + 0.5 d_comp <= 40
+_C466: 30 G1_comp + X_comp + 0.5 l_comp <= 90
+_C467: 20 G1_comp + Y_comp - 0.5 d_comp >= 20
+_C468: X_comp - 0.5 l_comp >= 0
+_C469: - 20 G1_distil + Y_distil + 0.5 d_distil <= 40
 _C47: D_furnace_reactor - D_reactor_furnace = 0
-_C470: Din_furnace_distil - 40.7293505963 Psie_furnace_distil <= 0
-_C471: Dout_furnace_distil + 40.7293505963 Psie_furnace_distil
- >= 40.7293505963
-_C472: Dout_furnace_distil + 1000 Psie_furnace_distil <= 1000
-_C473: 173771.491477 Din_furnace_distil - 7077600 Psie_furnace_distil
- + Ve2_furnace_distil = 0
-_C474: - D_furnace_store + Din_furnace_store + Dout_furnace_store = 0
-_C475: Din_furnace_store - 40.7293505963 Psie_furnace_store <= 0
-_C476: Dout_furnace_store + 40.7293505963 Psie_furnace_store >= 40.7293505963
-_C477: Dout_furnace_store + 1000 Psie_furnace_store <= 1000
-_C478: 139453.095049 Din_furnace_store - 5679834 Psie_furnace_store
- + Ve2_furnace_store = 0
-_C479: - D_furnace_ctrlroom + Din_furnace_ctrlroom + Dout_furnace_ctrlroom = 0
+_C470: 30 G1_distil + X_distil + 0.5 l_distil <= 90
+_C471: 20 G1_distil + Y_distil - 0.5 d_distil >= 20
+_C472: X_distil - 0.5 l_distil >= 0
+_C473: - 20 G1_store + Y_store + 0.5 d_store <= 40
+_C474: 30 G1_store + X_store + 0.5 l_store <= 90
+_C475: 20 G1_store + Y_store - 0.5 d_store >= 20
+_C476: X_store - 0.5 l_store >= 0
+_C477: - 20 G1_ctrlroom + Y_ctrlroom + 0.5 d_ctrlroom <= 40
+_C478: 30 G1_ctrlroom + X_ctrlroom + 0.5 l_ctrlroom <= 90
+_C479: 20 G1_ctrlroom + Y_ctrlroom - 0.5 d_ctrlroom >= 20
 _C48: 1000 E1_furnace_reactor + 1000 E2_furnace_reactor + X_furnace
  - X_reactor - 0.5 l_furnace - 0.5 l_reactor >= 0
-_C480: Din_furnace_ctrlroom - 40.7293505963 Psie_furnace_ctrlroom <= 0
-_C481: Dout_furnace_ctrlroom + 40.7293505963 Psie_furnace_ctrlroom
+_C480: X_ctrlroom - 0.5 l_ctrlroom >= 0
+_C481: Ve2_furnace_furnace = 0
+_C482: - D_furnace_reactor + Din_furnace_reactor + Dout_furnace_reactor = 0
+_C483: Din_furnace_reactor - 40.7293505963 Psie_furnace_reactor <= 0
+_C484: Dout_furnace_reactor + 40.7293505963 Psie_furnace_reactor
  >= 40.7293505963
-_C482: Dout_furnace_ctrlroom + 1000 Psie_furnace_ctrlroom <= 1000
-_C483: 943107.352255 Din_furnace_ctrlroom - 38412150 Psie_furnace_ctrlroom
- + Ve2_furnace_ctrlroom = 0
-_C484: - D_reactor_furnace + Din_reactor_furnace + Dout_reactor_furnace = 0
-_C485: Din_reactor_furnace - 57.1907964624 Psie_reactor_furnace <= 0
-_C486: Dout_reactor_furnace + 57.1907964624 Psie_reactor_furnace
- >= 57.1907964624
-_C487: Dout_reactor_furnace + 1000 Psie_reactor_furnace <= 1000
-_C488: 44697.7513538 Din_reactor_furnace - 2556300 Psie_reactor_furnace
- + Ve2_reactor_furnace = 0
-_C489: Ve2_reactor_reactor = 0
+_C485: Dout_furnace_reactor + 1000 Psie_furnace_reactor <= 1000
+_C486: 95466.7811558 Din_furnace_reactor - 3888300 Psie_furnace_reactor
+ + Ve2_furnace_reactor = 0
+_C487: - D_furnace_flash + Din_furnace_flash + Dout_furnace_flash = 0
+_C488: Din_furnace_flash - 40.7293505963 Psie_furnace_flash <= 0
+_C489: Dout_furnace_flash + 40.7293505963 Psie_furnace_flash >= 40.7293505963
 _C49: - 1000 E1_furnace_reactor + 1000 E2_furnace_reactor - X_furnace
  + X_reactor - 0.5 l_furnace - 0.5 l_reactor >= -1000
-_C490: - D_reactor_flash + Din_reactor_flash + Dout_reactor_flash = 0
-_C491: Din_reactor_flash - 57.1907964624 Psie_reactor_flash <= 0
-_C492: Dout_reactor_flash + 57.1907964624 Psie_reactor_flash >= 57.1907964624
-_C493: Dout_reactor_flash + 1000 Psie_reactor_flash <= 1000
-_C494: 44510.6583133 Din_reactor_flash - 2545600 Psie_reactor_flash
- + Ve2_reactor_flash = 0
-_C495: - D_reactor_comp + Din_reactor_comp + Dout_reactor_comp = 0
-_C496: Din_reactor_comp - 57.1907964624 Psie_reactor_comp <= 0
-_C497: Dout_reactor_comp + 57.1907964624 Psie_reactor_comp >= 57.1907964624
-_C498: Dout_reactor_comp + 1000 Psie_reactor_comp <= 1000
-_C499: 95253.0885557 Din_reactor_comp - 5447600 Psie_reactor_comp
- + Ve2_reactor_comp = 0
+_C490: Dout_furnace_flash + 1000 Psie_furnace_flash <= 1000
+_C491: 62500.3827149 Din_furnace_flash - 2545600 Psie_furnace_flash
+ + Ve2_furnace_flash = 0
+_C492: - D_furnace_comp + Din_furnace_comp + Dout_furnace_comp = 0
+_C493: Din_furnace_comp - 40.7293505963 Psie_furnace_comp <= 0
+_C494: Dout_furnace_comp + 40.7293505963 Psie_furnace_comp >= 40.7293505963
+_C495: Dout_furnace_comp + 1000 Psie_furnace_comp <= 1000
+_C496: 133751.211847 Din_furnace_comp - 5447600 Psie_furnace_comp
+ + Ve2_furnace_comp = 0
+_C497: - D_furnace_distil + Din_furnace_distil + Dout_furnace_distil = 0
+_C498: Din_furnace_distil - 40.7293505963 Psie_furnace_distil <= 0
+_C499: Dout_furnace_distil + 40.7293505963 Psie_furnace_distil
+ >= 40.7293505963
 _C5: - 4 O_reactor + l_reactor = 5
 _C50: 1000 E1_furnace_reactor - 1000 E2_furnace_reactor + Y_furnace
  - Y_reactor - 0.5 d_furnace - 0.5 d_reactor >= -1000
-_C500: - D_reactor_distil + Din_reactor_distil + Dout_reactor_distil = 0
-_C501: Din_reactor_distil - 57.1907964624 Psie_reactor_distil <= 0
-_C502: Dout_reactor_distil + 57.1907964624 Psie_reactor_distil
- >= 57.1907964624
-_C503: Dout_reactor_distil + 1000 Psie_reactor_distil <= 1000
-_C504: 123754.177906 Din_reactor_distil - 7077600 Psie_reactor_distil
- + Ve2_reactor_distil = 0
-_C505: - D_reactor_store + Din_reactor_store + Dout_reactor_store = 0
-_C506: Din_reactor_store - 57.1907964624 Psie_reactor_store <= 0
-_C507: Dout_reactor_store + 57.1907964624 Psie_reactor_store >= 57.1907964624
-_C508: Dout_reactor_store + 1000 Psie_reactor_store <= 1000
-_C509: 99313.7768896 Din_reactor_store - 5679834 Psie_reactor_store
- + Ve2_reactor_store = 0
+_C500: Dout_furnace_distil + 1000 Psie_furnace_distil <= 1000
+_C501: 173771.491477 Din_furnace_distil - 7077600 Psie_furnace_distil
+ + Ve2_furnace_distil = 0
+_C502: - D_furnace_store + Din_furnace_store + Dout_furnace_store = 0
+_C503: Din_furnace_store - 40.7293505963 Psie_furnace_store <= 0
+_C504: Dout_furnace_store + 40.7293505963 Psie_furnace_store >= 40.7293505963
+_C505: Dout_furnace_store + 1000 Psie_furnace_store <= 1000
+_C506: 139453.095049 Din_furnace_store - 5679834 Psie_furnace_store
+ + Ve2_furnace_store = 0
+_C507: - D_furnace_ctrlroom + Din_furnace_ctrlroom + Dout_furnace_ctrlroom = 0
+_C508: Din_furnace_ctrlroom - 40.7293505963 Psie_furnace_ctrlroom <= 0
+_C509: Dout_furnace_ctrlroom + 40.7293505963 Psie_furnace_ctrlroom
+ >= 40.7293505963
 _C51: - 1000 E1_furnace_reactor - 1000 E2_furnace_reactor - Y_furnace
  + Y_reactor - 0.5 d_furnace - 0.5 d_reactor >= -2000
-_C510: - D_reactor_ctrlroom + Din_reactor_ctrlroom + Dout_reactor_ctrlroom = 0
-_C511: Din_reactor_ctrlroom - 57.1907964624 Psie_reactor_ctrlroom <= 0
-_C512: Dout_reactor_ctrlroom + 57.1907964624 Psie_reactor_ctrlroom
+_C510: Dout_furnace_ctrlroom + 1000 Psie_furnace_ctrlroom <= 1000
+_C511: 943107.352255 Din_furnace_ctrlroom - 38412150 Psie_furnace_ctrlroom
+ + Ve2_furnace_ctrlroom = 0
+_C512: - D_reactor_furnace + Din_reactor_furnace + Dout_reactor_furnace = 0
+_C513: Din_reactor_furnace - 57.1907964624 Psie_reactor_furnace <= 0
+_C514: Dout_reactor_furnace + 57.1907964624 Psie_reactor_furnace
  >= 57.1907964624
-_C513: Dout_reactor_ctrlroom + 1000 Psie_reactor_ctrlroom <= 1000
-_C514: 671649.152942 Din_reactor_ctrlroom - 38412150 Psie_reactor_ctrlroom
- + Ve2_reactor_ctrlroom = 0
-_C515: - D_distil_furnace + Din_distil_furnace + Dout_distil_furnace = 0
-_C516: Din_distil_furnace - 50.063160108 Psie_distil_furnace <= 0
-_C517: Dout_distil_furnace + 50.063160108 Psie_distil_furnace >= 50.063160108
-_C518: Dout_distil_furnace + 1000 Psie_distil_furnace <= 1000
-_C519: 51061.4990042 Din_distil_furnace - 2556300 Psie_distil_furnace
- + Ve2_distil_furnace = 0
+_C515: Dout_reactor_furnace + 1000 Psie_reactor_furnace <= 1000
+_C516: 44697.7513538 Din_reactor_furnace - 2556300 Psie_reactor_furnace
+ + Ve2_reactor_furnace = 0
+_C517: Ve2_reactor_reactor = 0
+_C518: - D_reactor_flash + Din_reactor_flash + Dout_reactor_flash = 0
+_C519: Din_reactor_flash - 57.1907964624 Psie_reactor_flash <= 0
 _C52: L_furnace_reactor - R_reactor_furnace = 0
-_C520: - D_distil_reactor + Din_distil_reactor + Dout_distil_reactor = 0
-_C521: Din_distil_reactor - 50.063160108 Psie_distil_reactor <= 0
-_C522: Dout_distil_reactor + 50.063160108 Psie_distil_reactor >= 50.063160108
-_C523: Dout_distil_reactor + 1000 Psie_distil_reactor <= 1000
-_C524: 77667.8897539 Din_distil_reactor - 3888300 Psie_distil_reactor
- + Ve2_distil_reactor = 0
-_C525: - D_distil_flash + Din_distil_flash + Dout_distil_flash = 0
-_C526: Din_distil_flash - 50.063160108 Psie_distil_flash <= 0
-_C527: Dout_distil_flash + 50.063160108 Psie_distil_flash >= 50.063160108
-_C528: Dout_distil_flash + 1000 Psie_distil_flash <= 1000
-_C529: 50847.7689884 Din_distil_flash - 2545600 Psie_distil_flash
- + Ve2_distil_flash = 0
+_C520: Dout_reactor_flash + 57.1907964624 Psie_reactor_flash >= 57.1907964624
+_C521: Dout_reactor_flash + 1000 Psie_reactor_flash <= 1000
+_C522: 44510.6583133 Din_reactor_flash - 2545600 Psie_reactor_flash
+ + Ve2_reactor_flash = 0
+_C523: - D_reactor_comp + Din_reactor_comp + Dout_reactor_comp = 0
+_C524: Din_reactor_comp - 57.1907964624 Psie_reactor_comp <= 0
+_C525: Dout_reactor_comp + 57.1907964624 Psie_reactor_comp >= 57.1907964624
+_C526: Dout_reactor_comp + 1000 Psie_reactor_comp <= 1000
+_C527: 95253.0885557 Din_reactor_comp - 5447600 Psie_reactor_comp
+ + Ve2_reactor_comp = 0
+_C528: - D_reactor_distil + Din_reactor_distil + Dout_reactor_distil = 0
+_C529: Din_reactor_distil - 57.1907964624 Psie_reactor_distil <= 0
 _C53: - L_reactor_furnace + R_furnace_reactor = 0
-_C530: - D_distil_comp + Din_distil_comp + Dout_distil_comp = 0
-_C531: Din_distil_comp - 50.063160108 Psie_distil_comp <= 0
-_C532: Dout_distil_comp + 50.063160108 Psie_distil_comp >= 50.063160108
-_C533: Dout_distil_comp + 1000 Psie_distil_comp <= 1000
-_C534: 108814.545231 Din_distil_comp - 5447600 Psie_distil_comp
- + Ve2_distil_comp = 0
-_C535: Ve2_distil_distil = 0
-_C536: - D_distil_store + Din_distil_store + Dout_distil_store = 0
-_C537: Din_distil_store - 50.063160108 Psie_distil_store <= 0
-_C538: Dout_distil_store + 50.063160108 Psie_distil_store >= 50.063160108
-_C539: Dout_distil_store + 1000 Psie_distil_store <= 1000
+_C530: Dout_reactor_distil + 57.1907964624 Psie_reactor_distil
+ >= 57.1907964624
+_C531: Dout_reactor_distil + 1000 Psie_reactor_distil <= 1000
+_C532: 123754.177906 Din_reactor_distil - 7077600 Psie_reactor_distil
+ + Ve2_reactor_distil = 0
+_C533: - D_reactor_store + Din_reactor_store + Dout_reactor_store = 0
+_C534: Din_reactor_store - 57.1907964624 Psie_reactor_store <= 0
+_C535: Dout_reactor_store + 57.1907964624 Psie_reactor_store >= 57.1907964624
+_C536: Dout_reactor_store + 1000 Psie_reactor_store <= 1000
+_C537: 99313.7768896 Din_reactor_store - 5679834 Psie_reactor_store
+ + Ve2_reactor_store = 0
+_C538: - D_reactor_ctrlroom + Din_reactor_ctrlroom + Dout_reactor_ctrlroom = 0
+_C539: Din_reactor_ctrlroom - 57.1907964624 Psie_reactor_ctrlroom <= 0
 _C54: A_furnace_reactor - B_reactor_furnace = 0
-_C540: 113453.365464 Din_distil_store - 5679834 Psie_distil_store
- + Ve2_distil_store = 0
-_C541: - D_distil_ctrlroom + Din_distil_ctrlroom + Dout_distil_ctrlroom = 0
-_C542: Din_distil_ctrlroom - 50.063160108 Psie_distil_ctrlroom <= 0
-_C543: Dout_distil_ctrlroom + 50.063160108 Psie_distil_ctrlroom
- >= 50.063160108
-_C544: Dout_distil_ctrlroom + 1000 Psie_distil_ctrlroom <= 1000
-_C545: 767273.778106 Din_distil_ctrlroom - 38412150 Psie_distil_ctrlroom
- + Ve2_distil_ctrlroom = 0
-_C546: - D_store_furnace + Din_store_furnace + Dout_store_furnace = 0
-_C547: Din_store_furnace - 63.6396103068 Psie_store_furnace <= 0
-_C548: Dout_store_furnace + 63.6396103068 Psie_store_furnace >= 63.6396103068
-_C549: Dout_store_furnace + 1000 Psie_store_furnace <= 1000
+_C540: Dout_reactor_ctrlroom + 57.1907964624 Psie_reactor_ctrlroom
+ >= 57.1907964624
+_C541: Dout_reactor_ctrlroom + 1000 Psie_reactor_ctrlroom <= 1000
+_C542: 671649.152942 Din_reactor_ctrlroom - 38412150 Psie_reactor_ctrlroom
+ + Ve2_reactor_ctrlroom = 0
+_C543: - D_distil_furnace + Din_distil_furnace + Dout_distil_furnace = 0
+_C544: Din_distil_furnace - 50.063160108 Psie_distil_furnace <= 0
+_C545: Dout_distil_furnace + 50.063160108 Psie_distil_furnace >= 50.063160108
+_C546: Dout_distil_furnace + 1000 Psie_distil_furnace <= 1000
+_C547: 51061.4990042 Din_distil_furnace - 2556300 Psie_distil_furnace
+ + Ve2_distil_furnace = 0
+_C548: - D_distil_reactor + Din_distil_reactor + Dout_distil_reactor = 0
+_C549: Din_distil_reactor - 50.063160108 Psie_distil_reactor <= 0
 _C55: - A_reactor_furnace + B_furnace_reactor = 0
-_C550: 40168.3792166 Din_store_furnace - 2556300 Psie_store_furnace
- + Ve2_store_furnace = 0
-_C551: - D_store_reactor + Din_store_reactor + Dout_store_reactor = 0
-_C552: Din_store_reactor - 63.6396103068 Psie_store_reactor <= 0
-_C553: Dout_store_reactor + 63.6396103068 Psie_store_reactor >= 63.6396103068
-_C554: Dout_store_reactor + 1000 Psie_store_reactor <= 1000
-_C555: 61098.7399397 Din_store_reactor - 3888300 Psie_store_reactor
- + Ve2_store_reactor = 0
-_C556: - D_store_flash + Din_store_flash + Dout_store_flash = 0
-_C557: Din_store_flash - 63.6396103068 Psie_store_flash <= 0
-_C558: Dout_store_flash + 63.6396103068 Psie_store_flash >= 63.6396103068
-_C559: Dout_store_flash + 1000 Psie_store_flash <= 1000
+_C550: Dout_distil_reactor + 50.063160108 Psie_distil_reactor >= 50.063160108
+_C551: Dout_distil_reactor + 1000 Psie_distil_reactor <= 1000
+_C552: 77667.8897539 Din_distil_reactor - 3888300 Psie_distil_reactor
+ + Ve2_distil_reactor = 0
+_C553: - D_distil_flash + Din_distil_flash + Dout_distil_flash = 0
+_C554: Din_distil_flash - 50.063160108 Psie_distil_flash <= 0
+_C555: Dout_distil_flash + 50.063160108 Psie_distil_flash >= 50.063160108
+_C556: Dout_distil_flash + 1000 Psie_distil_flash <= 1000
+_C557: 50847.7689884 Din_distil_flash - 2545600 Psie_distil_flash
+ + Ve2_distil_flash = 0
+_C558: - D_distil_comp + Din_distil_comp + Dout_distil_comp = 0
+_C559: Din_distil_comp - 50.063160108 Psie_distil_comp <= 0
 _C56: Wx_furnace_reactor + Wx_reactor_furnace = 1
-_C560: 40000.2449375 Din_store_flash - 2545600 Psie_store_flash
- + Ve2_store_flash = 0
-_C561: - D_store_comp + Din_store_comp + Dout_store_comp = 0
-_C562: Din_store_comp - 63.6396103068 Psie_store_comp <= 0
-_C563: Dout_store_comp + 63.6396103068 Psie_store_comp >= 63.6396103068
-_C564: Dout_store_comp + 1000 Psie_store_comp <= 1000
-_C565: 85600.775582 Din_store_comp - 5447600 Psie_store_comp + Ve2_store_comp
- = 0
-_C566: - D_store_distil + Din_store_distil + Dout_store_distil = 0
-_C567: Din_store_distil - 63.6396103068 Psie_store_distil <= 0
-_C568: Dout_store_distil + 63.6396103068 Psie_store_distil >= 63.6396103068
-_C569: Dout_store_distil + 1000 Psie_store_distil <= 1000
+_C560: Dout_distil_comp + 50.063160108 Psie_distil_comp >= 50.063160108
+_C561: Dout_distil_comp + 1000 Psie_distil_comp <= 1000
+_C562: 108814.545231 Din_distil_comp - 5447600 Psie_distil_comp
+ + Ve2_distil_comp = 0
+_C563: Ve2_distil_distil = 0
+_C564: - D_distil_store + Din_distil_store + Dout_distil_store = 0
+_C565: Din_distil_store - 50.063160108 Psie_distil_store <= 0
+_C566: Dout_distil_store + 50.063160108 Psie_distil_store >= 50.063160108
+_C567: Dout_distil_store + 1000 Psie_distil_store <= 1000
+_C568: 113453.365464 Din_distil_store - 5679834 Psie_distil_store
+ + Ve2_distil_store = 0
+_C569: - D_distil_ctrlroom + Din_distil_ctrlroom + Dout_distil_ctrlroom = 0
 _C57: Wy_furnace_reactor + Wy_reactor_furnace = 1
-_C570: 111213.754545 Din_store_distil - 7077600 Psie_store_distil
+_C570: Din_distil_ctrlroom - 50.063160108 Psie_distil_ctrlroom <= 0
+_C571: Dout_distil_ctrlroom + 50.063160108 Psie_distil_ctrlroom
+ >= 50.063160108
+_C572: Dout_distil_ctrlroom + 1000 Psie_distil_ctrlroom <= 1000
+_C573: 767273.778106 Din_distil_ctrlroom - 38412150 Psie_distil_ctrlroom
+ + Ve2_distil_ctrlroom = 0
+_C574: - D_store_furnace + Din_store_furnace + Dout_store_furnace = 0
+_C575: Din_store_furnace - 63.6396103068 Psie_store_furnace <= 0
+_C576: Dout_store_furnace + 63.6396103068 Psie_store_furnace >= 63.6396103068
+_C577: Dout_store_furnace + 1000 Psie_store_furnace <= 1000
+_C578: 40168.3792166 Din_store_furnace - 2556300 Psie_store_furnace
+ + Ve2_store_furnace = 0
+_C579: - D_store_reactor + Din_store_reactor + Dout_store_reactor = 0
+_C58: CD_furnace_flash = 0
+_C580: Din_store_reactor - 63.6396103068 Psie_store_reactor <= 0
+_C581: Dout_store_reactor + 63.6396103068 Psie_store_reactor >= 63.6396103068
+_C582: Dout_store_reactor + 1000 Psie_store_reactor <= 1000
+_C583: 61098.7399397 Din_store_reactor - 3888300 Psie_store_reactor
+ + Ve2_store_reactor = 0
+_C584: - D_store_flash + Din_store_flash + Dout_store_flash = 0
+_C585: Din_store_flash - 63.6396103068 Psie_store_flash <= 0
+_C586: Dout_store_flash + 63.6396103068 Psie_store_flash >= 63.6396103068
+_C587: Dout_store_flash + 1000 Psie_store_flash <= 1000
+_C588: 40000.2449375 Din_store_flash - 2545600 Psie_store_flash
+ + Ve2_store_flash = 0
+_C589: - D_store_comp + Din_store_comp + Dout_store_comp = 0
+_C59: - L_furnace_flash + R_furnace_flash + X_flash - X_furnace = 0
+_C590: Din_store_comp - 63.6396103068 Psie_store_comp <= 0
+_C591: Dout_store_comp + 63.6396103068 Psie_store_comp >= 63.6396103068
+_C592: Dout_store_comp + 1000 Psie_store_comp <= 1000
+_C593: 85600.775582 Din_store_comp - 5447600 Psie_store_comp + Ve2_store_comp
+ = 0
+_C594: - D_store_distil + Din_store_distil + Dout_store_distil = 0
+_C595: Din_store_distil - 63.6396103068 Psie_store_distil <= 0
+_C596: Dout_store_distil + 63.6396103068 Psie_store_distil >= 63.6396103068
+_C597: Dout_store_distil + 1000 Psie_store_distil <= 1000
+_C598: 111213.754545 Din_store_distil - 7077600 Psie_store_distil
  + Ve2_store_distil = 0
-_C571: Ve2_store_store = 0
-_C572: - D_store_ctrlroom + Din_store_ctrlroom + Dout_store_ctrlroom = 0
-_C573: Din_store_ctrlroom - 63.6396103068 Psie_store_ctrlroom <= 0
-_C574: Dout_store_ctrlroom + 63.6396103068 Psie_store_ctrlroom
+_C599: Ve2_store_store = 0
+_C6: d_reactor + l_reactor = 14
+_C60: A_furnace_flash - B_furnace_flash + Y_flash - Y_furnace = 0
+_C600: - D_store_ctrlroom + Din_store_ctrlroom + Dout_store_ctrlroom = 0
+_C601: Din_store_ctrlroom - 63.6396103068 Psie_store_ctrlroom <= 0
+_C602: Dout_store_ctrlroom + 63.6396103068 Psie_store_ctrlroom
  >= 63.6396103068
-_C575: Dout_store_ctrlroom + 1000 Psie_store_ctrlroom <= 1000
-_C576: 603588.705443 Din_store_ctrlroom - 38412150 Psie_store_ctrlroom
+_C603: Dout_store_ctrlroom + 1000 Psie_store_ctrlroom <= 1000
+_C604: 603588.705443 Din_store_ctrlroom - 38412150 Psie_store_ctrlroom
  + Ve2_store_ctrlroom = 0
-_C577: - 0.001 Ve2_furnace_comp - 0.001 Ve2_furnace_ctrlroom
+_C605: - 0.001 Ve2_furnace_comp - 0.001 Ve2_furnace_ctrlroom
  - 0.001 Ve2_furnace_distil - 0.001 Ve2_furnace_flash
  - 0.001 Ve2_furnace_furnace - 0.001 Ve2_furnace_reactor
  - 0.001 Ve2_furnace_store + Ve_furnace = 0
-_C578: Omega0_furnace - 0.75 Ve_furnace = 0
-_C579: - 0.001 Ve2_reactor_comp - 0.001 Ve2_reactor_ctrlroom
+_C606: Omega0_furnace - 0.75 Ve_furnace = 0
+_C607: - 0.001 Ve2_reactor_comp - 0.001 Ve2_reactor_ctrlroom
  - 0.001 Ve2_reactor_distil - 0.001 Ve2_reactor_flash
  - 0.001 Ve2_reactor_furnace - 0.001 Ve2_reactor_reactor
  - 0.001 Ve2_reactor_store + Ve_reactor = 0
-_C58: CD_furnace_flash = 0
-_C580: Omega0_reactor - 0.8 Ve_reactor = 0
-_C581: - 0.001 Ve2_distil_comp - 0.001 Ve2_distil_ctrlroom
+_C608: Omega0_reactor - 0.8 Ve_reactor = 0
+_C609: - 0.001 Ve2_distil_comp - 0.001 Ve2_distil_ctrlroom
  - 0.001 Ve2_distil_distil - 0.001 Ve2_distil_flash - 0.001 Ve2_distil_furnace
  - 0.001 Ve2_distil_reactor - 0.001 Ve2_distil_store + Ve_distil = 0
-_C582: Omega0_distil - 0.77 Ve_distil = 0
-_C583: - 0.001 Ve2_store_comp - 0.001 Ve2_store_ctrlroom
+_C61: R_furnace_flash - 1000 Wx_furnace_flash <= 0
+_C610: Omega0_distil - 0.77 Ve_distil = 0
+_C611: - 0.001 Ve2_store_comp - 0.001 Ve2_store_ctrlroom
  - 0.001 Ve2_store_distil - 0.001 Ve2_store_flash - 0.001 Ve2_store_furnace
  - 0.001 Ve2_store_reactor - 0.001 Ve2_store_store + Ve_store = 0
-_C584: Omega0_store - 0.82 Ve_store = 0
-_C585: - Omega0_distil - Omega0_furnace - Omega0_reactor - Omega0_store
+_C612: Omega0_store - 0.82 Ve_store = 0
+_C613: - Omega0_distil - Omega0_furnace - Omega0_reactor - Omega0_store
  + SumOmega = 0
-_C59: - L_furnace_flash + R_furnace_flash + X_flash - X_furnace = 0
-_C6: d_reactor + l_reactor = 14
-_C60: A_furnace_flash - B_furnace_flash + Y_flash - Y_furnace = 0
-_C61: R_furnace_flash - 1000 Wx_furnace_flash <= 0
 _C62: L_furnace_flash + 1000 Wx_furnace_flash <= 1000
 _C63: A_furnace_flash - 1000 Wy_furnace_flash <= 0
 _C64: B_furnace_flash + 1000 Wy_furnace_flash <= 1000
@@ -810,6 +838,13 @@ E2_reactor_distil
 E2_reactor_flash
 E2_reactor_store
 E2_store_ctrlroom
+G1_comp
+G1_ctrlroom
+G1_distil
+G1_flash
+G1_furnace
+G1_reactor
+G1_store
 O_comp
 O_ctrlroom
 O_distil
