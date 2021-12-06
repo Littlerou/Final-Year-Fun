@@ -97,16 +97,18 @@ Casee = 1
 
 if Casee == 1:
     SwitchFEI = 1
+    # SwitchLandShape = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 1
-    # SwitchNonConvex = 1
+    SwitchNonConvex = 1
 
 elif Casee == 2:    
     SwitchMinSepDistance = 1
+    SwitchLandShape = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 1
     SwitchFEI = 1
-    SwitchNonConvex = 1
+    # SwitchNonConvex = 1
     
 elif Casee == 3:
     SwitchLandShape = 1
@@ -170,8 +172,8 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_coord = [0,0,36.899,36.899,0]
-Y_coord = [0,36.899,36.899,0,0]
+X_coord = [0, 0, 50, 60, 60, 0]
+Y_coord = [0, 60, 150, 60, 0, 0]
 
 X_begin = np.array(X_coord[:-1])
 X_end = np.array(X_coord[1:])
@@ -227,8 +229,8 @@ colin = list(colin)
 Area = np.trapz(X_coord, Y_coord)
 
 ## dimensions for the non convex shapes from given area 
-Ac = 75 #put any area into this for the original sqaure area 
-lc = Ac/2
+Ac = 60 #put any area into this for the original sqaure area 
+lc = Ac/1
 tc = Ac/3
 
 #%%----------------- INPUT SPECIFICATIONS-------------------------
@@ -236,7 +238,7 @@ tc = Ac/3
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
 alpha['furnace'] = 7
-alpha['reactor'] = 8.6
+alpha['reactor'] = 3.66 + 2 + 2 #8.6
 alpha['flash'] = 4
 alpha['comp'] = 14
 alpha['distil'] = 8
@@ -245,13 +247,17 @@ alpha['ctrlroom'] = 15
 
 
 beta['furnace'] = 16
-beta['reactor'] = 5.8 #5 #reactor diameter + 2m allowance for diameter of shell.
+beta['reactor'] = 1.83 + 2 + 2 #5.8 #reactor diameter + 2m allowance for diameter of shell.
 beta['flash'] = 4
 beta['comp'] = 14
 beta['distil'] = 8
 beta['store'] = 12
 beta['ctrlroom'] = 15
 
+De = dict.fromkeys(pertinent_units)
+DF = dict.fromkeys(pertinent_units)
+De['reactor'] = 40.4 * np.sqrt(2)
+DF['reactor'] = 0.82
 
 # Purchase cost of each unit (dollars)
 Cp = dict.fromkeys(units)
@@ -423,16 +429,17 @@ if SwitchLandUse == 1:
 #%% ----------- SwitchFEI---------
 if SwitchFEI == 1:
     # F&EI factors
-    De = dict.fromkeys(pertinent_units)
-    DF = dict.fromkeys(pertinent_units)
+    # De = dict.fromkeys(pertinent_units)
+    # DF = dict.fromkeys(pertinent_units)
+
 
     De['furnace'] =  28.8 * np.sqrt(2)
-    De['reactor'] = 40.44 * np.sqrt(2)
+    # De['reactor'] = 40.44 * np.sqrt(2)
     De['distil'] = 35.4* np.sqrt(2)
     De['store'] = 45.0* np.sqrt(2)
 
     DF['furnace'] =  0.75
-    DF['reactor'] = 0.82
+    # DF['reactor'] = 0.82
     DF['distil'] = 0.77
     DF['store'] = 0.82
 
@@ -627,10 +634,9 @@ obj_sumOmega = SwitchFEI*SumOmega
 obj_PZ = SwitchProt*SumPZ
 obj_CD = SumCD
 obj_TLC = SwitchLandUse *TLC
-if Casee == 2:
-    layout += obj_CD + obj_TLC
-else:
-    layout += obj_CD + obj_sumOmega + obj_PZ + obj_TLC
+
+
+layout += obj_CD + obj_sumOmega + obj_TLC
 
 
 #%% --------------Define Constraints and Objective Function Contributions--------------
@@ -1046,15 +1052,3 @@ for i in range(len(numbers)):
 
     
     
-#%% Data processing
-## Actual area used
-#Collect all vertices of units
-# xvertices = []
-# for i in units:
-#     xvertices.append(x[units].varValue + x[units].varValue)
-#     xvertices.append(x[units].varValue - x[units].varValue)
-#     yvertices.append(y[units].varValue + y[units]).varValue)
-#     yvertices.append(y[units].varValue + y[units].varValue)
-#create convex hull
-
-#find area of convex hull
