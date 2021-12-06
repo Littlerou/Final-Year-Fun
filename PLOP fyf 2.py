@@ -100,11 +100,11 @@ if Casee == 1:
     # SwitchLandShape = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 1
-    SwitchNonConvex = 1
+    # SwitchNonConvex = 1
 
 elif Casee == 2:    
     SwitchMinSepDistance = 1
-    SwitchLandShape = 1
+    # SwitchLandShape = 1
     # SwitchLandUse = 1
     # SwitchAspRatio = 1
     SwitchFEI = 1
@@ -172,8 +172,8 @@ Nunits = len(units)
 M = 1e3
 
 #polygon layout:
-X_coord = [0, 0, 50, 60, 60, 0]
-Y_coord = [0, 60, 150, 60, 0, 0]
+X_coord = [0, 0, 25, 50, 50, 0]
+Y_coord = [0, 50, 70, 50, 0, 0]
 
 X_begin = np.array(X_coord[:-1])
 X_end = np.array(X_coord[1:])
@@ -229,8 +229,8 @@ colin = list(colin)
 Area = np.trapz(X_coord, Y_coord)
 
 ## dimensions for the non convex shapes from given area 
-Ac = 60 #put any area into this for the original sqaure area 
-lc = Ac/1
+Ac = 50 #put any area into this for the original sqaure area 
+lc = Ac/2
 tc = Ac/3
 
 #%%----------------- INPUT SPECIFICATIONS-------------------------
@@ -238,7 +238,7 @@ tc = Ac/3
 alpha = dict.fromkeys(units)
 beta = dict.fromkeys(units)
 alpha['furnace'] = 7
-alpha['reactor'] = 3.66 + 2 + 2 #8.6
+alpha['reactor'] = 3.6 + 2 + 2 #8.6
 alpha['flash'] = 4
 alpha['comp'] = 14
 alpha['distil'] = 8
@@ -247,7 +247,7 @@ alpha['ctrlroom'] = 15
 
 
 beta['furnace'] = 16
-beta['reactor'] = 1.83 + 2 + 2 #5.8 #reactor diameter + 2m allowance for diameter of shell.
+beta['reactor'] = 1.8 + 2 + 2 #5.8 #reactor diameter + 2m allowance for diameter of shell.
 beta['flash'] = 4
 beta['comp'] = 14
 beta['distil'] = 8
@@ -271,7 +271,7 @@ Cp['ctrlroom'] = 1227010
 
 # Probability of event occuring (per year) --> pertinent units only
 freq_event = dict.fromkeys(units)
-freq_event['furnace'] = 1e-3 
+freq_event['furnace'] = 1e-3
 freq_event['reactor'] = 1e-3
 freq_event['distil']  = 1e-3
 freq_event['store']   = 1e-3
@@ -387,6 +387,8 @@ mechEffic = 0.6  #mechanical efficiency
 C_elec = 0.000045 # wholesale cost of electircity 
 OH = 8000  # operating hours
 
+RC = 35 * A_f #Road cost - £/m^2
+
 #%% Land shape constraint: 1 if non-rectangular, 0 if rectangular.
 if SwitchLandShape == 0: #sets default max available plot area.
 
@@ -396,7 +398,7 @@ if SwitchLandShape == 0: #sets default max available plot area.
 #%% Land use constraint: 
 if SwitchLandUse == 1:
     # Land cost per squared distance (m^2)
-    LC = 61.78
+    LC = 61.78 * A_f 
 
     ## Fixed Aspect Ratio!
     # Number of grid points in square plot
@@ -489,9 +491,7 @@ E2 = LpVariable.dicts("E2",(units,units),lowBound=0,upBound=1,cat="Integer")
 # is unit i to the right or above unit j
 Wx = LpVariable.dicts("Wx",(units,units),lowBound=0,upBound=1,cat="Integer")
 Wy = LpVariable.dicts("Wy",(units,units),lowBound=0,upBound=1,cat="Integer")
-# # same as above, but for road distance calculation
-# Wx2 = LpVariable("Wx2",lowBound=0,upBound=1,cat="Integer")
-# Wy2 = LpVariable("Wy2",lowBound=0,upBound=1,cat="Integer")
+
 # binary variables for non-convex shapes 
 G1 = LpVariable.dicts("G1",(units),lowBound=0,upBound=1,cat="Integer")
 G2 = LpVariable.dicts("G2",(units),lowBound=0,upBound=1,cat="Integer")
@@ -508,12 +508,6 @@ L = LpVariable.dicts("L",(units,units),lowBound=0,upBound=None,cat="Continuous")
 A = LpVariable.dicts("A",(units,units),lowBound=0,upBound=None,cat="Continuous")
     # relative distance in y coordinates between items i and j, if i is below j
 B = LpVariable.dicts("B",(units,units),lowBound=0,upBound=None,cat="Continuous")
-
-# Define continuous variables for road distance calculation
-# R2 = LpVariable("R2",lowBound=0,upBound=None,cat="Continuous")
-# L2 = LpVariable("L2",lowBound=0,upBound=None,cat="Continuous")
-# A2 = LpVariable("A2",lowBound=0,upBound=None,cat="Continuous")
-# B2= LpVariable("B2",lowBound=0,upBound=None,cat="Continuous")
 
     # total rectilinear distance between items i and j
 D = LpVariable.dicts("D",(units,units),lowBound=0,upBound=None,cat="Continuous")
@@ -585,15 +579,11 @@ if SwitchLandUse == 1:
     # Total Land Cost
     TLC = LpVariable("TLC",lowBound=0,upBound=None,cat="Continuous")
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
-    avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
-    avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
     D_road =  LpVariable.dicts("D_road",(units, units),lowBound=0,upBound=None,cat="Continuous")
 
 else:
     TLC = 0
     roadCost = LpVariable("roadCost",lowBound=0,upBound=None,cat="Continuous")
-    avgX = LpVariable("avgX",lowBound=0,upBound=None,cat="Continuous")
-    avgY =  LpVariable("avgY",lowBound=0,upBound=None,cat="Continuous")
     D_road =  LpVariable.dicts("D_road",(units, units),lowBound=0,upBound=None,cat="Continuous")
 
 if SwitchFEI == 1:
@@ -648,25 +638,11 @@ for i in units:
     # Lower bounds of coordinates (19 - 22)
     layout += x[i] >= 0.5*l[i]
     layout += y[i] >= 0.5*d[i]
-     
-# # For road from control room to centre of process plants.
-# layout += avgX == lpSum(x[i] for i in unitsBarCtrlroom)/6 #6 being the number of process units bar control room.
-# layout += avgY == lpSum(y[i] for i in unitsBarCtrlroom)/6
-
-# layout += R2 - L2 == x["ctrlroom"] - avgX
-# layout += A2 - B2 == y["ctrlroom"] - avgY
-# layout += R2 <= M*Wx2
-# layout += L2 <= M* (1-Wx2)
-# layout += A2 <= M*Wy2
-# layout += B2 <= M* (1-Wy2)
-# layout += D_road == R2 + L2 + A2 + B2
-
-# layout += roadCost == 30 * 4 * D_road
 
 for idxj, j in enumerate(units):
     if idxj<6:
         layout += D_road["ctrlroom"][j] == D["ctrlroom"][j]    
-layout += roadCost == 30 * 4 * lpSum([D_road["ctrlroom"][k] for k in units])    
+layout += roadCost ==  RC * 4 * lpSum([D_road["ctrlroom"][k] for k in units])
 
 for idxj, j in enumerate(units):
     for idxi, i in enumerate(units):
@@ -705,7 +681,7 @@ for idxj, j in enumerate(units):
                 layout += y[j] - y[i] + M*(2 - E1[i][j] - E2[i][j]) >=  (d[i] + d[j])/2
             
 # Objective function contribution for base model
-layout += SumCD == roadCost + lpSum([CD[i][j] for i in units for j in units])
+layout += SumCD == (roadCost + lpSum([CD[i][j] for i in units for j in units]))
 
 #%% Land shape constraints (or set max plot size if not used)
 if SwitchLandShape == 1:
@@ -793,9 +769,9 @@ if SwitchFEI == 1:
     for i in pertinent_units:
         # Value of area of exposure constraint (30ii)
         if SwitchFEIVle == 1: # Cost of replacing unit that explodes is not included, since its just a constant and doesnt actually tell us anything useful.
-            layout += Ve[i] == freq_event[i]*(lpSum([Ve2[i][j] for j in units]))
+            layout += Ve[i] == freq_event[i] * (Cp[i] + OCC[i]*Cl[i] + lpSum([Ve2[i][j] for j in units]))
         else:
-            layout += Ve[i] == freq_event[i]*(lpSum([Ve2[i][j] for j in units]))
+            layout += Ve[i] == freq_event[i]*(Cp[i] + lpSum([Ve2[i][j] for j in units]))
 
         # Base maximum probable property damage cost (31)
         layout += Omega0[i] == DF[i]*Ve[i]
@@ -996,8 +972,8 @@ if SwitchNonConvex == 1 and shape == 2:
     plt.gca().add_line(line5)
     line6 = plt.Line2D((Ac,Ac),(tc,0))
     plt.gca().add_line(line6)
-    ax.set_xlim(0,70)
-    ax.set_ylim(0,70)  
+    ax.set_xlim(0,120)
+    ax.set_ylim(0,60)  
     print('Ycoordinates:',0,TTc,TTc,Tc,Tc,tc,tc,0,0)
     print('Xcoordinates:',0,0,Tc,Tc,TTc,TTc,Tc,Tc,0)
     
