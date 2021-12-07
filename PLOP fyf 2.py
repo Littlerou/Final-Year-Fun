@@ -75,7 +75,7 @@ SwitchAspRatio = 0
 # Toggle Minimum Separation Distances switch
 SwitchMinSepDistance = 0
 
-# FEI Constraints
+# FEI Constraits
 SwitchFEI = 0
 
 # Toggle protection devices (must have FEI enabled if 1)
@@ -129,32 +129,45 @@ if SwitchProt == 1 and SwitchFEI == 0:
     raise NoFEIError("Protection devices not allowed without FEI constraints")
 
 #%% Checklist of variables to input:
-#     1. units - block of units
+    # section on units
+#     1. units - block of units 
 #     2. pertinent_units - units designated as dangerous, as defined in Dow F&EI
+   # shape inputs 
 #     3. X_coord - x coordinates to specify the vertices of a non-rectangular polygon
 #     4. Y_coord - y coordinates to specify the vertices of a non-rectangular polygon
+#   unit input 
 #     5. alpha - length of unit (m)
 #     6. beta - height of unit (m)
 #     7. Cp - cost price of unit (£)
+# F&EI inputs
 #     8. freq_event - frequency of event of a unit (/year)
 #     9. Demin - minimum separation distance (m)
+# connection cost inputs 
 #     10.velocity - velocity of flow in pipe (m/s)
 #     11.Q -flowrate of flow in pipe (kg/s)
 #     12.visc - viscosity of flow in pipe (Pa.s)
 #     13.rhog - density of flow (kg/cum)
 #     14.npp - number of pipes from a unit to another
 #     15.constants for piping cost - adjust as see fit
+#  shape inputs 
 #     16.xmax - when not utilising non-rectangular shapes, defines maximum feasible region in x direction
 #     17.ymax - when not utilising non-rectangular shapes, defines maximum feasible region in y direction
+#   costing input 
 #     18.LC - Land cost (£/m)
+# shape input
 #     19.N - for square plots, defines the degree of fineness of area calculation
 #     20.N1 - for rectangular plots, defines degree of fineness of grid length (x) in area calculation
 #     21.N2 - for rectangular plots, defines degree of fineness of grid length (y) in area calculation
 #     22.g - for rectangular plots, defines length/height of a unit grid (m)
+# F&EI inputs 
 #     23.De - explosion radius derived from F&EI calculation for each unit (m)
 #     24.Df - damage factor derived from F&EI calculation for each unit
 #     25.Nw - number of workers in each unit
 #     26.tw - fraction of time the workers are present at the unit (/time).
+#  costing input 
+#     27. RC
+#   shape inputs 
+#     28. non convex shape inputs 
     
 #%% --------------Define Sets--------------
 # Define the process units

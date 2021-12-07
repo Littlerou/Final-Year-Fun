@@ -71,16 +71,16 @@ solver = 1
 SwitchLandShape = 0
 
 # Land Shape Constraints (1 for Non-convex shape (T or L))
-SwitchNonConvex = 1
+SwitchNonConvex = 0
 
 # Land Cost constraints (1 is on; 0 is off)
-SwitchLandCost = 0
+SwitchLandCost = 1
 
 # Fixed aspect ratio grids or variable aspect ratio grids
-SwitchAspRatio = 0
+SwitchAspRatio = 1
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 0
+SwitchMinSepDistance = 1
 
 # FEI Constraints
 SwitchFEI = 1
@@ -129,7 +129,7 @@ if SwitchNonConvex == 0:
     if SwitchLandShape == 0:
         # Dimensions of rectangular plot area
         xmax = 150
-        ymax = 55
+        ymax = 150
         
     #For all convex polygons
     elif SwitchLandShape == 1: 
@@ -141,8 +141,8 @@ if SwitchNonConvex == 0:
 elif SwitchNonConvex == 1:
     d_nc = 50 # The width/height of a square (m)
     l_nc = 25 # The length of 'tail' from square (m)
-    t_nc = 50/3 # The thickness of the 'tail'
-    h_nc = 50/3 # The height at the bottom of the tail from y=0
+    t_nc = 50/3# The thickness of the 'tail'
+    h_nc = 50/3# The height at the bottom of the tail from y=0
 
 ### 3. DEFINE PIPE CONNECTIONS AND PIPE FLOW CONTENTS
 # Flow velocity in pipe [m/s]
@@ -284,11 +284,11 @@ if SwitchFEI == 1:
         
 ### 5. DEFINE DEGREE OF FINENESS FOR AREA CALCULATION
 if SwitchLandCost == 1:
-    if SwitchAspectRatio == 0:
+    if SwitchAspRatio == 0:
         # For fixed aspect ratios - N determines the dimensions of each individual grid relative to xmax and ymax
         N = 80
         
-    elif SwitchAspectRatio == 1: 
+    elif SwitchAspRatio == 1: 
         # For free aspect ratios - N1 determines the number of grids in x-direction, N2 determines number of grids in y-directions.
         #Number of grids in each direction
         N1 = 80
@@ -408,13 +408,13 @@ OCC = {i: Nw[i]*tw[i] for i in units}
 
 ### 3. LAND COST SETUP
 if SwitchLandCost == 1:    
-    if SwitchAspectRatio == 0:
+    if SwitchAspRatio == 0:
         # Length and width of one grid square (m)
         g_x = xmax/N
         g_y = ymax/N       
         gridsize = list(range(1,N))
         
-    elif SwitchAspectRatio == 1:
+    elif SwitchAspRatio == 1:
         # Defining set for binary variable Gn and Gn1n2
         gridsizen1 = list(range(1,N1+1))
         gridsizen2 = list(range(1,N2+1))
@@ -628,10 +628,11 @@ elif SwitchLandShape == 0:
             layout += y[i] + 0.5*d[i] <= ymax
     
     elif SwitchNonConvex == 1:
-        layout += y[i] + 0.5*d[i] <= d_nc*G1[i] + (h_nc + t_nc) * (1-G1[i])
-        layout += x[i] + 0.5*l[i] <= d_nc*G1[i] + (d_nc + l_nc) *(1-G1[i])
-        layout += y[i] - 0.5*d[i] >= h_nc*(1-G1[i])
-        layout += x[i] - 0.5*l[i] >= 0
+        for i in units:
+            layout += y[i] + 0.5*d[i] <= d_nc*G1[i] + (h_nc + t_nc) * (1-G1[i])
+            layout += x[i] + 0.5*l[i] <= d_nc*G1[i] + (d_nc + l_nc) *(1-G1[i])
+            layout += y[i] - 0.5*d[i] >= h_nc*(1-G1[i])
+            layout += x[i] - 0.5*l[i] >= 0
         
     
 ### 3. LAND COST CONSTRAINTS
@@ -839,7 +840,7 @@ plt.axis('square')
 # For Non Convex Shapes
 if SwitchNonConvex == 1:
     ax.set_xlim(0,d_nc+l_nc+10)
-    ax.set_ylim(0,d_nc + 10)
+    ax.set_ylim(0,d_nc+10)
 
 # For convex polygons:
 if SwitchLandShape == 1:
