@@ -74,13 +74,13 @@ SwitchLandShape = 0
 SwitchNonConvex = 0
 
 # Land Cost constraints (1 is on; 0 is off)
-SwitchLandCost = 1
+SwitchLandCost = 0
 
 # Fixed aspect ratio grids or variable aspect ratio grids
-SwitchAspRatio = 1
+SwitchAspRatio = 0
 
 # Toggle Minimum Separation Distances switch
-SwitchMinSepDistance = 1
+SwitchMinSepDistance = 0
 
 # FEI Constraints
 SwitchFEI = 1
@@ -154,6 +154,7 @@ velocity[2][4] = 3  # velocity between flash and distil
 velocity[3][0] = 30  # velocity between comp and furnace
 velocity[4][5] = 30  # velocity between distil and store
 velocity[5][0] = 3  # velocity between store and furnace
+velocity[4][0] = 3  # velocity between distil and furnace
 
 velocity = velocity + velocity.T - np.diag(velocity.diagonal())#
 velocity = makeDict([units,units],velocity,0)
@@ -167,6 +168,7 @@ Q[2][4] = 8.87631  # flowrate between flash and distil
 Q[3][0] = 15.0778  # flowrate between comp and furnace
 Q[4][5] = 5.94936  # flowrate between distil and store
 Q[5][0] = 7.66106  # flowrate between store and furnace
+Q[4][0] = 2.44706      # flowrate between distil and furnace
 
 Q = Q + Q.T - np.diag(Q.diagonal())
 Q = makeDict([units,units],Q,0)
@@ -180,6 +182,7 @@ visc[2][4] = 0.00039666  # viscosity between flash and distil
 visc[3][0] = 0.000017046  # viscosity between comp and furnace
 visc[4][5] = 0.00000900998  # viscosity between distil and store
 visc[5][0] = 0.000587848  # viscosity between store and furnace
+visc[4][0] = 0.000238829053918871   # viscosity between distil and furnace
 
 visc = visc + visc.T - np.diag(visc.diagonal())
 visc = makeDict([units,units],visc,0)
@@ -193,6 +196,7 @@ rhog[2][4] = 842.605  # density between flash and distil
 rhog[3][0] = 13.5901  # density between comp and furnace
 rhog[4][5] = 2.73253  # density between distil and store
 rhog[5][0] = 869.273  # density between store and furnace
+rhog[4][0] = 778.577117350617      # density between distil and furnace
 
 rhog = rhog + rhog.T - np.diag(rhog.diagonal())
 rhog = makeDict([units,units],rhog,0)
@@ -206,6 +210,7 @@ npp[2][4] = 1  # number of pipes between flash and distil
 npp[3][0] = 1  # number of pipes between comp and furnace
 npp[4][5] = 1  # number of pipes between distil and store
 npp[5][0] = 1  # number of pipes between store and furnace
+npp[4][0] = 1  # velocity between distil and furnace
 
 npp = npp + npp.T - np.diag(npp.diagonal())
 npp = makeDict([units,units],npp,0)
@@ -242,10 +247,10 @@ Demin = makeDict([units,units],Demin,0)
 if SwitchFEI == 1:
     # Exposure radius of pertinent units due to fire and explosion (m)
     De = dict.fromkeys(pertinent_units)
-    De['furnace'] =  28.8 * np.sqrt(2)
-    De['reactor'] = 40.4 * np.sqrt(2)
-    De['distil'] = 35.4* np.sqrt(2)
-    De['store'] = 45.0* np.sqrt(2)
+    De['furnace'] =  28.8 #* np.sqrt(2)
+    De['reactor'] = 40.4 #* np.sqrt(2)
+    De['distil'] = 35.4#* np.sqrt(2)
+    De['store'] = 45.0#* np.sqrt(2)
 
     # Damage factor of pertinent units
     DF = dict.fromkeys(pertinent_units)
