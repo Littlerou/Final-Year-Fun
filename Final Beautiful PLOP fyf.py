@@ -68,10 +68,10 @@ solver = 1
 # Toggle constraints in layout problem (1 is on; 0 is off)
 
 # Land Shape Constraints (1 for convex non-square polygon, 0 for rectangles or square)
-SwitchLandShape = 1
+SwitchLandShape = 0
 
 # Land Shape Constraints (1 for Non-convex shape (T or L))
-SwitchNonConvex = 0
+SwitchNonConvex = 1
 
 # Land Cost constraints (1 is on; 0 is off)
 SwitchLandCost = 0
@@ -128,8 +128,8 @@ if SwitchNonConvex == 0:
     # For right-angled quadrilaterals definitions only 
     if SwitchLandShape == 0:
         # Dimensions of rectangular plot area
-        xmax = 40
-        ymax = 40
+        xmax = 150
+        ymax = 150
         
     #For all convex polygons
     elif SwitchLandShape == 1: 
@@ -139,10 +139,10 @@ if SwitchNonConvex == 0:
  
 # Inputs for L-shape or T-shape plot areas.   
 elif SwitchNonConvex == 1:
-    d_nc = 40 # The width/height of a square (m)
-    l_nc = 50 # The length of 'tail' from square (m)
+    d_nc = 50 # The width/height of a square (m)
+    l_nc = 20 # The length of 'tail' from square (m)
     t_nc = 20# The thickness of the 'tail'
-    h_nc = 10# The height at the bottom of the tail from y=0
+    h_nc = 20# The height at the bottom of the tail from y=0
 
 ### 3. DEFINE PIPE CONNECTIONS AND PIPE FLOW CONTENTS
 # Flow velocity in pipe [m/s] (3 for liquids and 30 for gas)
@@ -163,9 +163,9 @@ velocity = makeDict([units,units],velocity,0)
 Q = np.zeros((len(units), len(units)))
 Q[0][1] = 15.0778  # flowrate between furnace and reactor
 Q[1][2] = 15.0778   # flowrate between reactor and flash
-Q[2][3] = 4.34105  # flowrate between flash and comp
+Q[2][3] = 6.2015 # flowrate between flash and comp
 Q[2][4] = 8.87631  # flowrate between flash and distil
-Q[3][0] = 15.0778  # flowrate between comp and furnace
+Q[3][0] = 4.34102  # flowrate between comp and furnace
 Q[4][5] = 5.94936  # flowrate between distil and store
 Q[5][0] = 7.66106  # flowrate between store and furnace
 Q[4][0] = 2.44706      # flowrate between distil and furnace
@@ -176,12 +176,12 @@ Q = makeDict([units,units],Q,0)
 # Flow viscosity in pipe [Pa.s]
 visc = np.zeros((len(units), len(units)))
 visc[0][1] = 0.0000244021  # viscosity between furnace and reactor
-visc[1][2] = 0.0000115938  # viscosity between reactor and flash
+visc[1][2] = 0.0000210 # viscosity between reactor and flash
 visc[2][3] = 0.0000115938 # viscosity between flash and comp
 visc[2][4] = 0.00039666  # viscosity between flash and distil
-visc[3][0] = 0.000017046  # viscosity between comp and furnace
+visc[3][0] = 0.0000122  # viscosity between comp and furnace
 visc[4][5] = 0.000592162597018692  # viscosity between distil and store
-visc[5][0] = 0.000587848  # viscosity between store and furnace
+visc[5][0] = 0.0005699812  # viscosity between store and furnace
 visc[4][0] = 0.000238829053918871   # viscosity between distil and furnace
 
 visc = visc + visc.T - np.diag(visc.diagonal())
@@ -190,12 +190,12 @@ visc = makeDict([units,units],visc,0)
 # Density of fluid in pipe [kg/cum]
 rhog = np.zeros((len(units), len(units)))
 rhog[0][1] = 8.01272  # density between furnace and reactor
-rhog[1][2] = 10.0488  # density between reactor and flash
+rhog[1][2] = 10.2485  # density between reactor and flash
 rhog[2][3] = 10.0488  # density between flash and comp
-rhog[2][4] = 842.605  # density between flash and distil
-rhog[3][0] = 13.5901  # density between comp and furnace
+rhog[2][4] = 842.6054  # density between flash and distil
+rhog[3][0] = 11.1785  # density between comp and furnace
 rhog[4][5] = 871.310417768016  # density between distil and store
-rhog[5][0] = 869.273  # density between store and furnace
+rhog[5][0] = 866.8986 # density between store and furnace
 rhog[4][0] = 778.577117350617  # density between distil and furnace
 
 rhog = rhog + rhog.T - np.diag(rhog.diagonal())
