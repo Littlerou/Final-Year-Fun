@@ -359,7 +359,7 @@ if SwitchLandUse == 1:
         # g = xmax/N
         # Defining set for binary variable Gn
         gridsize = list(range(1,N))
->>>>>>> 20c490c96c4f6d8f93d9f572b0ee77be867deb30
+
         
 
 #%% ----------- SwitchFEI---------

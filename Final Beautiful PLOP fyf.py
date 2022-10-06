@@ -2,14 +2,7 @@
 """
 Created on Tue Dec  7 13:49:20 2021
 
-@author: Nicholas Goh
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 23 13:28:37 2021
-
-@author: Nicholas Goh
+@author: Nicholas Goh and Isobel Melvin
 """
 
 # -*- coding: utf-8 -*-
